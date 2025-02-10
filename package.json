@@ -1,0 +1,20 @@
+{
+  "name": "tenanttalk",
+  "version": "1.0.0",
+  "description": "A platform displaying landlord reviews and rental listings",
+  "homepage": "https://github.com/thuntxiv/TenantTalk#readme",
+  "bugs": {
+    "url": "https://github.com/thuntxiv/TenantTalk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thuntxiv/TenantTalk.git"
+  },
+  "license": "ISC",
+  "author": "TenantTalkers",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
