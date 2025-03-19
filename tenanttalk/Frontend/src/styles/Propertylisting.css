@@ -1,0 +1,41 @@
+/* src/styles/Propertylisting.css */
+
+.property-listings {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.property-listings h1 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.listings-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.listing-card {
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.listing-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.listing-card h2 {
+  margin-bottom: 0.5rem;
+}
+
+.listing-card p {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
