@@ -10,6 +10,7 @@ const propertySchema = new mongoose.Schema({
     description: { type: String, required: true, unique: true },
     rent: { type: Number, required: true },
     type: { type: String, required: true },
+    period: { type: String, required: true },
     lastEdited: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now }
 });
