@@ -11,7 +11,7 @@ function App() {
         <Route path="/" element={<Home />} />
 
         {/* Renders the Propertylisting component at "/listings" */}
-        <Route path="/listings" element={<Propertylisting />} />
+        <Route path="/properties" element={<Propertylisting />} />
       </Routes>
     </Router>
   );
