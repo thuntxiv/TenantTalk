@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+import { Review } from './reviews';
 
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true },
@@ -7,6 +8,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     type: { type: String, required: true },
+    reviews: [Review],
     createdAt: { type: Date, default: Date.now }
 });
 
