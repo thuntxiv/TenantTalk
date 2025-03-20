@@ -1,22 +1,85 @@
-/* src/styles/Propertylisting.css */
-
-.property-listings {
-  padding: 2rem;
-  background-color: #f9f9f9;
+/* Make the entire page a column layout so we can have a header on top and
+   sidebar + main content below. */
+.property-page {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  background-color: #f9f9f9;
 }
 
-.property-listings h1 {
-  margin-bottom: 1.5rem;
-  text-align: center;
+/* Header (logo + title) at the top */
+.page-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #ccc;
+  background-color: #fff;
 }
 
+/* Logo container inside the header */
+.page-logo {
+  display: flex;
+  align-items: center;
+  margin-right: 2rem;
+  /* space between logo and title */
+}
+
+.page-logo span[role="img"] {
+  font-size: 2rem;
+  margin-right: 0.5rem;
+}
+
+/* The text next to the emoji logo */
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* The main title in the header */
+.page-title {
+  font-size: 1.75rem;
+  margin: 0;
+}
+
+/* The main content area (sidebar + listings) */
+.page-content {
+  display: flex;
+  flex: 1;
+  /* so it expands to fill the viewport if needed */
+}
+
+/* Sidebar for filters */
+.filters-sidebar {
+  width: 250px;
+  /* fixed width for the sidebar */
+  padding: 1rem;
+  border-right: 1px solid #ccc;
+  background-color: #fafafa;
+}
+
+/* Simple spacing for each filter block */
+.filter-section {
+  margin-bottom: 1rem;
+}
+
+/* Main area for listings + timeline */
+.listings-container {
+  flex: 1;
+  /* fills remaining space */
+  padding: 2rem;
+  background-color: #fff;
+}
+
+/* -- Existing grid for listing cards -- */
 .listings-grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  margin-bottom: 2rem;
+  /* space before the timeline */
 }
 
+/* Listing card styles remain the same */
 .listing-card {
   background-color: #fff;
   border-radius: 6px;
@@ -40,12 +103,14 @@
   line-height: 1.4;
 }
 
+/* Timeline container, same as before */
 .timeline-container {
   margin-top: 2rem;
   padding-top: 1rem;
   border-top: 1px solid #ccc;
 }
 
+/* Timeline items */
 .timeline-item {
   display: flex;
   align-items: center;
@@ -57,14 +122,37 @@
   margin-right: 1rem;
   color: #666;
   min-width: 80px;
-  /* to align dates */
+  /* align dates */
 }
 
 .timeline-content {
   display: inline-block;
 }
 
-.listing-card p {
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
+/* Price slider container (the filter-section that wraps it) */
+.filter-section {
+  margin-bottom: 1rem;
+}
+
+/* The slider itself */
+#priceRange {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Example styling for range input in Chrome, Safari, and Edge */
+#priceRange::-webkit-slider-thumb {
+  background-color: #333;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px;
+  /* center the thumb on the track */
+}
+
+#priceRange::-webkit-slider-runnable-track {
+  background: #ccc;
+  height: 4px;
+  border-radius: 2px;
 }
