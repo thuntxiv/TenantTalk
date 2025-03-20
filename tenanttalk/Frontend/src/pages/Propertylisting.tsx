@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import Footer from '../components/footer.tsx';
 import '../styles/Propertylisting.css';
+
 const studioImage = require('../imgs/Studio_listing_1.jpeg');
 const loftImage = require('../imgs/Loft_Example.jpg');
+
+
 
 interface Listing {
     id: number;
@@ -10,7 +14,7 @@ interface Listing {
     location: string;
     description: string;
     imageUrl: string;
-    timeFrame: string; // NEW property for sublease time
+    timeFrame: string;
 }
 
 const mockListings: Listing[] = [
@@ -20,7 +24,7 @@ const mockListings: Listing[] = [
         price: 650,
         location: 'RPI',
         description: 'A cozy studio in midtown Troy.',
-        imageUrl: studioImage, // Use the imported image URL string here
+        imageUrl: studioImage,
         timeFrame: 'August - December',
     },
     {
@@ -80,7 +84,6 @@ export default function Propertylisting() {
                     <option value="All">School</option>
                     <option value="RPI">RPI</option>
                     <option value="HVCC">HVCC</option>
-                    {/* Add more locations as needed */}
                 </select>
             </div>
 
@@ -116,5 +119,9 @@ export default function Propertylisting() {
                     </div>
                 ))}
             </div>
+
+            {/* Footer Component */}
+            <Footer />
         </div>
     );
+}
