@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Propertylisting.css';
+const studioImage = require('../imgs/Studio_listing_1.jpeg');
+const loftImage = require('../imgs/Loft_Example.jpg');
 
 interface Listing {
     id: number;
@@ -18,7 +20,7 @@ const mockListings: Listing[] = [
         price: 650,
         location: 'RPI',
         description: 'A cozy studio in midtown Troy.',
-        imageUrl: 'https://via.placeholder.com/300x200?text=Cozy+Studio',
+        imageUrl: studioImage, // Use the imported image URL string here
         timeFrame: 'August - December',
     },
     {
@@ -27,7 +29,7 @@ const mockListings: Listing[] = [
         price: 1000,
         location: 'RPI',
         description: 'A modern loft near the river.',
-        imageUrl: 'https://via.placeholder.com/300x200?text=Modern+Loft',
+        imageUrl: loftImage,
         timeFrame: 'May - August',
     },
     {
@@ -36,7 +38,7 @@ const mockListings: Listing[] = [
         price: 550,
         location: 'HVCC',
         description: 'A large townhouse on 12th Street.',
-        imageUrl: 'https://via.placeholder.com/300x200?text=Townhouse',
+        imageUrl: studioImage,
         timeFrame: 'January - June',
     },
 ];
@@ -77,7 +79,6 @@ export default function Propertylisting() {
                 >
                     <option value="All">School</option>
                     <option value="RPI">RPI</option>
-                    <option value="RPI">RPI</option>
                     <option value="HVCC">HVCC</option>
                     {/* Add more locations as needed */}
                 </select>
@@ -117,4 +118,3 @@ export default function Propertylisting() {
             </div>
         </div>
     );
-}
