@@ -39,3 +39,32 @@
   margin-bottom: 0.5rem;
   line-height: 1.4;
 }
+
+.timeline-container {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.timeline-date {
+  font-weight: bold;
+  margin-right: 1rem;
+  color: #666;
+  min-width: 80px;
+  /* to align dates */
+}
+
+.timeline-content {
+  display: inline-block;
+}
+
+.listing-card p {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
