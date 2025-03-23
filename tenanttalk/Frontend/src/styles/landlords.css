@@ -1,0 +1,63 @@
+/* landlords.css */
+
+.landlords-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  .landlords-heading {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+  }
+  
+  .landlords-intro {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .landlords-featured h2 {
+    margin-bottom: 15px;
+    color: #444;
+    font-size: 1.5em;
+  }
+  
+  .landlords-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .landlords-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    line-height: 1.5;
+  }
+  
+  .landlords-review-link {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .review-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .review-link:hover {
+    background-color: #0056b3;
+  }
+  
