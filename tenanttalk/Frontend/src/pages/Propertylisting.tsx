@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Footer from '../components/footer.tsx';
 import '../styles/Propertylisting.css';
 
@@ -32,8 +32,7 @@ const mockListings: Listing[] = [
         petFriendly: true,
         rooms: 1,
         utilitiesIncluded: false,
-        description:
-            'A cozy studio near RPI. Perfect for one person. Pets allowed!',
+        description: 'A cozy studio near RPI. Perfect for one person. Pets allowed!',
         imageUrl: studioImage,
         timeFrame: 'August - December',
     },
@@ -70,35 +69,64 @@ const mockListings: Listing[] = [
 ];
 
 export default function Propertylisting() {
+    // 1. Read query parameters
+    const [searchParams] = useSearchParams();
+
+    // For example, if the user visited: /listings?propertyType=House&location=Troy&priceRange=$500 - $1000
+    // we can parse them here:
+    const paramLocation = searchParams.get('location') || '';      // from Home page's "Location" field
+    const queryMaxPrice = searchParams.get('maxPrice') || '2000';
+    const paramPropertyType = searchParams.get('propertyType') || 'All Types';
+
+    // 2. Initialize local filter states with query param values (if any)
+    //    We also have existing filters: searchTerm, timeFrameFilter
     const [listings] = useState<Listing[]>(mockListings);
 
-    // Existing filters
-    const [searchTerm, setSearchTerm] = useState('');
+    // For the searchTerm, let's map it to paramLocation for demonstration
+    // or you can create a separate param if needed
+    const [searchTerm, setSearchTerm] = useState(paramLocation);
+
+    // If your listing has a "type" field, you could store paramPropertyType. Here we have "locationFilter"
+    // We'll map "propertyType" param to "locationFilter" for demonstration
+    // or rename "locationFilter" to "propertyTypeFilter" if you prefer
     const [locationFilter, setLocationFilter] = useState('All');
-    const [maxPrice, setMaxPrice] = useState(2000);
+    // We do have a location property in each listing, so let's keep "locationFilter" for that
+    // But you can adapt as needed. For now, let's keep locationFilter = 'All' or 'RPI' etc.
+    // We'll rely on paramLocation in the "searchTerm" for demonstration
+
+    const [maxPrice, setMaxPrice] = useState(() => parseInt(queryMaxPrice));
+
     const [timeFrameFilter, setTimeFrameFilter] = useState('All');
 
     const navigate = useNavigate();
 
     function handleListingClick(listingId: number) {
-        // Navigate to a detail page for this listing
         navigate(`/listings/${listingId}`);
     }
 
-    // Filter logic
+    // 3. Filter logic (combine local states + param-based logic)
     const filteredListings = listings.filter((listing) => {
+        // For demonstration, let's do:
+        // - If searchTerm is present, it must match the listing's title or address
+        const matchesSearch =
+            !searchTerm ||
+            listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            listing.address.toLowerCase().includes(searchTerm.toLowerCase());
+
+        // locationFilter (the user can still pick from the sidebar "All", "RPI", etc.)
         const matchesLocation =
             locationFilter === 'All' || listing.location === locationFilter;
-        const matchesSearch = listing.title
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
+
+        // price
         const matchesPrice = listing.price <= maxPrice;
+
+        // sublease period
         const matchesTimeFrame =
             timeFrameFilter === 'All' || listing.timeFrame === timeFrameFilter;
 
         return (
-            matchesLocation &&
             matchesSearch &&
+            matchesLocation &&
             matchesPrice &&
             matchesTimeFrame
         );
