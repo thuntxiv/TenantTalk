@@ -1,0 +1,75 @@
+/* src/styles/ListingDetails.css */
+
+.listing-details-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.back-button {
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.top-section {
+  /* We only have the main image/info now, so no need for complex flex layout */
+  margin-bottom: 2rem;
+}
+
+.image-and-info {
+  display: flex;
+  flex-direction: column;
+  /* or row if you want the image and facts side-by-side */
+  gap: 1.5rem;
+}
+
+.main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.quick-facts {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.price {
+  font-size: 1.75rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.address {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+/* Highlights / Description */
+.highlights-section {
+  margin-bottom: 2rem;
+}
+
+.highlights-section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+.highlights-section p {
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
