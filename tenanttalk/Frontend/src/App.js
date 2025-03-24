@@ -24,6 +24,7 @@ function App() {
 
         <Route path="/profile" element={<Profile />} />
         <Route path="/landlords" element={<Landlordlisting />} />
+        <Route path="/listings/:id" element={<ListingDetails />} />
     
       </Routes>
       </AuthProvider>
