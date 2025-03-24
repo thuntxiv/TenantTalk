@@ -23,7 +23,7 @@ function App() {
         {/* Renders the Propertylisting component at "/listings" */}
         <Route path="/properties" element={<Propertylisting />} />
 
-         <Route path="/listings/:id" element={<ListingDetails />} />
+         
 
         <Route path="/profile" element={<Profile />} />
         <Route path="/landlords" element={<LandlordListPage />} />
