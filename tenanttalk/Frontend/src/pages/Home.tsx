@@ -15,12 +15,8 @@ const Home = () => {
           <p>Find your dream rental property and landlord</p>
           
           <div className="search-container">
-            <div className="search-tabs">
-              <button className="tab active">Buy</button>
-              <button className="tab">Rent</button>
-              <button className="tab">Sell</button>
-            </div>
-            
+            {/* Removed the search-tabs div here */}
+
             <div className="search-form">
               <div className="search-row">
                 <div className="search-field">
@@ -164,7 +160,8 @@ const Home = () => {
           <div className="world-map">
             <div className="map-dot germany">
               <div className="country-popup">
-                <img src={Map} alt="German flag" />
+                {/* Example Dot */}
+                <img src="https://via.placeholder.com/50x50" alt="Location Dot" />
                 <div>
                   <h4>Troy, NY</h4>
                   <p>RPI Housing</p>
