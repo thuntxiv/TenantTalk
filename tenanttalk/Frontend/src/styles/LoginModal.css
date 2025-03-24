@@ -1,0 +1,50 @@
+.google-auth-button {
+  display: flex;
+  align-items: center;
+}
+
+/* Override default Google button styling */
+.google-login-button {
+  box-shadow: none !important;
+  border-radius: 4px !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.google-login-button:hover {
+  opacity: 0.9 !important;
+}
+
+.google-logout-button {
+  box-shadow: none !important;
+  border-radius: 4px !important;
+  background-color: #f5f5f5 !important;
+  color: #333 !important;
+}
+
+.user-auth-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 150px;
+  overflow: hidden;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-name {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

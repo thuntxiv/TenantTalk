@@ -1,7 +1,11 @@
 import React from 'react';
 import '../styles/navbar.css';
+import GoogleLoginButton from '../components/LoginModal.tsx';
+import { useAuth } from './AuthContext.tsx';
 
 const Navbar = () => {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -14,7 +18,15 @@ const Navbar = () => {
           <a href="/properties" className="nav-link">Properties</a>
           <a href="/agents" className="nav-link">Forum</a>
           <a href="/contact" className="nav-link contact-btn">Contact Us</a>
-          <a href="/contact" className="nav-link contact-btn">Profile</a>
+          {isAuthenticated && (
+            <a href="/profile" className="nav-link">My Profile</a>
+          )}
+          
+          <div className="auth-section">
+            <GoogleLoginButton 
+              className="navbar-google-login"  
+            />
+          </div>
         </div>
       </div>
     </nav>
