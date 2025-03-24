@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import '../styles/Profile.css';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext.tsx';
 import Navbar from '../components/navbar.tsx';
 import Footer from '../components/footer.tsx';
+import '../styles/Profile.css';
 
 const Profile = () => {
-  // Mock user data - in a real app this would come from your API/state management
-  const [user, setUser] = useState({
-    name: 'Jessica Chen',
-    email: 'jessica.chen@university.edu',
-    phone: '(555) 123-4567',
-    role: 'Tenant',
-    university: 'State University',
-    major: 'Computer Science',
-    graduationYear: '2026',
-    avatar: 'https://via.placeholder.com/150',
-    bio: 'Hi! I\'m a junior CS major looking for a quiet apartment close to campus. I enjoy studying at coffee shops and hiking on weekends.',
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const [activeTab, setActiveTab] = useState('profile');
+  const [isEditing, setIsEditing] = useState(false);
+  const [profileData, setProfileData] = useState({
+    bio: '',
+    phone: '',
+    university: '',
+    major: '',
+    graduationYear: '',
     preferences: {
       rentRange: '$800-1000',
       moveInDate: '2025-08-01',
@@ -27,33 +27,50 @@ const Profile = () => {
       location: 'Within 2 miles of campus'
     }
   });
+  const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState('profile');
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditedUser] = useState(user);
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate('/');
+    }
+  }, [isLoading, isAuthenticated, navigate]);
+
+  // Load user data from localStorage if available
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    if (savedProfile) {
+      setProfileData(JSON.parse(savedProfile));
+    }
+  }, []);
+
+  // Loading state
+  if (isLoading || !user) {
+    return <div className="loading-container">Loading...</div>;
+  }
 
   const handleEditToggle = () => {
     if (isEditing) {
-      // Save changes
-      setUser(editedUser);
+      // Save changes to localStorage
+      localStorage.setItem('userProfile', JSON.stringify(profileData));
     }
     setIsEditing(!isEditing);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditedUser({
-      ...editedUser,
+    setProfileData({
+      ...profileData,
       [name]: value
     });
   };
 
   const handlePreferenceChange = (e) => {
     const { name, value } = e.target;
-    setEditedUser({
-      ...editedUser,
+    setProfileData({
+      ...profileData,
       preferences: {
-        ...editedUser.preferences,
+        ...profileData.preferences,
         [name]: value
       }
     });
@@ -61,12 +78,14 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <Navbar />
-      
       <div className="profile-container">
         <div className="profile-header">
           <div className="profile-avatar-section">
-            <img src={user.avatar} alt="Profile" className="profile-avatar" />
+            <img 
+              src={user.picture || user.imageUrl || 'https://via.placeholder.com/150'} 
+              alt="Profile" 
+              className="profile-avatar" 
+            />
             {isEditing && (
               <button className="update-avatar-btn">Update Photo</button>
             )}
@@ -74,7 +93,7 @@ const Profile = () => {
           
           <div className="profile-title-section">
             <h1>{user.name}</h1>
-            <span className="profile-role">{user.role} • {user.university}</span>
+            <span className="profile-email">{user.email}</span>
             
             <div className="profile-actions">
               <button 
@@ -85,6 +104,10 @@ const Profile = () => {
               </button>
             </div>
           </div>
+          <div className="logo">
+          <a href="/" ><span className="logo-icon">🏠</span>
+          <span className="logo-text">TenantTalk</span></a>
+        </div>
         </div>
         
         <div className="profile-tabs">
@@ -101,10 +124,10 @@ const Profile = () => {
             Housing Preferences
           </button>
           <button 
-            className={`profile-tab ${activeTab === 'reviews' ? 'active' : ''}`}
-            onClick={() => setActiveTab('reviews')}
+            className={`profile-tab ${activeTab === 'saved' ? 'active' : ''}`}
+            onClick={() => setActiveTab('saved')}
           >
-            Reviews
+            Saved Properties
           </button>
           <button 
             className={`profile-tab ${activeTab === 'messages' ? 'active' : ''}`}
@@ -122,12 +145,13 @@ const Profile = () => {
                 {isEditing ? (
                   <textarea
                     name="bio"
-                    value={editedUser.bio}
+                    value={profileData.bio}
                     onChange={handleChange}
                     className="edit-bio"
+                    placeholder="Tell us a bit about yourself..."
                   />
                 ) : (
-                  <p>{user.bio}</p>
+                  <p>{profileData.bio || 'No bio provided yet. Click Edit Profile to add your bio.'}</p>
                 )}
               </div>
               
@@ -136,16 +160,7 @@ const Profile = () => {
                 <div className="profile-details">
                   <div className="detail-row">
                     <span className="detail-label">Email</span>
-                    {isEditing ? (
-                      <input
-                        type="email"
-                        name="email"
-                        value={editedUser.email}
-                        onChange={handleChange}
-                      />
-                    ) : (
-                      <span className="detail-value">{user.email}</span>
-                    )}
+                    <span className="detail-value">{user.email}</span>
                   </div>
                   
                   <div className="detail-row">
@@ -154,11 +169,14 @@ const Profile = () => {
                       <input
                         type="tel"
                         name="phone"
-                        value={editedUser.phone}
+                        value={profileData.phone}
                         onChange={handleChange}
+                        placeholder="Your phone number"
                       />
                     ) : (
-                      <span className="detail-value">{user.phone}</span>
+                      <span className="detail-value">
+                        {profileData.phone || 'No phone number provided.'}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -173,11 +191,14 @@ const Profile = () => {
                       <input
                         type="text"
                         name="university"
-                        value={editedUser.university}
+                        value={profileData.university}
                         onChange={handleChange}
+                        placeholder="Your university"
                       />
                     ) : (
-                      <span className="detail-value">{user.university}</span>
+                      <span className="detail-value">
+                        {profileData.university || 'Not specified'}
+                      </span>
                     )}
                   </div>
                   
@@ -187,11 +208,14 @@ const Profile = () => {
                       <input
                         type="text"
                         name="major"
-                        value={editedUser.major}
+                        value={profileData.major}
                         onChange={handleChange}
+                        placeholder="Your major"
                       />
                     ) : (
-                      <span className="detail-value">{user.major}</span>
+                      <span className="detail-value">
+                        {profileData.major || 'Not specified'}
+                      </span>
                     )}
                   </div>
                   
@@ -201,11 +225,14 @@ const Profile = () => {
                       <input
                         type="text"
                         name="graduationYear"
-                        value={editedUser.graduationYear}
+                        value={profileData.graduationYear}
                         onChange={handleChange}
+                        placeholder="Expected graduation year"
                       />
                     ) : (
-                      <span className="detail-value">{user.graduationYear}</span>
+                      <span className="detail-value">
+                        {profileData.graduationYear || 'Not specified'}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -224,11 +251,11 @@ const Profile = () => {
                       <input
                         type="text"
                         name="rentRange"
-                        value={editedUser.preferences.rentRange}
+                        value={profileData.preferences.rentRange}
                         onChange={handlePreferenceChange}
                       />
                     ) : (
-                      <span className="preference-value">{user.preferences.rentRange}</span>
+                      <span className="preference-value">{profileData.preferences.rentRange}</span>
                     )}
                   </div>
                   
@@ -238,12 +265,12 @@ const Profile = () => {
                       <input
                         type="date"
                         name="moveInDate"
-                        value={editedUser.preferences.moveInDate}
+                        value={profileData.preferences.moveInDate}
                         onChange={handlePreferenceChange}
                       />
                     ) : (
                       <span className="preference-value">
-                        {new Date(user.preferences.moveInDate).toLocaleDateString()}
+                        {new Date(profileData.preferences.moveInDate).toLocaleDateString()}
                       </span>
                     )}
                   </div>
@@ -254,11 +281,11 @@ const Profile = () => {
                       <input
                         type="text"
                         name="leaseLength"
-                        value={editedUser.preferences.leaseLength}
+                        value={profileData.preferences.leaseLength}
                         onChange={handlePreferenceChange}
                       />
                     ) : (
-                      <span className="preference-value">{user.preferences.leaseLength}</span>
+                      <span className="preference-value">{profileData.preferences.leaseLength}</span>
                     )}
                   </div>
                   
@@ -268,11 +295,11 @@ const Profile = () => {
                       <input
                         type="text"
                         name="roommates"
-                        value={editedUser.preferences.roommates}
+                        value={profileData.preferences.roommates}
                         onChange={handlePreferenceChange}
                       />
                     ) : (
-                      <span className="preference-value">{user.preferences.roommates}</span>
+                      <span className="preference-value">{profileData.preferences.roommates}</span>
                     )}
                   </div>
                   
@@ -281,7 +308,7 @@ const Profile = () => {
                     {isEditing ? (
                       <select
                         name="petFriendly"
-                        value={editedUser.preferences.petFriendly}
+                        value={profileData.preferences.petFriendly}
                         onChange={handlePreferenceChange}
                       >
                         <option value="Yes">Yes</option>
@@ -289,7 +316,7 @@ const Profile = () => {
                         <option value="No Preference">No Preference</option>
                       </select>
                     ) : (
-                      <span className="preference-value">{user.preferences.petFriendly}</span>
+                      <span className="preference-value">{profileData.preferences.petFriendly}</span>
                     )}
                   </div>
                   
@@ -298,7 +325,7 @@ const Profile = () => {
                     {isEditing ? (
                       <select
                         name="furnished"
-                        value={editedUser.preferences.furnished}
+                        value={profileData.preferences.furnished}
                         onChange={handlePreferenceChange}
                       >
                         <option value="Yes">Yes</option>
@@ -307,7 +334,7 @@ const Profile = () => {
                         <option value="No">No</option>
                       </select>
                     ) : (
-                      <span className="preference-value">{user.preferences.furnished}</span>
+                      <span className="preference-value">{profileData.preferences.furnished}</span>
                     )}
                   </div>
                   
@@ -317,11 +344,11 @@ const Profile = () => {
                       <input
                         type="text"
                         name="utilities"
-                        value={editedUser.preferences.utilities}
+                        value={profileData.preferences.utilities}
                         onChange={handlePreferenceChange}
                       />
                     ) : (
-                      <span className="preference-value">{user.preferences.utilities}</span>
+                      <span className="preference-value">{profileData.preferences.utilities}</span>
                     )}
                   </div>
                   
@@ -331,11 +358,11 @@ const Profile = () => {
                       <input
                         type="text"
                         name="parking"
-                        value={editedUser.preferences.parking}
+                        value={profileData.preferences.parking}
                         onChange={handlePreferenceChange}
                       />
                     ) : (
-                      <span className="preference-value">{user.preferences.parking}</span>
+                      <span className="preference-value">{profileData.preferences.parking}</span>
                     )}
                   </div>
                   
@@ -345,11 +372,11 @@ const Profile = () => {
                       <input
                         type="text"
                         name="location"
-                        value={editedUser.preferences.location}
+                        value={profileData.preferences.location}
                         onChange={handlePreferenceChange}
                       />
                     ) : (
-                      <span className="preference-value">{user.preferences.location}</span>
+                      <span className="preference-value">{profileData.preferences.location}</span>
                     )}
                   </div>
                 </div>
@@ -357,27 +384,25 @@ const Profile = () => {
             </div>
           )}
           
-          {activeTab === 'reviews' && (
-            <div className="profile-reviews">
+          {activeTab === 'saved' && (
+            <div className="saved-properties">
               <div className="profile-section">
-                <h2>My Reviews</h2>
-                <p className="no-content">You haven't submitted any reviews yet.</p>
+                <h2>Saved Properties</h2>
+                <p className="no-content">You haven't saved any properties yet.</p>
               </div>
             </div>
           )}
           
           {activeTab === 'messages' && (
-            <div className="profile-messages">
+            <div className="messages">
               <div className="profile-section">
-                <h2>My Messages</h2>
+                <h2>Messages</h2>
                 <p className="no-content">You have no messages yet.</p>
               </div>
             </div>
           )}
         </div>
       </div>
-      
-      <Footer />
     </div>
   );
 };
