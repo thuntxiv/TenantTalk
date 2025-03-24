@@ -3,6 +3,7 @@ import Home from './pages/Home.tsx';
 import Propertylisting from './pages/Propertylisting.tsx';
 import Profile from './pages/Profile.jsx';
 import LandlordListPage from './pages/Landlords.tsx';
+import ListingDetails from './components/ListingDetails.tsx';
 import './App.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './components/AuthContext.tsx';
@@ -28,6 +29,8 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/landlords" element={<LandlordListPage />} />
         <Route path="/landlords/:id" element={<LandlordProfilePage />} />
+        <Route path="/listings/:id" element={<ListingDetails />} />
+
     
       </Routes>
       </AuthProvider>
