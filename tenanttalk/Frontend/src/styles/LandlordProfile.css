@@ -1,0 +1,296 @@
+.landlord-profile-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+  
+  .back-button {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .back-button:hover {
+    color: #c8a360;
+  }
+  
+  .profile-header {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  
+  .profile-image-container {
+    flex-shrink: 0;
+  }
+  
+  .profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-info {
+    flex-grow: 1;
+  }
+  
+  .landlord-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .rating-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .star-rating {
+    display: flex;
+    align-items: center;
+  }
+  
+  .star {
+    color: #f8ce0b;
+    font-size: 1.4rem;
+    margin-right: 3px;
+  }
+  
+  .star.empty {
+    color: #ddd;
+  }
+  
+  .rating-value {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-left: 5px;
+  }
+  
+  .review-count {
+    color: #666;
+    margin-left: 10px;
+  }
+  
+  .profile-details {
+    margin-bottom: 25px;
+  }
+  
+  .detail-item {
+    margin-bottom: 8px;
+  }
+  
+  .detail-label {
+    font-weight: 600;
+    color: #555;
+    margin-right: 10px;
+  }
+  
+  .detail-value {
+    color: #333;
+  }
+  
+  .write-review-button {
+    background-color: #c8a360;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .write-review-button:hover {
+    background-color: #b89350;
+  }
+  
+  .write-review-button.mobile {
+    display: none;
+  }
+  
+  .profile-bio {
+    background-color: #f8f8f8;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+  }
+  
+  .profile-bio h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .profile-bio p {
+    line-height: 1.6;
+    color: #555;
+  }
+  
+  .properties-section,
+  .reviews-section,
+  .review-form-section {
+    margin-bottom: 50px;
+  }
+  
+  .properties-section h2,
+  .reviews-section h2,
+  .review-form-section h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .property-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .property-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+    cursor: pointer;
+  }
+  
+  .property-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .property-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  
+  .property-info {
+    padding: 20px;
+  }
+  
+  .property-address {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .property-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .property-price {
+    font-weight: 600;
+    color: #c8a360;
+    font-size: 1.1rem;
+  }
+  
+  .reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .review-card {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .review-header {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .reviewer-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .reviewer-info {
+    flex-grow: 1;
+  }
+  
+  .reviewer-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .review-rating {
+    margin-bottom: 5px;
+  }
+  
+  .review-rating .star {
+    font-size: 1.1rem;
+  }
+  
+  .review-date {
+    color: #888;
+    font-size: 0.9rem;
+  }
+  
+  .review-comment {
+    line-height: 1.6;
+    color: #444;
+  }
+  
+  @media (max-width: 768px) {
+    .profile-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+    }
+    
+    .profile-image {
+      width: 150px;
+      height: 150px;
+    }
+    
+    .rating-section {
+      justify-content: center;
+    }
+    
+    .write-review-button {
+      display: none;
+    }
+    
+    .write-review-button.mobile {
+      display: inline-block;
+    }
+    
+    .property-cards {
+      grid-template-columns: 1fr;
+    }
+  }

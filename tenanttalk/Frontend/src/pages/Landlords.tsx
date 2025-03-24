@@ -1,39 +1,178 @@
-import React from 'react';
-import '../styles/landlords.css';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/navbar.tsx';
-import Footer from '../components/footer.tsx';
+import '../styles/landlords.css';
 
-const Landlords: React.FC = () => {
-  return (
-    <div className="landlords-container" style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <Navbar />
-      <h1 className="landlords-heading">Landlords</h1>
-      <p className="landlords-intro">
-        Welcome to the Landlords page! Here you can view information about landlords that list properties on TenantTalk.
-      </p>
+// Types
+interface Landlord {
+  id: string;
+  name: string;
+  profileImage: string;
+  properties: number;
+  rating: number;
+  reviewCount: number;
+}
 
-      <div>
-        <h2 className="landlords-featured">Featured Landlords</h2>
-        <ul className="landlords-list">
-          <li>
-            <strong>John Doe</strong> - Experienced landlord with several rental properties.
-          </li>
-          <li>
-            <strong>Jane Smith</strong> - Specializes in family-friendly rental homes.
-          </li>
-          <li>
-            <strong>Acme Properties</strong> - Trusted property management company.
-          </li>
-        </ul>
-      </div>
+const LandlordListPage: React.FC = () => {
+  const [landlords, setLandlords] = useState<Landlord[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  
+  const navigate = useNavigate();
 
-      <div style={{ marginTop: '20px' }}>
-        <p>If you’d like to leave a review for a landlord, please click the link below:</p>
-      </div>
-      <Footer />
-    </div>
+  useEffect(() => {
+    // In a real app, you would fetch this data from your API
+    const fetchLandlords = async () => {
+      try {
+        setLoading(true);
+        // Mock API call - replace with actual API call
+        // const response = await fetch('/api/landlords');
+        // const data = await response.json();
+        
+        // Mock data for demonstration
+        const mockData: Landlord[] = [
+          {
+            id: '1',
+            name: 'John Smith',
+            profileImage: 'https://via.placeholder.com/150',
+            properties: 12,
+            rating: 4.7,
+            reviewCount: 34
+          },
+          {
+            id: '2',
+            name: 'Emily Johnson',
+            profileImage: 'https://via.placeholder.com/150',
+            properties: 8,
+            rating: 4.5,
+            reviewCount: 21
+          },
+          {
+            id: '3',
+            name: 'Michael Rodriguez',
+            profileImage: 'https://via.placeholder.com/150',
+            properties: 5,
+            rating: 4.9,
+            reviewCount: 15
+          },
+          {
+            id: '4',
+            name: 'Sarah Williams',
+            profileImage: 'https://via.placeholder.com/150',
+            properties: 3,
+            rating: 4.2,
+            reviewCount: 9
+          },
+          {
+            id: '5',
+            name: 'David Chen',
+            profileImage: 'https://via.placeholder.com/150',
+            properties: 15,
+            rating: 4.8,
+            reviewCount: 42
+          }
+        ];
+        
+        setLandlords(mockData);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load landlords. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchLandlords();
+  }, []);
+
+  const handleLandlordClick = (landlordId: string) => {
+    navigate(`/landlords/${landlordId}`);
+  };
+
+  const filteredLandlords = landlords.filter(landlord => 
+    landlord.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Render Star Rating
+  const renderStars = (rating: number, reviewCount: number) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
     
+    return (
+      <div className="star-rating">
+        {[...Array(5)].map((_, i) => (
+          <span key={i} className={
+            i < fullStars 
+              ? "star full" 
+              : (i === fullStars && hasHalfStar) 
+                ? "star half" 
+                : "star empty"
+          }>
+            {i < fullStars 
+              ? "★" 
+              : (i === fullStars && hasHalfStar) 
+                ? "★" 
+                : "☆"}
+          </span>
+        ))}
+        <span className="rating-value">{rating.toFixed(1)}</span>
+        <span className="review-count">({reviewCount} reviews)</span>
+      </div>
+    );
+  };
+
+  if (loading) {
+    return <div className="loading">Loading landlords...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
+
+  return (
+    <div className="landlord-list-page">
+      <div className="landlord-list-header">
+        <Navbar></Navbar>
+        <h1>Landlords</h1>
+        <p>Find and review landlords in your area</p>
+      </div>
+
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search for landlords..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+      </div>
+
+      <div className="landlord-cards-container">
+        {filteredLandlords.length > 0 ? (
+          filteredLandlords.map(landlord => (
+            <div 
+              key={landlord.id} 
+              className="landlord-card"
+              onClick={() => handleLandlordClick(landlord.id)}
+            >
+              <img 
+                src={landlord.profileImage} 
+                alt={`${landlord.name}`} 
+                className="landlord-image"
+              />
+              <div className="landlord-info">
+                <h3 className="landlord-name">{landlord.name}</h3>
+                <p className="property-count">{landlord.properties} {landlord.properties === 1 ? 'Property' : 'Properties'}</p>
+                {renderStars(landlord.rating, landlord.reviewCount)}
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="no-results">No landlords found matching "{searchTerm}"</div>
+        )}
+      </div>
+    </div>
   );
 };
 
-export default Landlords;
+export default LandlordListPage;

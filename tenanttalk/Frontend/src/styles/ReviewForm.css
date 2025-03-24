@@ -1,0 +1,111 @@
+.review-form {
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .rating-input {
+    margin-bottom: 25px;
+  }
+  
+  .rating-label {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .stars-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .star {
+    color: #ddd;
+    font-size: 2rem;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: color 0.2s;
+  }
+  
+  .star.active {
+    color: #f8ce0b;
+  }
+  
+  .rating-text {
+    margin-left: 15px;
+    font-weight: 600;
+    color: #666;
+  }
+  
+  .comment-input {
+    margin-bottom: 25px;
+  }
+  
+  .comment-input label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .comment-input textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    line-height: 1.5;
+    font-family: inherit;
+    resize: vertical;
+  }
+  
+  .comment-input textarea:focus {
+    outline: none;
+    border-color: #c8a360;
+    box-shadow: 0 0 5px rgba(200, 163, 96, 0.3);
+  }
+  
+  .error-message {
+    color: #e53e3e;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+  }
+  
+  .cancel-button {
+    background-color: #f2f2f2;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .cancel-button:hover {
+    background-color: #e6e6e6;
+  }
+  
+  .submit-button {
+    background-color: #c8a360;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .submit-button:hover {
+    background-color: #b89350;
+  }
