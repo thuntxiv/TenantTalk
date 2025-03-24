@@ -1,8 +1,6 @@
-const mongoose = require('mongoose');
-const { updateSearchIndex } = require('./user');
+import {mongoose} from "mongoose";
 
 const propertySchema = new mongoose.Schema({
-    userID: { type: mongoose.ObjectId, required: true },
     landlordID: {type: mongoose.ObjectId },
     title: { type: String, required: true },
     address: { type: String, required: true },
@@ -17,4 +15,5 @@ const propertySchema = new mongoose.Schema({
 
 const Property = mongoose.model('Property', propertySchema);
 
-module.exports = Property;
+export {Property, propertySchema};
+
