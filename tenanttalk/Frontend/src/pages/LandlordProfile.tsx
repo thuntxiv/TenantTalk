@@ -184,12 +184,14 @@ const LandlordProfilePage: React.FC = () => {
               </div>
             </div>
             
+            <a href="#reviews">
             <button 
               className="write-review-button"
               onClick={handleWriteReview}
-            >
+            >     
               Write a Review
             </button>
+            </a>
           </div>
         </div>
         
@@ -221,7 +223,7 @@ const LandlordProfilePage: React.FC = () => {
             ))}
           </div>
         </div>
-        
+        <div id="reviews">
         {showReviewForm ? (
           <div className="review-form-section">
             <h2>Write a Review</h2>
@@ -269,6 +271,7 @@ const LandlordProfilePage: React.FC = () => {
             </div>
           </div>
         )}
+        </div>
       </div>
     );
   };
