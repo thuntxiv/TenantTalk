@@ -156,3 +156,8 @@
   height: 4px;
   border-radius: 2px;
 }
+
+a {
+  text-decoration: none;
+  color: black;
+}

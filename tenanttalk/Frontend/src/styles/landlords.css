@@ -1,7 +1,6 @@
 /* landlords.css */
 
 .landlords-container {
-    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -33,7 +32,7 @@
     margin: 0;
   }
   
-  .landlords-item {
+  .landlords-item, li {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     padding: 15px;
