@@ -109,8 +109,8 @@ export default function Propertylisting() {
             {/* Header */}
             <header className="page-header">
                 <div className="page-logo">
-                    <span role="img" aria-label="logo">🏠</span>
-                    <span className="logo-text">TenantTalk</span>
+                    <a href='/'><span role="img" aria-label="logo">🏠</span>
+                    <span className="logo-text">TenantTalk</span></a>
                 </div>
                 <h1 className="page-title">Current Sublistings</h1>
             </header>
