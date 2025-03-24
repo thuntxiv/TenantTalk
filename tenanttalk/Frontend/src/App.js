@@ -25,7 +25,7 @@ function App() {
 
         <Route path="/profile" element={<Profile />} />
         <Route path="/landlords" element={<LandlordListPage />} />
-        <Route path="/landlords/1" element={<LandlordProfilePage />} />
+        <Route path="/landlords/:id" element={<LandlordProfilePage />} />
     
       </Routes>
       </AuthProvider>

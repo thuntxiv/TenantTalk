@@ -1,52 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/home.css';
 import Navbar from '../components/navbar.tsx';
 import Footer from '../components/footer.tsx';
 
 const Home = () => {
+  // Local states for search fields
+  const [propertyType, setPropertyType] = useState('All Types');
+  const [location, setLocation] = useState('');
+  const [maxPrice, setMaxPrice] = useState(2000);
+
+  const navigate = useNavigate();
+
+  // Build query string from the search fields and navigate to /properties
+  function handleSearch() {
+    const params = new URLSearchParams({
+      propertyType,
+      location,
+      maxPrice: maxPrice.toString(),
+    });
+    navigate(`/properties?${params.toString()}`);
+  }
+
   return (
     <div className="home">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
           <h1>Journey To Your Perfect Home</h1>
           <p>Find your dream rental property and landlord</p>
-          
-          <div className="search-container">
-            {/* Removed the search-tabs div here */}
 
+          <div className="search-container">
             <div className="search-form">
               <div className="search-row">
+                {/* Property Type */}
                 <div className="search-field">
                   <label>Property Type</label>
-                  <select>
+                  <select
+                    value={propertyType}
+                    onChange={(e) => setPropertyType(e.target.value)}
+                  >
                     <option>All Types</option>
                     <option>Apartment</option>
                     <option>House</option>
                     <option>Condo</option>
                   </select>
                 </div>
-                
+
+                {/* Location */}
                 <div className="search-field">
                   <label>Location</label>
-                  <input type="text" placeholder="Enter location" />
+                  <input
+                    type="text"
+                    placeholder="Enter location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
                 </div>
-                
+
+                {/* Max Price Slider */}
                 <div className="search-field">
-                  <label>Price Range</label>
-                  <select>
-                    <option>Any Price</option>
-                    <option>$500 - $1000</option>
-                    <option>$1000 - $1500</option>
-                    <option>$1500+</option>
-                  </select>
+                  <label>
+                    Max Price: <strong>${maxPrice}</strong>
+                  </label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="2000"
+                    step="50"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(parseInt(e.target.value))}
+                  />
                 </div>
-                
-                <button className="search-button">Search</button>
+
+                {/* Search Button */}
+                <button className="search-button" onClick={handleSearch}>
+                  Search
+                </button>
               </div>
-              
+
               <div className="popular-searches">
                 <span>Popular Searches:</span>
                 <a href="#">Downtown</a>
@@ -59,38 +93,41 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
+
       {/* Advisors Section */}
       <section className="advisors-section">
         <div className="section-container">
           <div className="advisors-content">
             <h2>Your Trusted Landlord Advisors</h2>
-            
+
             <div className="stats-container">
               <div className="stat-card">
                 <h3>17K+</h3>
                 <p>Satisfied Customers</p>
               </div>
-              
+
               <div className="stat-card dark">
                 <h3>25+</h3>
                 <p>Years of Experience</p>
               </div>
-              
+
               <div className="stat-card">
                 <h3>150+</h3>
                 <p>Award-Winning</p>
               </div>
-              
+
               <div className="stat-card">
                 <h3>25+</h3>
                 <p>Property Collections</p>
               </div>
             </div>
           </div>
-          
+
           <div className="advisor-description">
-            <p>A cutting-edge marketplace app that offers a seamless platform for finding the perfect rental property near your dream college.</p>
+            <p>
+              A cutting-edge marketplace app that offers a seamless platform for finding the perfect rental property near your dream college.
+            </p>
             <div className="feature-box">
               <p>
                 <span className="highlight">We have refined the</span> ever-evolving landscape of college housing, prioritizing transparency and focused intensely on a stress-free tenant search experience.
@@ -102,7 +139,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Property Match Section */}
       <section className="property-match-section">
         <div className="section-container">
@@ -110,10 +147,13 @@ const Home = () => {
           <p className="section-description">
             Embark on a journey of discovery through beautiful properties. Various categories, curated to fulfill your specific housing needs.
           </p>
-          
+
           <div className="property-grid">
             <div className="property-card large">
-              <div className="property-image" style={{ backgroundImage: "url('https://via.placeholder.com/600x400')" }}>
+              <div
+                className="property-image"
+                style={{ backgroundImage: "url('https://via.placeholder.com/600x400')" }}
+              >
                 <button className="save-button">♡</button>
               </div>
               <div className="property-details">
@@ -129,38 +169,46 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="property-card">
-              <div className="property-image" style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}>
+              <div
+                className="property-image"
+                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
+              >
                 <button className="save-button">♡</button>
               </div>
             </div>
-            
+
             <div className="property-card">
-              <div className="property-image" style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}>
+              <div
+                className="property-image"
+                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
+              >
                 <button className="save-button">♡</button>
               </div>
             </div>
-            
+
             <div className="property-card">
-              <div className="property-image" style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}>
+              <div
+                className="property-image"
+                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
+              >
                 <button className="save-button">♡</button>
               </div>
             </div>
           </div>
         </div>
       </section>
-      
+
       {/* International Network Section */}
       <section className="network-section">
         <div className="section-container">
           <h2>Landlord Property Network</h2>
           <p>Our landlord network spans to the most college campuses in the US</p>
-          
+
           <div className="world-map">
             <div className="map-dot germany">
               <div className="country-popup">
-                {/* Example Dot */}
                 <img src="https://via.placeholder.com/50x50" alt="Location Dot" />
                 <div>
                   <h4>Troy, NY</h4>
@@ -172,7 +220,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Trends Section */}
       <section className="trends-section">
         <div className="section-container">
@@ -180,10 +228,13 @@ const Home = () => {
           <p className="section-description">
             Stay informed and updated with the latest trends, home improvement ideas, and our insights on the property market.
           </p>
-          
+
           <div className="blog-grid">
             <div className="blog-card">
-              <div className="blog-image" style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}>
+              <div
+                className="blog-image"
+                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
+              >
                 <span className="blog-category">Design Trend</span>
                 <button className="save-button">♡</button>
               </div>
@@ -192,18 +243,24 @@ const Home = () => {
                 <p>Discover the latest in sustainable campus living...</p>
               </div>
             </div>
-            
+
             <div className="blog-card">
-              <div className="blog-image" style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}></div>
+              <div
+                className="blog-image"
+                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
+              ></div>
             </div>
-            
+
             <div className="blog-card">
-              <div className="blog-image" style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}></div>
+              <div
+                className="blog-image"
+                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
+              ></div>
             </div>
           </div>
         </div>
       </section>
-      
+
       {/* Testimonials Section */}
       <section className="testimonials-section">
         <div className="section-container">
@@ -211,11 +268,15 @@ const Home = () => {
           <p className="section-description">
             Discover heartfelt accounts of our past renters and what they say on our valued hosts's timely and reliable responses.
           </p>
-          
+
           <div className="testimonials-grid">
             <div className="testimonial-card">
               <div className="testimonial-header">
-                <img src="https://via.placeholder.com/50x50" alt="Rachel Heart" className="testimonial-avatar" />
+                <img
+                  src="https://via.placeholder.com/50x50"
+                  alt="Rachel Heart"
+                  className="testimonial-avatar"
+                />
                 <div>
                   <h4>Rachel Heart</h4>
                   <div className="rating">★★★★★</div>
@@ -225,10 +286,14 @@ const Home = () => {
                 "Choosing this app saved me so much time in my rental search! I was instantly connected with verified landlords and appreciated their professionalism and expertise. Highly recommended!"
               </p>
             </div>
-            
+
             <div className="testimonial-card">
               <div className="testimonial-header">
-                <img src="https://via.placeholder.com/50x50" alt="Lucas Rodrigo" className="testimonial-avatar" />
+                <img
+                  src="https://via.placeholder.com/50x50"
+                  alt="Lucas Rodrigo"
+                  className="testimonial-avatar"
+                />
                 <div>
                   <h4>Lucas Rodrigo</h4>
                   <div className="rating">★★★★★</div>
@@ -238,10 +303,14 @@ const Home = () => {
                 "I had a tight timeline to find a place near campus. This service helped me secure a grand rental in no time. I would definitely use it again!"
               </p>
             </div>
-            
+
             <div className="testimonial-card">
               <div className="testimonial-header">
-                <img src="https://via.placeholder.com/50x50" alt="Amanda Baldwin" className="testimonial-avatar" />
+                <img
+                  src="https://via.placeholder.com/50x50"
+                  alt="Amanda Baldwin"
+                  className="testimonial-avatar"
+                />
                 <div>
                   <h4>Amanda Baldwin</h4>
                   <div className="rating">★★★★★</div>
@@ -251,10 +320,14 @@ const Home = () => {
                 "They patiently answered all our questions, provided valuable market insights, and helped us secure our dream home within our budget."
               </p>
             </div>
-            
+
             <div className="testimonial-card">
               <div className="testimonial-header">
-                <img src="https://via.placeholder.com/50x50" alt="Harry Jacobs" className="testimonial-avatar" />
+                <img
+                  src="https://via.placeholder.com/50x50"
+                  alt="Harry Jacobs"
+                  className="testimonial-avatar"
+                />
                 <div>
                   <h4>Harry Jacobs</h4>
                   <div className="rating">★★★★★</div>
@@ -267,19 +340,19 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* CTA Section */}
       <section className="cta-section">
         <div className="section-container">
           <h2>Ready To Work With Us?</h2>
           <p>Experience top-notch customer service and let us guide you on your property journey.</p>
-          
+
           <button className="cta-button">
             Learn More <span>→</span>
           </button>
         </div>
       </section>
-      
+
       <Footer />
     </div>
   );
