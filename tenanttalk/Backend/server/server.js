@@ -9,6 +9,7 @@ import {User} from '../models/user.js';
 import {Property} from '../models/property.js';
 import {Landlord} from '../models/landlord.js';
 import {Review} from '../models/reviews.js';
+import {ForumPost, Comment} from '../models/forum.js';
 
 const app = express();
 
@@ -323,6 +324,125 @@ app.delete("/api/landlords/:id", async (req, res) => {
     }
     res.status(200).json({ message: "Landlord successfully deleted" });
   } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// POST a new ForumPost
+app.post("/api/forumposts", async (req, res) => {
+  try {
+      const forumPost = new ForumPost(req.body);
+      await mongoose.connection.collection("forumposts").insertOne(forumPost);
+      res.status(201).json(forumPost);
+  } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+  }
+});
+
+// GET a ForumPost by ID
+app.get("/api/forumposts/:id", async (req, res) => {
+  try {
+      const forumPost = await mongoose.connection.collection("forumposts").findOne({ 
+          _id: new mongoose.Types.ObjectId(req.params.id)
+      });
+      if (!forumPost) {
+          return res.status(404).json({ error: "Forum post not found" });
+      }
+      res.status(200).json(forumPost);
+  } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+  }
+});
+
+// DELETE a ForumPost by ID
+app.delete("/api/forumposts/:id", async (req, res) => {
+  try {
+      const result = await mongoose.connection.collection("forumposts").deleteOne({ 
+          _id: new mongoose.Types.ObjectId(req.params.id)
+      });
+      if (result.deletedCount === 0) {
+          return res.status(404).json({ error: "Forum post not found" });
+      }
+      res.status(200).json({ message: "Forum post deleted successfully" });
+  } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+  }
+});
+
+// POST a new Comment
+app.post("/api/comments", async (req, res) => {
+  try {
+      const comment = new Comment(req.body);
+      await mongoose.connection.collection("comments").insertOne(comment);
+      res.status(201).json(comment);
+  } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+  }
+});
+
+// GET a Comment by ID
+app.get("/api/comments/:id", async (req, res) => {
+  try {
+      const comment = await mongoose.connection.collection("comments").findOne({ 
+          _id: new mongoose.Types.ObjectId(req.params.id)
+      });
+      if (!comment) {
+          return res.status(404).json({ error: "Comment not found" });
+      }
+      res.status(200).json(comment);
+  } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+  }
+});
+
+// DELETE a Comment by ID
+app.delete("/api/comments/:id", async (req, res) => {
+  try {
+      const result = await mongoose.connection.collection("comments").deleteOne({ 
+          _id: new mongoose.Types.ObjectId(req.params.id)
+      });
+      if (result.deletedCount === 0) {
+          return res.status(404).json({ error: "Comment not found" });
+      }
+      res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+  }
+});
+
+//Add comment to post
+app.post("/api/forumposts/:id/comments", async (req, res) => {
+  try {
+    // Find the forum post by its _id
+    const forumPost = await ForumPost.findById(req.params.id);
+    if (!forumPost) {
+      return res.status(404).json({ error: "Forum post not found" });
+    }
+
+    // Create a new comment object based on the request body
+    const newComment = {
+      userId: req.body.userId,
+      username: req.body.username,
+      userAvatar: req.body.userAvatar,
+      content: req.body.content,
+      createdAt: new Date() // Use current date/time
+    };
+
+    // Push the new comment into the existing comments array
+    forumPost.comments.push(newComment);
+
+    // Save the updated forum post document
+    await forumPost.save();
+
+    res.status(201).json(forumPost);
+  } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err.message });
   }
 });
