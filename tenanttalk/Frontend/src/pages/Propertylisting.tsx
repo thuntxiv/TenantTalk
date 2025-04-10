@@ -70,7 +70,8 @@ const mockListings: Listing[] = [
         petFriendly: true,
         rooms: 3,
         utilitiesIncluded: false,
-        description: 'A large townhouse on 12th Street, close to HVCC. Shared living space, pet-friendly.',
+        description:
+            'A large townhouse on 12th Street, close to HVCC. Shared living space, pet-friendly.',
         imageUrl: studioImage,
         timeFrame: 'January - June',
         numberOfSuitemates: 3,
@@ -80,27 +81,30 @@ const mockListings: Listing[] = [
 ];
 
 export default function Propertylisting() {
-    // 1. Parse query parameters 
+    // 1. Parse query parameters (defaults are provided in case a parameter is missing)
     const [searchParams] = useSearchParams();
     const paramLocation = searchParams.get('location') || '';
-    const queryMaxPrice = searchParams.get('maxPrice') || '2000';
+    const paramMaxPrice = searchParams.get('maxPrice') || '2000';
+    const paramTimeFrame = searchParams.get('timeFrame') || 'All';
+    const paramPetFriendly = searchParams.get('petFriendly') || 'All';
+    const paramUtilities = searchParams.get('utilitiesIncluded') || 'All';
+    const paramRooms = searchParams.get('rooms') || 'All';
+    const paramSuitemates = searchParams.get('suitemates') || 'All';
+    const paramRoomType = searchParams.get('roomType') || 'All';
+    const paramBathrooms = searchParams.get('bathrooms') || 'All';
 
-    // 2. Local filter states
+    // 2. Local filter states; if desired, you can also update the UI to let users change these on the listings page
     const [listings] = useState<Listing[]>(mockListings);
     const [searchTerm, setSearchTerm] = useState(paramLocation);
     const [locationFilter, setLocationFilter] = useState('All');
-    const [maxPrice, setMaxPrice] = useState(() => parseInt(queryMaxPrice));
-    const [timeFrameFilter, setTimeFrameFilter] = useState('All');
-
-    // Existing filters
-    const [petFriendlyFilter, setPetFriendlyFilter] = useState('All'); 
-    const [utilitiesFilter, setUtilitiesFilter] = useState('All');     
-    const [roomsFilter, setRoomsFilter] = useState('All');            
-    const [suitematesFilter, setSuitematesFilter] = useState('All');
-
-    // New filters for the room being rented
-    const [roomTypeFilter, setRoomTypeFilter] = useState('All'); 
-    const [bathroomsFilter, setBathroomsFilter] = useState('All'); 
+    const [maxPrice, setMaxPrice] = useState(() => parseInt(paramMaxPrice));
+    const [timeFrameFilter, setTimeFrameFilter] = useState(paramTimeFrame);
+    const [petFriendlyFilter, setPetFriendlyFilter] = useState(paramPetFriendly); // 'All' | 'Yes' | 'No'
+    const [utilitiesFilter, setUtilitiesFilter] = useState(paramUtilities);     // 'All' | 'Yes' | 'No'
+    const [roomsFilter, setRoomsFilter] = useState(paramRooms);                 // 'All' or an exact number
+    const [suitematesFilter, setSuitematesFilter] = useState(paramSuitemates);    // 'All' or an exact number
+    const [roomTypeFilter, setRoomTypeFilter] = useState(paramRoomType);        // 'All' | 'Single' | 'Double' | 'Other'
+    const [bathroomsFilter, setBathroomsFilter] = useState(paramBathrooms);      // 'All' or an exact number
 
     const navigate = useNavigate();
 
@@ -108,42 +112,50 @@ export default function Propertylisting() {
         navigate(`/listings/${listingId}`);
     }
 
-    // 3. Filter logic
+    // 3. Filter logic - All filters must pass for a listing to be displayed.
     const filteredListings = listings.filter((listing) => {
+        // Search by title or address
         const matchesSearch =
             !searchTerm ||
             listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             listing.address.toLowerCase().includes(searchTerm.toLowerCase());
 
+        // Location filter (using a local UI dropdown)
         const matchesLocation =
             locationFilter === 'All' || listing.location === locationFilter;
 
+        // Price filter
         const matchesPrice = listing.price <= maxPrice;
 
+        // Sublease Period filter
         const matchesTimeFrame =
             timeFrameFilter === 'All' || listing.timeFrame === timeFrameFilter;
 
+        // Pet Friendly filter
         const matchesPetFriendly =
             petFriendlyFilter === 'All' ||
             (petFriendlyFilter === 'Yes' && listing.petFriendly) ||
             (petFriendlyFilter === 'No' && !listing.petFriendly);
 
+        // Utilities Included filter
         const matchesUtilities =
             utilitiesFilter === 'All' ||
             (utilitiesFilter === 'Yes' && listing.utilitiesIncluded) ||
             (utilitiesFilter === 'No' && !listing.utilitiesIncluded);
 
+        // Number of Rooms in the property filter
         const matchesRooms =
             roomsFilter === 'All' || listing.rooms === parseInt(roomsFilter);
 
+        // Number of Suitemates filter
         const matchesSuitemates =
-            suitematesFilter === 'All' ||
-            listing.numberOfSuitemates === parseInt(suitematesFilter);
+            suitematesFilter === 'All' || listing.numberOfSuitemates === parseInt(suitematesFilter);
 
-        // New matching for room details (room type and bathrooms)
+        // Room Type filter (for the room being rented)
         const matchesRoomType =
             roomTypeFilter === 'All' || listing.roomType === roomTypeFilter;
 
+        // Bathrooms filter (for the room being rented)
         const matchesBathrooms =
             bathroomsFilter === 'All' || listing.bathrooms === parseInt(bathroomsFilter);
 
@@ -172,7 +184,7 @@ export default function Propertylisting() {
                 <aside className="filters-sidebar">
                     <h2>Filters</h2>
 
-                    {/* Search */}
+                    {/* Search by Title */}
                     <div className="filter-section">
                         <label htmlFor="searchInput">Search by Title</label>
                         <input
@@ -199,7 +211,7 @@ export default function Propertylisting() {
                         </select>
                     </div>
 
-                    {/* Price Slider */}
+                    {/* Max Price Slider */}
                     <div className="filter-section">
                         <label htmlFor="priceRange">
                             Max Price: <strong>${maxPrice}</strong>
@@ -215,7 +227,7 @@ export default function Propertylisting() {
                         />
                     </div>
 
-                    {/* Sublease Period */}
+                    {/* Sublease Period Filter */}
                     <div className="filter-section">
                         <label htmlFor="timeFrameSelect">Sublease Period</label>
                         <select
@@ -230,7 +242,7 @@ export default function Propertylisting() {
                         </select>
                     </div>
 
-                    {/* Pet Friendly */}
+                    {/* Pet Friendly Filter */}
                     <div className="filter-section">
                         <label htmlFor="petFriendlySelect">Pet Friendly</label>
                         <select
@@ -244,7 +256,7 @@ export default function Propertylisting() {
                         </select>
                     </div>
 
-                    {/* Utilities Included */}
+                    {/* Utilities Included Filter */}
                     <div className="filter-section">
                         <label htmlFor="utilitiesSelect">Utilities Included</label>
                         <select
@@ -258,7 +270,7 @@ export default function Propertylisting() {
                         </select>
                     </div>
 
-                    {/* Rooms Filter (Property-wide) */}
+                    {/* Rooms (Property) Filter */}
                     <div className="filter-section">
                         <label htmlFor="roomsSelect">Number of Rooms (Property)</label>
                         <select
@@ -330,16 +342,20 @@ export default function Propertylisting() {
                             >
                                 <img src={listing.imageUrl} alt={listing.title} />
                                 <h2>{listing.title}</h2>
-                                <p><strong>Address:</strong> {listing.address}</p>
-                                <p><strong>School:</strong> {listing.school}</p>
                                 <p>
-                                    <strong>Pet Friendly:</strong>{' '}
-                                    {listing.petFriendly ? 'Yes' : 'No'}
+                                    <strong>Address:</strong> {listing.address}
                                 </p>
-                                <p><strong>Property Rooms:</strong> {listing.rooms}</p>
                                 <p>
-                                    <strong>Utilities Included:</strong>{' '}
-                                    {listing.utilitiesIncluded ? 'Yes' : 'No'}
+                                    <strong>School:</strong> {listing.school}
+                                </p>
+                                <p>
+                                    <strong>Pet Friendly:</strong> {listing.petFriendly ? 'Yes' : 'No'}
+                                </p>
+                                <p>
+                                    <strong>Property Rooms:</strong> {listing.rooms}
+                                </p>
+                                <p>
+                                    <strong>Utilities Included:</strong> {listing.utilitiesIncluded ? 'Yes' : 'No'}
                                 </p>
                                 <p>
                                     <strong>Number of Suitemates:</strong> {listing.numberOfSuitemates}
@@ -350,8 +366,12 @@ export default function Propertylisting() {
                                 <p>
                                     <strong>Bathrooms:</strong> {listing.bathrooms}
                                 </p>
-                                <p><strong>Price:</strong> ${listing.price}</p>
-                                <p><strong>Sublease Period:</strong> {listing.timeFrame}</p>
+                                <p>
+                                    <strong>Price:</strong> ${listing.price}
+                                </p>
+                                <p>
+                                    <strong>Sublease Period:</strong> {listing.timeFrame}
+                                </p>
                                 <p>{listing.description}</p>
                             </div>
                         ))}
