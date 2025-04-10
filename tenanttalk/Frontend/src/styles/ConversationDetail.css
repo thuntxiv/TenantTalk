@@ -1,8 +1,33 @@
+/* 
+   This layout ensures:
+   1. Header (Navbar) and footer are full width.
+   2. The conversation area is centered and expands proportionally.
+   3. The message box (textarea) is sized to fill available space.
+*/
+
 .conversation-detail-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Because Navbar and Footer likely already have their own CSS 
+   ensuring they stretch the full width, 
+   we just let them remain at top/bottom. */
+
+/* Main container for conversation content */
+.conversation-container {
+  flex: 1;
+  width: 90%;
+  /* Fill most of the page horizontally */
+  max-width: 1000px;
+  /* Or bigger if you'd like */
+  margin: 2rem auto;
+  /* center horizontally, plus vertical spacing */
+  padding: 1rem 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .back-button {
@@ -14,33 +39,48 @@
   cursor: pointer;
 }
 
+.conversation-container h1 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Messages area */
 .messages-container {
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 1rem;
-  max-height: 500px;
+  max-height: 50vh;
+  /* Keep a reasonable vertical size */
   overflow-y: auto;
-  margin-bottom: 1rem;
+  /* Scroll if content is too tall */
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
+/* Individual message bubbles */
 .message {
   padding: 0.5rem;
   border-radius: 4px;
+  max-width: 60%;
 }
 
+/* Sent vs. received styling */
 .message.sent {
   align-self: flex-end;
-  background-color: #d1e7dd;
+  background-color: #fff;
+  /* your own messages are white or minimal styling */
+  border: 1px solid #eee;
 }
 
 .message.received {
   align-self: flex-start;
-  background-color: #f8d7da;
+  background-color: #d1e7dd;
+  /* incoming messages in green */
 }
 
+/* Optional styling for message text & timestamp */
 .message-content {
   margin-bottom: 0.25rem;
 }
@@ -51,23 +91,32 @@
   text-align: right;
 }
 
+/* Form for new messages */
 .message-form {
   display: flex;
   gap: 0.5rem;
 }
 
-.message-form input {
+.message-input {
   flex: 1;
-  padding: 0.5rem;
+  /* Occupies available horizontal space */
+  min-height: 60px;
+  /* Reasonable starting height */
+  max-height: 200px;
+  /* Let user expand if needed with resize */
+  resize: vertical;
+  /* Let them manually resize vertically */
+  padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 1rem;
 }
 
 .message-form button {
-  padding: 0.5rem 1rem;
   background-color: #2d7ddb;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  padding: 0.75rem 1rem;
 }
