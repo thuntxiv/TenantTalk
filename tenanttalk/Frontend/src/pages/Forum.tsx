@@ -276,6 +276,7 @@ const ForumPage: React.FC = () => {
     }
   };
 
+
   // Create new post
   const handleCreatePost = () => {
     if (!newPostSubject.trim() || !newPostContent.trim()) {
@@ -283,8 +284,9 @@ const ForumPage: React.FC = () => {
       return;
     }
 
-    // In a real app, you'd upload the image and post data to your server
-    const imageUrl = newPostImage ? 'https://via.placeholder.com/600x400' : undefined;
+    
+    //const imageUrl = newPostImage ? 'https://via.placeholder.com/600x400' : undefined;
+    const imageUrl = imagePreview || undefined;
 
     const newPost: ForumPost = {
       id: `post-${Date.now()}`,
@@ -348,6 +350,11 @@ const ForumPage: React.FC = () => {
       })
   }
 
+  // Handle Liking a post
+  const handleLikes = (f: ForumPost) => {
+    f.likes = f.likes + 1;
+  }
+  
   return (
     <div className="forum-page-wrapper">
       <Navbar />
@@ -554,7 +561,7 @@ const ForumPage: React.FC = () => {
                       {post.comments.length === 1 ? 'comment' : 'comments'}
                     </span>
                   </div>
-                  <button className="like-button">Like</button>
+                  <button className="like-button" onClick={() => {handleLikes(post)}}>Like</button>
                 </div>
 
                 {post.comments.length > 0 && (

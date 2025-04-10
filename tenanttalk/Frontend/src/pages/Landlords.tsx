@@ -23,7 +23,7 @@ const LandlordListPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // In a real app, you would fetch data from your API. Here we simulate with mock data.
+    // Mock data.
     const fetchLandlords = async () => {
       try {
         setLoading(true);
