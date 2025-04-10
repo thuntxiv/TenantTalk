@@ -10,6 +10,15 @@ const Home = () => {
   const [location, setLocation] = useState('');
   const [maxPrice, setMaxPrice] = useState(2000);
 
+  // Additional filters
+  const [timeFrame, setTimeFrame] = useState('All');
+  const [petFriendly, setPetFriendly] = useState('All');    // 'All' | 'Yes' | 'No'
+  const [utilitiesIncluded, setUtilitiesIncluded] = useState('All'); // 'All' | 'Yes' | 'No'
+  const [rooms, setRooms] = useState('All');                // 'All' | '1' | '2' | '3' etc.
+  const [suitemates, setSuitemates] = useState('All');
+  const [roomType, setRoomType] = useState('All');          // 'All' | 'Single' | 'Double' | 'Other'
+  const [bathrooms, setBathrooms] = useState('All');        // 'All' | '1' | '2' | '3' etc.
+
   const navigate = useNavigate();
 
   // Build query string from the search fields and navigate to /properties
@@ -18,6 +27,15 @@ const Home = () => {
       propertyType,
       location,
       maxPrice: maxPrice.toString(),
+
+      // Additional filters
+      timeFrame,
+      petFriendly,
+      utilitiesIncluded,
+      rooms,
+      suitemates,
+      roomType,
+      bathrooms,
     });
     navigate(`/properties?${params.toString()}`);
   }
@@ -34,27 +52,15 @@ const Home = () => {
 
           <div className="search-container">
             <div className="search-form">
+              {/* FIRST ROW (existing search fields) */}
               <div className="search-row">
-                {/* Property Type */}
-                <div className="search-field">
-                  <label>Property Type</label>
-                  <select
-                    value={propertyType}
-                    onChange={(e) => setPropertyType(e.target.value)}
-                  >
-                    <option>All Types</option>
-                    <option>Apartment</option>
-                    <option>House</option>
-                    <option>Condo</option>
-                  </select>
-                </div>
 
                 {/* Location */}
                 <div className="search-field">
-                  <label>Location</label>
+                  <label>Name Of Property</label>
                   <input
                     type="text"
-                    placeholder="Enter location"
+                    placeholder="Enter Property Name"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                   />
@@ -81,13 +87,106 @@ const Home = () => {
                 </button>
               </div>
 
-              <div className="popular-searches">
-                <span>Popular Searches:</span>
-                <a href="#">Downtown</a>
-                <a href="#">College Area</a>
-                <a href="#">Furnished</a>
-                <a href="#">Pet Friendly</a>
-                <a href="#">Utilities Included</a>
+              {/* SECOND ROW (new filters row #1) */}
+              <div className="search-row">
+                {/* Sublease Period */}
+                <div className="search-field">
+                  <label>Sublease Period</label>
+                  <select
+                    value={timeFrame}
+                    onChange={(e) => setTimeFrame(e.target.value)}
+                  >
+                    <option value="All">All</option>
+                    <option value="January - June">January - June</option>
+                    <option value="May - August">May - August</option>
+                    <option value="August - December">August - December</option>
+                  </select>
+                </div>
+
+                {/* Pet Friendly */}
+                <div className="search-field">
+                  <label>Pet Friendly</label>
+                  <select
+                    value={petFriendly}
+                    onChange={(e) => setPetFriendly(e.target.value)}
+                  >
+                    <option value="All">All</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+
+                {/* Utilities Included */}
+                <div className="search-field">
+                  <label>Utilities Included</label>
+                  <select
+                    value={utilitiesIncluded}
+                    onChange={(e) => setUtilitiesIncluded(e.target.value)}
+                  >
+                    <option value="All">All</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+
+                {/* Number of Rooms (Property) */}
+                <div className="search-field">
+                  <label>Rooms (Property)</label>
+                  <select
+                    value={rooms}
+                    onChange={(e) => setRooms(e.target.value)}
+                  >
+                    <option value="All">All</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* THIRD ROW (new filters row #2) */}
+              <div className="search-row">
+                {/* Number of Suitemates */}
+                <div className="search-field">
+                  <label>Suitemates</label>
+                  <select
+                    value={suitemates}
+                    onChange={(e) => setSuitemates(e.target.value)}
+                  >
+                    <option value="All">All</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+
+                {/* Room Type */}
+                <div className="search-field">
+                  <label>Room Type</label>
+                  <select
+                    value={roomType}
+                    onChange={(e) => setRoomType(e.target.value)}
+                  >
+                    <option value="All">All</option>
+                    <option value="Single">Single</option>
+                    <option value="Double">Double</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                {/* Bathrooms */}
+                <div className="search-field">
+                  <label>Bathrooms</label>
+                  <select
+                    value={bathrooms}
+                    onChange={(e) => setBathrooms(e.target.value)}
+                  >
+                    <option value="All">All</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
