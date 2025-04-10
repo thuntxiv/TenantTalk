@@ -12,7 +12,7 @@ interface ForumPost {
   content: string;
   imageUrl?: string;
   createdAt: string;
-  category: 'property' | 'landlord' | 'roommate' | 'general';
+  category: 'forSublease' | 'toSublease' | 'landlord' | 'roommate' | 'general';
   likes: number;
   comments: Comment[];
 }
@@ -61,7 +61,7 @@ const ForumPage: React.FC = () => {
           subject: 'Beware of hidden fees at Campus View Apartments',
           content: 'I recently moved into Campus View and discovered they charge extra for parking, which wasn\'t mentioned during the tour. Make sure to ask about ALL fees before signing a lease!',
           createdAt: '2025-03-15T14:32:00Z',
-          category: 'property',
+          category: 'general',
           likes: 24,
           comments: [
             {
@@ -315,7 +315,8 @@ const ForumPage: React.FC = () => {
               onChange={(e) => setNewPostCategory(e.target.value)}
               required
             >
-              <option value="property">Property</option>
+              <option value="forSublease">Looking for Sublease</option>
+              <option value="toSublease">Looking to Sublease</option>
               <option value="landlord">Landlord</option>
               <option value="roommate">Roommate</option>
               <option value="general">General</option>
@@ -387,7 +388,8 @@ const ForumPage: React.FC = () => {
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="">All Categories</option>
-            <option value="property">Property</option>
+            <option value="forSublease">Looking for Sublease</option>
+            <option value="toSublease">Looking to Sublease</option>
             <option value="landlord">Landlord</option>
             <option value="roommate">Roommate</option>
             <option value="general">General</option>
