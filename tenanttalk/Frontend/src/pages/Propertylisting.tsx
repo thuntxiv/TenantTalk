@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import Navbar from '../components/navbar.tsx';   
+import Navbar from '../components/navbar.tsx';
 import Footer from '../components/footer.tsx';
 import '../styles/Propertylisting.css';
 
@@ -20,6 +20,7 @@ interface Listing {
     description: string;
     imageUrl: string;
     timeFrame: string;
+    numberOfSuitemates: number;
 }
 
 const mockListings: Listing[] = [
@@ -36,6 +37,7 @@ const mockListings: Listing[] = [
         description: 'A cozy studio near RPI. Perfect for one person. Pets allowed!',
         imageUrl: studioImage,
         timeFrame: 'August - December',
+        numberOfSuitemates: 1,
     },
     {
         id: 2,
@@ -50,6 +52,7 @@ const mockListings: Listing[] = [
         description: 'A modern loft near the river. Spacious living area with utilities included.',
         imageUrl: loftImage,
         timeFrame: 'May - August',
+        numberOfSuitemates: 2,
     },
     {
         id: 3,
@@ -64,22 +67,31 @@ const mockListings: Listing[] = [
         description: 'A large townhouse on 12th Street, close to HVCC. Shared living space, pet-friendly.',
         imageUrl: studioImage,
         timeFrame: 'January - June',
+        numberOfSuitemates: 3,
     },
 ];
 
 export default function Propertylisting() {
-    // 1. Parse query parameters
+    // 1. Parse query parameters if you're still using them
     const [searchParams] = useSearchParams();
     const paramLocation = searchParams.get('location') || '';
     const queryMaxPrice = searchParams.get('maxPrice') || '2000';
-    const paramPropertyType = searchParams.get('propertyType') || 'All Types';
 
     // 2. Local filter states
     const [listings] = useState<Listing[]>(mockListings);
     const [searchTerm, setSearchTerm] = useState(paramLocation);
+
     const [locationFilter, setLocationFilter] = useState('All');
     const [maxPrice, setMaxPrice] = useState(() => parseInt(queryMaxPrice));
     const [timeFrameFilter, setTimeFrameFilter] = useState('All');
+
+    // New filters:
+    const [petFriendlyFilter, setPetFriendlyFilter] = useState('All');   // 'All' | 'Yes' | 'No'
+    const [utilitiesFilter, setUtilitiesFilter] = useState('All');       // 'All' | 'Yes' | 'No'
+    const [roomsFilter, setRoomsFilter] = useState('All');               // 'All' | '1' | '2' | '3' etc.
+
+    // If you track suitemates:
+    const [suitematesFilter, setSuitematesFilter] = useState('All');
 
     const navigate = useNavigate();
 
@@ -89,20 +101,54 @@ export default function Propertylisting() {
 
     // 3. Filter logic
     const filteredListings = listings.filter((listing) => {
+        // Text search (title + address)
         const matchesSearch =
             !searchTerm ||
             listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             listing.address.toLowerCase().includes(searchTerm.toLowerCase());
 
+        // Location
         const matchesLocation =
             locationFilter === 'All' || listing.location === locationFilter;
 
+        // Price
         const matchesPrice = listing.price <= maxPrice;
 
+        // Timeframe
         const matchesTimeFrame =
             timeFrameFilter === 'All' || listing.timeFrame === timeFrameFilter;
 
-        return matchesSearch && matchesLocation && matchesPrice && matchesTimeFrame;
+        // Pet friendly
+        const matchesPetFriendly =
+            petFriendlyFilter === 'All' ||
+            (petFriendlyFilter === 'Yes' && listing.petFriendly) ||
+            (petFriendlyFilter === 'No' && !listing.petFriendly);
+
+        // Utilities included
+        const matchesUtilities =
+            utilitiesFilter === 'All' ||
+            (utilitiesFilter === 'Yes' && listing.utilitiesIncluded) ||
+            (utilitiesFilter === 'No' && !listing.utilitiesIncluded);
+
+        // Rooms filter
+        const matchesRooms =
+            roomsFilter === 'All' || listing.rooms === parseInt(roomsFilter);
+
+        // Suitemates filter, if you add it:
+        const matchesSuitemates =
+           suitematesFilter === 'All' ||
+           listing.numberOfSuitemates === parseInt(suitematesFilter);
+
+        return (
+            matchesSearch &&
+            matchesLocation &&
+            matchesPrice &&
+            matchesTimeFrame &&
+            matchesPetFriendly &&
+            matchesUtilities &&
+            matchesRooms
+            && matchesSuitemates
+        );
     });
 
     return (
@@ -173,6 +219,64 @@ export default function Propertylisting() {
                             <option value="August - December">August - December</option>
                         </select>
                     </div>
+
+                    {/* Pet Friendly Filter */}
+                    <div className="filter-section">
+                        <label htmlFor="petFriendlySelect">Pet Friendly</label>
+                        <select
+                            id="petFriendlySelect"
+                            value={petFriendlyFilter}
+                            onChange={(e) => setPetFriendlyFilter(e.target.value)}
+                        >
+                            <option value="All">All</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    {/* Utilities Included Filter */}
+                    <div className="filter-section">
+                        <label htmlFor="utilitiesSelect">Utilities Included</label>
+                        <select
+                            id="utilitiesSelect"
+                            value={utilitiesFilter}
+                            onChange={(e) => setUtilitiesFilter(e.target.value)}
+                        >
+                            <option value="All">All</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    {/* Rooms Filter: Single, Double, etc. */}
+                    <div className="filter-section">
+                        <label htmlFor="roomsSelect">Number of Rooms</label>
+                        <select
+                            id="roomsSelect"
+                            value={roomsFilter}
+                            onChange={(e) => setRoomsFilter(e.target.value)}
+                        >
+                            <option value="All">All</option>
+                            <option value="1">Single (1 room)</option>
+                            <option value="2">Double (2 rooms)</option>
+                            <option value="3">3 Rooms</option>
+                        </select>
+                    </div>
+                    {
+          <div className="filter-section">
+            <label htmlFor="suitematesSelect">Number of Suitemates</label>
+            <select
+              id="suitematesSelect"
+              value={suitematesFilter}
+              onChange={(e) => setSuitematesFilter(e.target.value)}
+            >
+              <option value="All">All</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+          }
                 </aside>
 
                 <main className="listings-container">
