@@ -9,6 +9,10 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './components/AuthContext.tsx';
 import LandlordProfilePage from './pages/LandlordProfile.tsx';
 import ForumPage from './pages/Forum.tsx';
+import DMPage from './pages/DMPage.tsx';
+import Conversations from './pages/Conversations.tsx';
+import ConversationDetail from './pages/ConversationDetail.tsx';
+
 
 const clientId = '933058198355-7hlkolpvuoogsvke3ngsrvr5d2ldpdev.apps.googleusercontent.com';
 
@@ -19,21 +23,16 @@ function App() {
       <GoogleOAuthProvider clientId={clientId}>
         <AuthProvider>
       <Routes>
-        {/* Renders the Home component at the root path "/" */}
         <Route path="/" element={<Home />} />
-
-        {/* Renders the Propertylisting component at "/listings" */}
         <Route path="/properties" element={<Propertylisting />} />
-
-         
-
         <Route path="/profile" element={<Profile />} />
         <Route path="/landlords" element={<LandlordListPage />} />
         <Route path="/landlords/:id" element={<LandlordProfilePage />} />
         <Route path="/listings/:id" element={<ListingDetails />} />
         <Route path="/forum" element={<ForumPage />} />
-
-    
+        <Route path="/dm" element={<DMPage />} />
+        <Route path="/conversations" element={<Conversations />} />
+        <Route path="/conversations/:id" element={<ConversationDetail />} />
       </Routes>
       </AuthProvider>
       </GoogleOAuthProvider>

@@ -1,0 +1,45 @@
+.conversations-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.conversation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.conversation-item {
+  display: block;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.2s ease;
+}
+
+.conversation-item:hover {
+  background-color: #f0f0f0;
+}
+
+.conversation-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.participant {
+  font-weight: bold;
+}
+
+.timestamp {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.last-message {
+  font-style: italic;
+}

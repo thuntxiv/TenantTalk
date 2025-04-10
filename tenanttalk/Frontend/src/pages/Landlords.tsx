@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/navbar.tsx';
+import Footer from '../components/footer.tsx';
 import '../styles/landlords.css';
 
 // Types
@@ -18,19 +19,14 @@ const LandlordListPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // In a real app, you would fetch this data from your API
+    // In a real app, you would fetch data from your API. Here we simulate with mock data.
     const fetchLandlords = async () => {
       try {
         setLoading(true);
-        // Mock API call - replace with actual API call
-        // const response = await fetch('/api/landlords');
-        // const data = await response.json();
-        
-        // Mock data for demonstration
         const mockData: Landlord[] = [
           {
             id: '1',
@@ -73,7 +69,6 @@ const LandlordListPage: React.FC = () => {
             reviewCount: 42
           }
         ];
-        
         setLandlords(mockData);
         setLoading(false);
       } catch (err) {
@@ -89,29 +84,29 @@ const LandlordListPage: React.FC = () => {
     navigate(`/landlords/${landlordId}`);
   };
 
-  const filteredLandlords = landlords.filter(landlord => 
+  const filteredLandlords = landlords.filter(landlord =>
     landlord.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Render Star Rating
+  // Render Star Rating helper
   const renderStars = (rating: number, reviewCount: number) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
-    
+
     return (
       <div className="star-rating">
         {[...Array(5)].map((_, i) => (
           <span key={i} className={
-            i < fullStars 
-              ? "star full" 
-              : (i === fullStars && hasHalfStar) 
-                ? "star half" 
+            i < fullStars
+              ? "star full"
+              : (i === fullStars && hasHalfStar)
+                ? "star half"
                 : "star empty"
           }>
-            {i < fullStars 
-              ? "★" 
-              : (i === fullStars && hasHalfStar) 
-                ? "★" 
+            {i < fullStars
+              ? "★"
+              : (i === fullStars && hasHalfStar)
+                ? "★"
                 : "☆"}
           </span>
         ))}
@@ -130,47 +125,52 @@ const LandlordListPage: React.FC = () => {
   }
 
   return (
-    <div className="landlord-list-page">
-      <div className="landlord-list-header">
-        <Navbar></Navbar>
-        <h1>Landlords</h1>
-        <p>Find and review landlords in your area</p>
-      </div>
+    <div className="landlord-page-wrapper">
+      <Navbar />
+      <div className="landlord-list-page">
+        <div className="landlord-list-header">
+          <h1>Landlords</h1>
+          <p>Find and review landlords in your area</p>
+        </div>
 
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search for landlords..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-      </div>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search for landlords..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
 
-      <div className="landlord-cards-container">
-        {filteredLandlords.length > 0 ? (
-          filteredLandlords.map(landlord => (
-            <div 
-              key={landlord.id} 
-              className="landlord-card"
-              onClick={() => handleLandlordClick(landlord.id)}
-            >
-              <img 
-                src={landlord.profileImage} 
-                alt={`${landlord.name}`} 
-                className="landlord-image"
-              />
-              <div className="landlord-info">
-                <h3 className="landlord-name">{landlord.name}</h3>
-                <p className="property-count">{landlord.properties} {landlord.properties === 1 ? 'Property' : 'Properties'}</p>
-                {renderStars(landlord.rating, landlord.reviewCount)}
+        <div className="landlord-cards-container">
+          {filteredLandlords.length > 0 ? (
+            filteredLandlords.map(landlord => (
+              <div
+                key={landlord.id}
+                className="landlord-card"
+                onClick={() => handleLandlordClick(landlord.id)}
+              >
+                <img
+                  src={landlord.profileImage}
+                  alt={`${landlord.name}`}
+                  className="landlord-image"
+                />
+                <div className="landlord-info">
+                  <h3 className="landlord-name">{landlord.name}</h3>
+                  <p className="property-count">
+                    {landlord.properties} {landlord.properties === 1 ? 'Property' : 'Properties'}
+                  </p>
+                  {renderStars(landlord.rating, landlord.reviewCount)}
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <div className="no-results">No landlords found matching "{searchTerm}"</div>
-        )}
+            ))
+          ) : (
+            <div className="no-results">No landlords found matching "{searchTerm}"</div>
+          )}
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };
