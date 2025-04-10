@@ -87,6 +87,7 @@ const LandlordProfilePage: React.FC = () => {
     };
   
     const handleReviewSubmit = (rating: number, comment: string) => {
+     if(user){
       const newReview = {
         id: `r${landlordData.reviews.length + 1}`,
         userId: 'current-user-id',
@@ -109,6 +110,10 @@ const LandlordProfilePage: React.FC = () => {
       });
       
       setShowReviewForm(false);
+     }
+     else{
+        throw new Error('You must be signed in to leave a review!');
+     }
     };
   
     const renderStars = (rating: number) => {

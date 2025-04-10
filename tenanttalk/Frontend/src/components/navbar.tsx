@@ -17,7 +17,7 @@ const Navbar = () => {
           <a href="/" className="nav-link active">About Us</a>
           <a href="/properties" className="nav-link">Properties</a>
           <a href="/landlords" className="nav-link">Landlords</a>
-          <a href="/agents" className="nav-link">Forum</a>
+          <a href="/forum" className="nav-link">Forum</a>
           <a href="/contact" className="nav-link contact-btn">Contact Us</a>
           {isAuthenticated && (
             <a href="/profile" className="nav-link">My Profile</a>
