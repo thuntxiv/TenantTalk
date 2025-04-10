@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Conversations.css';
 
-// Example mock data – in a real app, fetch your conversations from your backend
+// Example mock data 
 const mockConversations = [
     {
         id: 1,
