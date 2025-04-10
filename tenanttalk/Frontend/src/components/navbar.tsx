@@ -19,9 +19,8 @@ const Navbar = () => {
           <a href="/landlords" className="nav-link">Landlords</a>
           <a href="/forum" className="nav-link">Forum</a>
           <a href="/dm">Message</a>
-          <a href="/contact" className="nav-link contact-btn">Contact Us</a>
           {isAuthenticated && (
-            <a href="/profile" className="nav-link">My Profile</a>
+            <a href="/profile" className="nav-link contact-btn">My Profile</a>
           )}
           
           <div className="auth-section">
