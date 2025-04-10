@@ -7,7 +7,7 @@ const reviewSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     rating: { type: Number, required: true },
-    photoUrl: { type: String, required: true },
+    photoUrl: { type: String },
     createdAt: { type: Date, default: Date.now }
 });
 
