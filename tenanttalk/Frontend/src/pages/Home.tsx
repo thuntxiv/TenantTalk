@@ -54,26 +54,13 @@ const Home = () => {
             <div className="search-form">
               {/* FIRST ROW (existing search fields) */}
               <div className="search-row">
-                {/* Property Type */}
-                <div className="search-field">
-                  <label>Property Type</label>
-                  <select
-                    value={propertyType}
-                    onChange={(e) => setPropertyType(e.target.value)}
-                  >
-                    <option>All Types</option>
-                    <option>Apartment</option>
-                    <option>House</option>
-                    <option>Condo</option>
-                  </select>
-                </div>
 
                 {/* Location */}
                 <div className="search-field">
-                  <label>Location</label>
+                  <label>Name Of Property</label>
                   <input
                     type="text"
-                    placeholder="Enter location"
+                    placeholder="Enter Property Name"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                   />
