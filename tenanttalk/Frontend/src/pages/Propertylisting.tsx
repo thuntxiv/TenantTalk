@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import Navbar from '../components/navbar.tsx';   // <-- Import your Navbar
+import Navbar from '../components/navbar.tsx';   
 import Footer from '../components/footer.tsx';
 import '../styles/Propertylisting.css';
 
@@ -107,12 +107,9 @@ export default function Propertylisting() {
 
     return (
         <div className="property-page">
-            {/* Replaced the old “TenantTalk” header with your Navbar */}
             <Navbar />
-
-            {/* Optional: Keep a header for page title, or remove entirely */}
             <header className="page-header">
-                <h1 className="page-title">Current Sublistings</h1>
+                <h1 className="page-title">Current Listings</h1>
             </header>
 
             <div className="page-content">
