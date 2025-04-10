@@ -340,6 +340,20 @@ app.post("/api/forumposts", async (req, res) => {
   }
 });
 
+// GET ForumPosts
+app.get("/api/forumposts", async (req, res) => {
+  try {
+      const forumPost = await ForumPost.find();
+      if (!forumPost) {
+          return res.status(404).json({ error: "Forum post not found" });
+      }
+      res.status(200).json(forumPost);
+  } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+  }
+});
+
 // GET a ForumPost by ID
 app.get("/api/forumposts/:id", async (req, res) => {
   try {
@@ -441,6 +455,34 @@ app.post("/api/forumposts/:id/comments", async (req, res) => {
     await forumPost.save();
 
     res.status(201).json(forumPost);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err.message });
+  }
+});
+
+//Get chat by ID
+app.get("/api/chats/:id", async (req, res) => {
+  try {
+    const chat = await mongoose.connection.collection("chats").findOne({ 
+        _id: new mongoose.Types.ObjectId(req.params.id)
+    });
+    if (!chat) {
+        return res.status(404).json({ error: "Chat not found" });
+    }
+    res.status(200).json(chat);
+  } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+  }
+});
+
+//Create new chat
+app.post("/api/chats", async (req, res) => {
+  try {
+    const chat = new Chat(req.body);
+    await chat.save();
+    res.status(201).json(chat);
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: err.message });

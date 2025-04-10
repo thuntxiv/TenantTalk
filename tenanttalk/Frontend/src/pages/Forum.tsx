@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../components/AuthContext.tsx';
 import Navbar from '../components/navbar.tsx';
 import Footer from '../components/footer.tsx';
+import {v4} from 'uuid';
 import '../styles/ForumPage.css';
 
 // Types
@@ -44,15 +45,16 @@ const ForumPage: React.FC = () => {
   const [newPostImage, setNewPostImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  const [newComment, setNewComment] = useState<string>('');
+
   // Filter states
   const [usernameFilter, setUsernameFilter] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [dateFilter, setDateFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('newest');
 
-  // Mock fetch on mount
+  // Fetch on mount
   useEffect(() => {
-    setLoading(true);
 
     // Example mock data
     const mockPosts: ForumPost[] = [
@@ -167,8 +169,50 @@ const ForumPage: React.FC = () => {
       }
     ];
 
-    setPosts(mockPosts);
-    setFilteredPosts(mockPosts);
+
+
+    //setPosts(mockPosts);
+    //setFilteredPosts(mockPosts);
+    setLoading(true);
+
+    const fetchListings = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/forumposts');
+        if (!response.ok) {
+          throw new Error('Failed to fetch listings from the API');
+        }
+        setLoading(false);
+        const data = await response.json();
+
+        const apiListings: ForumPost[] = data.map((item: any) => ({
+          id: item._id,
+          userId: item.userId,
+          username: item.username,
+          userAvatar: item.userAvatar,
+          subject: item.subject,
+          content: item.content,
+          createdAt: item.createdAt,
+          category: item.category,
+          likes: item.likes,
+          comments: item.comments
+        }));
+
+        console.log("Successfully fetched posts from API:", apiListings);
+        
+        setPosts(apiListings);
+        setFilteredPosts(apiListings);
+      } catch (err: any) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!loading) {
+      fetchListings();
+      setLoading(false);
+    }
+    
     setLoading(false);
   }, []);
 
@@ -277,6 +321,32 @@ const ForumPage: React.FC = () => {
       minute: '2-digit'
     });
   };
+
+
+  const handleNewComment = (postId: string) => {
+    const newCommentObj: Comment = {
+      id: v4(),
+      userId: "elk120df3099",
+      username: "James",
+      userAvatar: "https://via.placeholder.com/40",
+      content: newComment,
+      createdAt: new Date().toISOString()
+    }
+    console.log(newCommentObj);
+    console.log(postId);
+
+    fetch(`http://localhost:5000/api/forumposts/${postId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        },
+      body: JSON.stringify(newCommentObj),
+      })
+      .then(response => {
+        window.location.reload();
+        response.json();
+      })
+  }
 
   return (
     <div className="forum-page-wrapper">
@@ -517,11 +587,12 @@ const ForumPage: React.FC = () => {
 
                 {isAuthenticated && (
                   <div className="add-comment-form">
-                    <textarea
+                    <input
                       placeholder="Write a comment..."
                       className="comment-input"
-                    ></textarea>
-                    <button className="comment-button">Comment</button>
+                      onChange={(e) => {setNewComment(e.target.value)}}
+                    ></input>
+                    <button className="comment-button" onClick={() => handleNewComment(post.id)}>Comment</button>
                   </div>
                 )}
               </div>

@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
         // Update state
         setUser(userData);
         setIsAuthenticated(true);
+        console.log("User logged in:", userData);
       } catch (error) {
         console.error("Error fetching user details:", error);
       } finally {

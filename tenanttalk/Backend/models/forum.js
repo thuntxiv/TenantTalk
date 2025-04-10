@@ -28,5 +28,4 @@ const forumPostSchema = new mongoose.Schema({
 const ForumPost = mongoose.model('ForumPost', forumPostSchema);
 const Comment = mongoose.model('Comment', commentSchema);
 
-// Export the models so you can use them in other parts of your application.
 export { ForumPost, Comment };
