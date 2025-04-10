@@ -1,0 +1,74 @@
+/* DMPage.css */
+
+.dm-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.dm-container {
+  flex: 1;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dm-container h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.dm-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.dm-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.dm-form input,
+.dm-form textarea,
+.dm-form select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.dm-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.dm-form button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #2d7ddb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.dm-form button:disabled {
+  background-color: #7da9e3;
+}
+
+.success-message {
+  color: green;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  margin-top: 0.5rem;
+  text-align: center;
+}
