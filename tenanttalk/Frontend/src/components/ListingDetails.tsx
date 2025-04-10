@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Navbar from '../components/navbar.tsx';
-import Footer from '../components/footer.tsx';
-import '../styles/ListingDetails.css'; // Use your CSS file for styling
+import Navbar from './navbar.tsx';
+import Footer from './footer.tsx';
+import '../styles/ListingDetails.css'; // We'll define new table styles here
 
 interface Listing {
     id: number;
@@ -70,8 +70,7 @@ const mockListings: Listing[] = [
         petFriendly: true,
         rooms: 3,
         utilitiesIncluded: false,
-        description:
-            'A large townhouse on 12th Street, close to HVCC. Shared living space, pet-friendly.',
+        description: 'A large townhouse on 12th Street, close to HVCC. Shared living space, pet-friendly.',
         imageUrl: studioImage,
         timeFrame: 'January - June',
         numberOfSuitemates: 3,
@@ -106,7 +105,6 @@ export default function ListingDetails() {
         <div className="listing-details-page">
             <Navbar />
 
-            {/* "Go Back" Button */}
             <button onClick={() => navigate(-1)} className="back-button">
                 Go Back
             </button>
@@ -118,7 +116,6 @@ export default function ListingDetails() {
                     <div className="quick-facts">
                         <h1 className="price">${listing.price.toLocaleString()}</h1>
                         <p className="address">{listing.address}</p>
-                        {/* Additional quick stats can go here if needed */}
                     </div>
                 </div>
             </div>
@@ -126,39 +123,52 @@ export default function ListingDetails() {
             {/* Highlights / Description Section */}
             <div className="highlights-section">
                 <h2>Highlights</h2>
-                <p>{listing.description}</p>
-                <ul className="detail-highlights">
-                    <li>
-                        <strong>Location:</strong> {listing.location}
-                    </li>
-                    <li>
-                        <strong>School:</strong> {listing.school}
-                    </li>
-                    <li>
-                        <strong>Pet Friendly:</strong> {listing.petFriendly ? 'Yes' : 'No'}
-                    </li>
-                    <li>
-                        <strong>Property Rooms:</strong> {listing.rooms}
-                    </li>
-                    <li>
-                        <strong>Room Type:</strong> {listing.roomType}
-                    </li>
-                    <li>
-                        <strong>Bathrooms:</strong> {listing.bathrooms}
-                    </li>
-                    <li>
-                        <strong>Suitemates:</strong> {listing.numberOfSuitemates}
-                    </li>
-                    <li>
-                        <strong>Utilities Included:</strong> {listing.utilitiesIncluded ? 'Yes' : 'No'}
-                    </li>
-                    <li>
-                        <strong>Sublease Period:</strong> {listing.timeFrame}
-                    </li>
-                </ul>
+                <p className="detail-description">{listing.description}</p>
+
+                <table className="highlights-table">
+                    <tbody>
+                        <tr>
+                            <th>Location</th>
+                            <td>{listing.location}</td>
+                        </tr>
+                        <tr>
+                            <th>School</th>
+                            <td>{listing.school}</td>
+                        </tr>
+                        <tr>
+                            <th>Pet Friendly</th>
+                            <td>{listing.petFriendly ? 'Yes' : 'No'}</td>
+                        </tr>
+                        <tr>
+                            <th>Property Rooms</th>
+                            <td>{listing.rooms}</td>
+                        </tr>
+                        <tr>
+                            <th>Room Type</th>
+                            <td>{listing.roomType}</td>
+                        </tr>
+                        <tr>
+                            <th>Bathrooms</th>
+                            <td>{listing.bathrooms}</td>
+                        </tr>
+                        <tr>
+                            <th>Suitemates</th>
+                            <td>{listing.numberOfSuitemates}</td>
+                        </tr>
+                        <tr>
+                            <th>Utilities Included</th>
+                            <td>{listing.utilitiesIncluded ? 'Yes' : 'No'}</td>
+                        </tr>
+                        <tr>
+                            <th>Sublease Period</th>
+                            <td>{listing.timeFrame}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <Footer />
         </div>
     );
 }
+

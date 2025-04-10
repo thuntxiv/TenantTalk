@@ -1,75 +1,103 @@
-/* src/styles/ListingDetails.css */
-
+/* Main Page Container */
 .listing-details-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-  font-family: sans-serif;
+  padding: 20px;
+  background-color: #f8f8f8;
+  min-height: 100vh;
 }
 
+/* Back Button */
 .back-button {
-  margin-bottom: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #eee;
-  border: 1px solid #ccc;
+  background-color: #ddd;
+  border: none;
+  padding: 8px 16px;
   cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
 }
 
+.back-button:hover {
+  background-color: #ccc;
+}
+
+/* Top Section */
 .top-section {
-  /* We only have the main image/info now, so no need for complex flex layout */
-  margin-bottom: 2rem;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .image-and-info {
   display: flex;
-  flex-direction: column;
-  /* or row if you want the image and facts side-by-side */
-  gap: 1.5rem;
+  gap: 20px;
 }
 
 .main-image {
-  width: 100%;
+  width: 350px;
   height: auto;
   border-radius: 4px;
-  margin-bottom: 1rem;
+  object-fit: cover;
 }
 
 .quick-facts {
-  background-color: #f9f9f9;
-  padding: 1rem;
-  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .price {
-  font-size: 1.75rem;
-  color: #333;
-  margin-bottom: 0.5rem;
+  font-size: 24px;
+  color: #c0392b;
+  margin: 0;
 }
 
 .address {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  color: #666;
+  font-size: 16px;
+  color: #555;
 }
 
-.stats {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
-}
-
-/* Highlights / Description */
+/* Highlights Section */
 .highlights-section {
-  margin-bottom: 2rem;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .highlights-section h2 {
-  margin-bottom: 1rem;
-  font-size: 1.4rem;
+  margin-top: 0;
 }
 
-.highlights-section p {
-  line-height: 1.5;
-  margin-bottom: 0.75rem;
+.detail-description {
+  margin-bottom: 20px;
+  font-size: 15px;
+  color: #444;
+}
+
+/* Table Styling */
+.highlights-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.highlights-table th {
+  text-align: left;
+  width: 160px;
+  background: #f3f3f3;
+  padding: 8px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+}
+
+.highlights-table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  font-size: 15px;
+  color: #555;
 }
