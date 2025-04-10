@@ -139,7 +139,7 @@ export default function Propertylisting() {
             }));
     
             // Insert the API data into the listings state
-            setListings(apiListings);
+            setListings(prevListings => [...prevListings, ...apiListings]);
           } catch (err: any) {
             setError(err.message || 'An unexpected error occurred');
           } finally {
