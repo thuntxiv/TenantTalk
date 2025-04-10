@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/navbar.tsx';
 import Footer from '../components/footer.tsx';
@@ -24,7 +24,6 @@ interface Listing {
     roomType: 'Single' | 'Double' | 'Other';
     bathrooms: number;
 }
-
 const mockListings: Listing[] = [
     {
         id: 1,
@@ -93,8 +92,11 @@ export default function Propertylisting() {
     const paramRoomType = searchParams.get('roomType') || 'All';
     const paramBathrooms = searchParams.get('bathrooms') || 'All';
 
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
     // 2. Local filter states; if desired, you can also update the UI to let users change these on the listings page
-    const [listings] = useState<Listing[]>(mockListings);
+    const [listings, setListings] = useState<Listing[]>(mockListings);
     const [searchTerm, setSearchTerm] = useState(paramLocation);
     const [locationFilter, setLocationFilter] = useState('All');
     const [maxPrice, setMaxPrice] = useState(() => parseInt(paramMaxPrice));
@@ -105,6 +107,50 @@ export default function Propertylisting() {
     const [suitematesFilter, setSuitematesFilter] = useState(paramSuitemates);    // 'All' or an exact number
     const [roomTypeFilter, setRoomTypeFilter] = useState(paramRoomType);        // 'All' | 'Single' | 'Double' | 'Other'
     const [bathroomsFilter, setBathroomsFilter] = useState(paramBathrooms);      // 'All' or an exact number
+
+    useEffect(() => {
+        const fetchListings = async () => {
+          try {
+            const response = await fetch('http://localhost:5000/api/properties');
+            if (!response.ok) {
+              throw new Error('Failed to fetch listings from the API');
+            }
+            const data = await response.json();
+    
+            const apiListings: Listing[] = data.map((item: any) => ({
+              id: item._id, 
+              title: item.title,
+              price: item.rent,
+              location: item.location,
+              address: item.address,
+              school: item.location, 
+              petFriendly: item.amenities ? item.amenities.includes('pet-friendly') : false,
+              rooms: item.bedrooms,
+              utilitiesIncluded: item.tags ? item.tags.includes('utilitiesIncluded') : false,
+              description: item.description,
+              imageUrl:
+                item.photoURL && item.photoURL.length > 0
+                  ? item.photoURL[0]
+                  : studioImage, // Fallback to studioImage if no image is returned
+              timeFrame: item.period,
+              numberOfSuitemates: 1, // Default value if not provided by API
+              roomType: item.roomType,
+              bathrooms: item.bathrooms,
+            }));
+    
+            // Insert the API data into the listings state
+            setListings(apiListings);
+          } catch (err: any) {
+            setError(err.message || 'An unexpected error occurred');
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        // Call the async function
+        fetchListings();
+      }, []);
+
 
     const navigate = useNavigate();
 
