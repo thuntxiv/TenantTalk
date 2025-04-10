@@ -126,10 +126,7 @@ const LandlordListPage: React.FC = () => {
 
   return (
     <div className="landlord-page-wrapper">
-      {/* Full-width Navbar */}
       <Navbar />
-
-      {/* Main forum content centered at max-width */}
       <div className="landlord-list-page">
         <div className="landlord-list-header">
           <h1>Landlords</h1>
@@ -173,8 +170,6 @@ const LandlordListPage: React.FC = () => {
           )}
         </div>
       </div>
-
-      {/* Full-width Footer */}
       <Footer />
     </div>
   );
