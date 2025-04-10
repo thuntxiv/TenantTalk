@@ -241,7 +241,8 @@ const ForumPage: React.FC = () => {
     }
 
     
-    const imageUrl = newPostImage ? 'https://via.placeholder.com/600x400' : undefined;
+    //const imageUrl = newPostImage ? 'https://via.placeholder.com/600x400' : undefined;
+    const imageUrl = imagePreview || undefined;
 
     const newPost: ForumPost = {
       id: `post-${Date.now()}`,
