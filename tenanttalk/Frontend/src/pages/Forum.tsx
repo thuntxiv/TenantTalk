@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../components/AuthContext.tsx';
+import Navbar from '../components/navbar.tsx';
+import Footer from '../components/footer.tsx';
 import '../styles/ForumPage.css';
 
 // Types
@@ -274,6 +276,7 @@ const ForumPage: React.FC = () => {
   return (
     <div className="forum-page">
       <div className="forum-header">
+        <Navbar></Navbar>
         <h1>Community Forum</h1>
         <p>Discuss properties, landlords, and find roommates in your area</p>
       </div>
