@@ -4,12 +4,25 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import {home, login} from '../controllers/routeControllers.js';
-import {User} from '../models/user.js';
-import {Property} from '../models/property.js';
-import {Landlord} from '../models/landlord.js';
-import {Review} from '../models/reviews.js';
-import {ForumPost, Comment} from '../models/forum.js';
+
+// Import controller instances
+import { 
+  userController, 
+  propertyController, 
+  reviewController, 
+  forumController, 
+  home, 
+  login 
+} from '../controllers/routeControllers.js';
+
+// Import models - both base and specialized types
+import { User } from '../models/user.js';
+import { Property } from '../models/property.js';
+import { Apartment, House, Room } from '../models/propertyTypes.js';
+import { Review, PropertyReview, LandlordReview } from '../models/reviews.js';
+import { ForumPost, SubleasePost, RoommatePost, Comment } from '../models/forum.js';
+import { Landlord } from '../models/landlord.js';
+
 
 const app = express();
 
@@ -36,402 +49,121 @@ try {
   handleError(error);
 }
 
-//Set DB
-//const db = mongoose.connection.useDb("tenantTalk");
-
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);  
 });
 
-app.get('/', (req, res) => { //Home route
-    res.send('Hello World');  
-});
+/* 
+ ________________
+| BASIC ROUTES   |
+|________________|
+*/
 
+// Home route
+app.get('/', home);
+
+// Login route
 app.get('/login', (req, res) => {
   res.send('login.html');  
 });
 
-app.get('/api/users', async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/properties', async (req, res) => {
-  try {
-    const property = await Property.find();
-    res.json(property);
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/reviews', async (req, res) => {
-  try {
-    const reviews = await Review.find();
-    res.json(reviews);
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/landlords', async (req, res) => {
-  try {
-    const landlord = await Landlord.find();
-    res.json(landlord);
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
-});
-
-// Get User by ID
-app.get("/api/users/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.status(200).json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: err.message });
-  }
-});
-
-// Get Property by ID
-app.get("/api/properties/:id", async (req, res) => {
-  try {
-    const property = await Property.findById(req.params.id);
-    if (!property) {
-      return res.status(404).json({ error: "Property not found" });
-    }
-    res.status(200).json(property);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: err.message });
-  }
-});
-
-// Get Review by ID
-app.get("/api/reviews/:id", async (req, res) => {
-  try {
-    const review = await Review.findById(req.params.id);
-    if (!review) {
-      return res.status(404).json({ error: "Review not found" });
-    }
-    res.status(200).json(review);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: err.message });
-  }
-});
-
-// Get Landlord by ID
-app.get("/api/landlords/:id", async (req, res) => {
-  try {
-    const landlord = await Landlord.findById(req.params.id);
-    if (!landlord) {
-      return res.status(404).json({ error: "Landlord not found" });
-    }
-    res.status(200).json(landlord);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: err.message });
-  }
-});
-
+app.post('/api/login', login);
 
 /* 
- _______________
-| POST METHODS  |
-|_______________|
+ _________________
+| USER ROUTES     |
+|_________________|
+*/
 
-*/ 
+// Get all users
+app.get('/api/users', userController.getAll.bind(userController));
 
-app.post("/api/users", async (req, res) => {
-  try {
-      const user = new User(req.body);
-      await mongoose.connection.collection("users").insertOne(user);
-      res.status(201).json(user);
-  } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
-  }
-});
+// Get user by ID
+app.get('/api/users/:id', userController.getById.bind(userController));
 
-app.post("/api/properties", async (req, res) => {
-  try {
-      const property = new Property(req.body);
-      await property.save();
-      res.status(201).json(property);
-  } catch (err) {
-      res.status(400).json({ error: err.message });
-  }
-});
+// Create user (handles both regular users and landlords polymorphically)
+app.post('/api/users', userController.create.bind(userController));
 
-app.post("/api/reviews", async (req, res) => {
-  try {
-      const review = new Review(req.body);
-      await review.save();
-      res.status(201).json(review);
-  } catch (err) {
-      res.status(400).json({ error: err.message });
-  }
-});
+// Update user
+app.put('/api/users/:id', userController.update.bind(userController));
 
-app.post("/api/landlords", async (req, res) => {
-  try {
-      const landlord = new Landlord(req.body);
-      await landlord.save();
-      res.status(201).json(landlord);
-  } catch (err) {
-      res.status(400).json({ error: err.message });
-  }
-});
+// Delete user
+app.delete('/api/users/:id', userController.delete.bind(userController));
 
 /* 
- _______________
-| PUT METHODS   |
-|_______________|
+ _________________
+| PROPERTY ROUTES |
+|_________________|
+*/
 
-*/ 
+// Get all properties
+app.get('/api/properties', propertyController.getAll.bind(propertyController));
 
-// Update User
-app.put("/api/users/:id", async (req, res) => {
-  try {
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
-});
+// Get property by ID
+app.get('/api/properties/:id', propertyController.getById.bind(propertyController));
 
-// Update Property
-app.put("/api/properties/:id", async (req, res) => {
-  try {
-    const updatedProperty = await Property.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    if (!updatedProperty) {
-      return res.status(404).json({ error: "Property not found" });
-    }
-    res.status(200).json(updatedProperty);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+// Get properties by location
+app.get('/api/properties/location/:location', propertyController.getByLocation.bind(propertyController));
 
-// Update Review
-app.put("/api/reviews/:id", async (req, res) => {
-  try {
-    const updatedReview = await Review.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    if (!updatedReview) {
-      return res.status(404).json({ error: "Review not found" });
-    }
-    res.status(200).json(updatedReview);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+// Create property (handles all property types polymorphically)
+app.post('/api/properties', propertyController.create.bind(propertyController));
 
-// Update Landlord
-app.put("/api/landlords/:id", async (req, res) => {
-  try {
-    const updatedLandlord = await Landlord.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    if (!updatedLandlord) {
-      return res.status(404).json({ error: "Landlord not found" });
-    }
-    res.status(200).json(updatedLandlord);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+// Update property
+app.put('/api/properties/:id', propertyController.update.bind(propertyController));
+
+// Delete property
+app.delete('/api/properties/:id', propertyController.delete.bind(propertyController));
 
 /* 
- __________________
-| DELETE METHODS   |
-|__________________|
+ _________________
+| REVIEW ROUTES   |
+|_________________|
+*/
 
-*/ 
+// Get all reviews
+app.get('/api/reviews', reviewController.getAll.bind(reviewController));
 
-// Delete User
-app.delete("/api/users/:id", async (req, res) => {
-  try {
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
-    if (!deletedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.status(200).json({ message: "User successfully deleted" });
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: err.message });
-  }
-});
+// Get review by ID
+app.get('/api/reviews/:id', reviewController.getById.bind(reviewController));
 
-// Delete Property
-app.delete("/api/properties/:id", async (req, res) => {
-  try {
-    const deletedProperty = await Property.findByIdAndDelete(req.params.id);
-    if (!deletedProperty) {
-      return res.status(404).json({ error: "Property not found" });
-    }
-    res.status(200).json({ message: "Property successfully deleted" });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+// Get recent reviews
+app.get('/api/reviews/recent', reviewController.getRecent.bind(reviewController));
 
-// Delete Review
-app.delete("/api/reviews/:id", async (req, res) => {
-  try {
-    const deletedReview = await Review.findByIdAndDelete(req.params.id);
-    if (!deletedReview) {
-      return res.status(404).json({ error: "Review not found" });
-    }
-    res.status(200).json({ message: "Review successfully deleted" });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+// Create review (handles both property and landlord reviews polymorphically)
+app.post('/api/reviews', reviewController.create.bind(reviewController));
 
-// Delete Landlord
-app.delete("/api/landlords/:id", async (req, res) => {
-  try {
-    const deletedLandlord = await Landlord.findByIdAndDelete(req.params.id);
-    if (!deletedLandlord) {
-      return res.status(404).json({ error: "Landlord not found" });
-    }
-    res.status(200).json({ message: "Landlord successfully deleted" });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+// Update review
+app.put('/api/reviews/:id', reviewController.update.bind(reviewController));
 
-// POST a new ForumPost
-app.post("/api/forumposts", async (req, res) => {
-  try {
-      const forumPost = new ForumPost(req.body);
-      await mongoose.connection.collection("forumposts").insertOne(forumPost);
-      res.status(201).json(forumPost);
-  } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
-  }
-});
+// Delete review
+app.delete('/api/reviews/:id', reviewController.delete.bind(reviewController));
 
-// GET ForumPosts
-app.get("/api/forumposts", async (req, res) => {
-  try {
-      const forumPost = await ForumPost.find();
-      if (!forumPost) {
-          return res.status(404).json({ error: "Forum post not found" });
-      }
-      res.status(200).json(forumPost);
-  } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
-  }
-});
+/* 
+ _________________
+| FORUM ROUTES    |
+|_________________|
+*/
 
-// GET a ForumPost by ID
-app.get("/api/forumposts/:id", async (req, res) => {
-  try {
-      const forumPost = await mongoose.connection.collection("forumposts").findOne({ 
-          _id: new mongoose.Types.ObjectId(req.params.id)
-      });
-      if (!forumPost) {
-          return res.status(404).json({ error: "Forum post not found" });
-      }
-      res.status(200).json(forumPost);
-  } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
-  }
-});
+// Get all forum posts
+app.get('/api/forumposts', forumController.getAll.bind(forumController));
 
-// DELETE a ForumPost by ID
-app.delete("/api/forumposts/:id", async (req, res) => {
-  try {
-      const result = await mongoose.connection.collection("forumposts").deleteOne({ 
-          _id: new mongoose.Types.ObjectId(req.params.id)
-      });
-      if (result.deletedCount === 0) {
-          return res.status(404).json({ error: "Forum post not found" });
-      }
-      res.status(200).json({ message: "Forum post deleted successfully" });
-  } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
-  }
-});
+// Get forum post by ID
+app.get('/api/forumposts/:id', forumController.getById.bind(forumController));
 
-// POST a new Comment
-app.post("/api/comments", async (req, res) => {
-  try {
-      const comment = new Comment(req.body);
-      await mongoose.connection.collection("comments").insertOne(comment);
-      res.status(201).json(comment);
-  } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
-  }
-});
+// Get popular forum posts
+app.get('/api/forumposts/popular', forumController.getPopular.bind(forumController));
 
-// GET a Comment by ID
-app.get("/api/comments/:id", async (req, res) => {
-  try {
-      const comment = await mongoose.connection.collection("comments").findOne({ 
-          _id: new mongoose.Types.ObjectId(req.params.id)
-      });
-      if (!comment) {
-          return res.status(404).json({ error: "Comment not found" });
-      }
-      res.status(200).json(comment);
-  } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
-  }
-});
+// Create forum post (handles different post types polymorphically)
+app.post('/api/forumposts', forumController.create.bind(forumController));
 
-// DELETE a Comment by ID
-app.delete("/api/comments/:id", async (req, res) => {
-  try {
-      const result = await mongoose.connection.collection("comments").deleteOne({ 
-          _id: new mongoose.Types.ObjectId(req.params.id)
-      });
-      if (result.deletedCount === 0) {
-          return res.status(404).json({ error: "Comment not found" });
-      }
-      res.status(200).json({ message: "Comment deleted successfully" });
-  } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
-  }
-});
+// Update forum post
+app.put('/api/forumposts/:id', forumController.update.bind(forumController));
 
-//Add comment to post
-app.post("/api/forumposts/:id/comments", async (req, res) => {
+// Delete forum post
+app.delete('/api/forumposts/:id', forumController.delete.bind(forumController));
+
+// Add comment to forum post
+app.post('/api/forumposts/:id/comments', async (req, res) => {
   try {
     // Find the forum post by its _id
     const forumPost = await ForumPost.findById(req.params.id);
@@ -461,19 +193,63 @@ app.post("/api/forumposts/:id/comments", async (req, res) => {
   }
 });
 
+/* 
+ _________________
+| COMMENT ROUTES  |
+|_________________|
+*/
+
+// GET a Comment by ID
+app.get("/api/comments/:id", async (req, res) => {
+  try {
+    const comment = await mongoose.connection.collection("comments").findOne({ 
+      _id: new mongoose.Types.ObjectId(req.params.id)
+    });
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+    res.status(200).json(comment);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// DELETE a Comment by ID
+app.delete("/api/comments/:id", async (req, res) => {
+  try {
+    const result = await mongoose.connection.collection("comments").deleteOne({ 
+      _id: new mongoose.Types.ObjectId(req.params.id)
+    });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+    res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err.message });
+  }
+});
+
+/* 
+ _________________
+| CHAT ROUTES     |
+|_________________|
+*/
+
 //Get chat by ID
 app.get("/api/chats/:id", async (req, res) => {
   try {
     const chat = await mongoose.connection.collection("chats").findOne({ 
-        _id: new mongoose.Types.ObjectId(req.params.id)
+      _id: new mongoose.Types.ObjectId(req.params.id)
     });
     if (!chat) {
-        return res.status(404).json({ error: "Chat not found" });
+      return res.status(404).json({ error: "Chat not found" });
     }
     res.status(200).json(chat);
   } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: err.message });
+    console.log(err);
+    res.status(400).json({ error: err.message });
   }
 });
 
