@@ -2,8 +2,9 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from './navbar.tsx';
 import Footer from './footer.tsx';
-import '../styles/ListingDetails.css'; // We'll define new table styles here
+import '../styles/ListingDetails.css'; 
 
+// Listing Framework
 interface Listing {
     id: number;
     title: string;
@@ -25,6 +26,7 @@ interface Listing {
 const studioImage = require('../imgs/Studio_listing_1.jpeg');
 const loftImage = require('../imgs/Loft_Example.jpg');
 
+// Mock data, can be removed with fully implemented backend
 const mockListings: Listing[] = [
     {
         id: 1,
@@ -79,6 +81,7 @@ const mockListings: Listing[] = [
     },
 ];
 
+//Lists details of the listing. This is the listing page itself 
 export default function ListingDetails() {
     const { id } = useParams();
     const navigate = useNavigate();

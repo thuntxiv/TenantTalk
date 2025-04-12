@@ -12,12 +12,12 @@ const Home = () => {
 
   // Additional filters
   const [timeFrame, setTimeFrame] = useState('All');
-  const [petFriendly, setPetFriendly] = useState('All');    // 'All' | 'Yes' | 'No'
-  const [utilitiesIncluded, setUtilitiesIncluded] = useState('All'); // 'All' | 'Yes' | 'No'
-  const [rooms, setRooms] = useState('All');                // 'All' | '1' | '2' | '3' etc.
+  const [petFriendly, setPetFriendly] = useState('All');   
+  const [utilitiesIncluded, setUtilitiesIncluded] = useState('All'); 
+  const [rooms, setRooms] = useState('All');               
   const [suitemates, setSuitemates] = useState('All');
-  const [roomType, setRoomType] = useState('All');          // 'All' | 'Single' | 'Double' | 'Other'
-  const [bathrooms, setBathrooms] = useState('All');        // 'All' | '1' | '2' | '3' etc.
+  const [roomType, setRoomType] = useState('All');          
+  const [bathrooms, setBathrooms] = useState('All');       
 
   const navigate = useNavigate();
 
@@ -27,8 +27,6 @@ const Home = () => {
       propertyType,
       location,
       maxPrice: maxPrice.toString(),
-
-      // Additional filters
       timeFrame,
       petFriendly,
       utilitiesIncluded,
@@ -52,7 +50,6 @@ const Home = () => {
 
           <div className="search-container">
             <div className="search-form">
-              {/* FIRST ROW (existing search fields) */}
               <div className="search-row">
 
                 {/* Location */}
@@ -86,8 +83,6 @@ const Home = () => {
                   Search
                 </button>
               </div>
-
-              {/* SECOND ROW (new filters row #1) */}
               <div className="search-row">
                 {/* Sublease Period */}
                 <div className="search-field">
@@ -143,8 +138,6 @@ const Home = () => {
                   </select>
                 </div>
               </div>
-
-              {/* THIRD ROW (new filters row #2) */}
               <div className="search-row">
                 {/* Number of Suitemates */}
                 <div className="search-field">
@@ -315,7 +308,6 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            {/* More dots would be added for other locations */}
           </div>
         </div>
       </section>

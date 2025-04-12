@@ -7,6 +7,7 @@ import '../styles/Propertylisting.css';
 const studioImage = require('../imgs/Studio_listing_1.jpeg');
 const loftImage = require('../imgs/Loft_Example.jpg');
 
+// Interface for each listing
 interface Listing {
     id: number;
     title: string;
@@ -24,6 +25,8 @@ interface Listing {
     roomType: 'Single' | 'Double' | 'Other';
     bathrooms: number;
 }
+
+// Mock data, can be deleted later on with fully implemented backend
 const mockListings: Listing[] = [
     {
         id: 1,
@@ -79,8 +82,8 @@ const mockListings: Listing[] = [
     },
 ];
 
+// Gathers parameters from user for sorting and filtering
 export default function Propertylisting() {
-    // 1. Parse query parameters (defaults are provided in case a parameter is missing)
     const [searchParams] = useSearchParams();
     const paramLocation = searchParams.get('location') || '';
     const paramMaxPrice = searchParams.get('maxPrice') || '2000';
@@ -91,22 +94,19 @@ export default function Propertylisting() {
     const paramSuitemates = searchParams.get('suitemates') || 'All';
     const paramRoomType = searchParams.get('roomType') || 'All';
     const paramBathrooms = searchParams.get('bathrooms') || 'All';
-
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-
-    // 2. Local filter states; if desired, you can also update the UI to let users change these on the listings page
     const [listings, setListings] = useState<Listing[]>(mockListings);
     const [searchTerm, setSearchTerm] = useState(paramLocation);
     const [locationFilter, setLocationFilter] = useState('All');
     const [maxPrice, setMaxPrice] = useState(() => parseInt(paramMaxPrice));
     const [timeFrameFilter, setTimeFrameFilter] = useState(paramTimeFrame);
-    const [petFriendlyFilter, setPetFriendlyFilter] = useState(paramPetFriendly); // 'All' | 'Yes' | 'No'
-    const [utilitiesFilter, setUtilitiesFilter] = useState(paramUtilities);     // 'All' | 'Yes' | 'No'
-    const [roomsFilter, setRoomsFilter] = useState(paramRooms);                 // 'All' or an exact number
-    const [suitematesFilter, setSuitematesFilter] = useState(paramSuitemates);    // 'All' or an exact number
-    const [roomTypeFilter, setRoomTypeFilter] = useState(paramRoomType);        // 'All' | 'Single' | 'Double' | 'Other'
-    const [bathroomsFilter, setBathroomsFilter] = useState(paramBathrooms);      // 'All' or an exact number
+    const [petFriendlyFilter, setPetFriendlyFilter] = useState(paramPetFriendly); 
+    const [utilitiesFilter, setUtilitiesFilter] = useState(paramUtilities);     
+    const [roomsFilter, setRoomsFilter] = useState(paramRooms);                 
+    const [suitematesFilter, setSuitematesFilter] = useState(paramSuitemates);    
+    const [roomTypeFilter, setRoomTypeFilter] = useState(paramRoomType);        
+    const [bathroomsFilter, setBathroomsFilter] = useState(paramBathrooms);   
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -131,9 +131,9 @@ export default function Propertylisting() {
               imageUrl:
                 item.photoURL && item.photoURL.length > 0
                   ? item.photoURL[0]
-                  : studioImage, // Fallback to studioImage if no image is returned
+                  : studioImage, 
               timeFrame: item.period,
-              numberOfSuitemates: 1, // Default value if not provided by API
+              numberOfSuitemates: 1, 
               roomType: item.roomType,
               bathrooms: item.bathrooms,
             }));
@@ -166,7 +166,7 @@ export default function Propertylisting() {
             listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             listing.address.toLowerCase().includes(searchTerm.toLowerCase());
 
-        // Location filter (using a local UI dropdown)
+        // Location filter 
         const matchesLocation =
             locationFilter === 'All' || listing.location === locationFilter;
 
