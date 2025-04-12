@@ -6,7 +6,7 @@ import { useAuth } from '../components/AuthContext.tsx';
 
 const LandlordProfilePage: React.FC = () => {
     const { user, isAuthenticated, isLoading } = useAuth();
-    // Mock data directly in the component
+    // Mock data directly in the component, cna be deleted later with completed backend
     const landlord = {
       id: '1',
       name: 'John Smith',

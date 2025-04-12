@@ -158,7 +158,7 @@ export default function Propertylisting() {
         navigate(`/listings/${listingId}`);
     }
 
-    // 3. Filter logic - All filters must pass for a listing to be displayed.
+    // Filter logic - All filters must pass for a listing to be displayed.
     const filteredListings = listings.filter((listing) => {
         // Search by title or address
         const matchesSearch =

@@ -73,7 +73,6 @@
   text-align: right;
 }
 
-/* Form for new messages */
 .message-form {
   display: flex;
   gap: 0.5rem;
