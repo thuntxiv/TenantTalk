@@ -1,6 +1,6 @@
 import {mongoose} from "mongoose";
 
-// Add discriminator key for polymorphic review types
+// Discriminator key for polymorphic review types
 const options = { discriminatorKey: 'reviewType', collection: 'reviews' };
 
 // Base review schema
@@ -13,7 +13,7 @@ const reviewSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 }, options);
 
-// Add base methods that all review types will inherit
+// Base methods that all review types will inherit
 reviewSchema.methods.getBasicInfo = function() {
     return {
         id: this._id,
@@ -25,7 +25,7 @@ reviewSchema.methods.getBasicInfo = function() {
     };
 };
 
-// Virtual for checking if review is recent (within last 30 days)
+// Checking if review is recent (within last 30 days)
 reviewSchema.virtual('isRecent').get(function() {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -42,7 +42,7 @@ reviewSchema.statics.findRecent = function(days = 30) {
 // Create the base Review model
 const Review = mongoose.model('Review', reviewSchema);
 
-// Property review schema - extends base review
+// Property review schema
 const propertyReviewSchema = new mongoose.Schema({
     propertyID: { type: mongoose.ObjectId, required: true },
     cleanliness: { type: Number, min: 1, max: 5 },
@@ -50,7 +50,7 @@ const propertyReviewSchema = new mongoose.Schema({
     value: { type: Number, min: 1, max: 5 }
 });
 
-// Landlord review schema - extends base review
+// Landlord review schema 
 const landlordReviewSchema = new mongoose.Schema({
     landlordID: { type: mongoose.ObjectId, required: true },
     communication: { type: Number, min: 1, max: 5 },
@@ -72,7 +72,7 @@ propertyReviewSchema.methods.getDetailedInfo = function() {
     };
 };
 
-// Add a specialized method for property reviews
+// Specialized method for property reviews
 propertyReviewSchema.methods.calculateAverageSubRating = function() {
     return (this.cleanliness + this.location + this.value) / 3;
 };
@@ -91,12 +91,12 @@ landlordReviewSchema.methods.getDetailedInfo = function() {
     };
 };
 
-// Add a specialized method for landlord reviews
+// Method for landlord reviews
 landlordReviewSchema.methods.calculateAverageSubRating = function() {
     return (this.communication + this.responsiveness + this.reliability) / 3;
 };
 
-// Create discriminator models that inherit from Review
+// Discriminator models that inherit from Review
 const PropertyReview = Review.discriminator('PropertyReview', propertyReviewSchema);
 const LandlordReview = Review.discriminator('LandlordReview', landlordReviewSchema);
 

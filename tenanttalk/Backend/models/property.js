@@ -1,9 +1,9 @@
 import {mongoose} from "mongoose";
 
-// Define options object with discriminatorKey for implementing inheritance
+// Options object 
 const options = { discriminatorKey: 'propertyType', collection: 'properties' };
 
-// Base property schema that can be extended by specific property types
+// Base property schema  
 const propertySchema = new mongoose.Schema({
     landlordID: {type: mongoose.ObjectId },
     title: { type: String, required: true, unique: true },
@@ -23,7 +23,7 @@ const propertySchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 }, options);
 
-// Base methods that will be available to all property types
+// Base methods 
 propertySchema.methods.getBasicInfo = function() {
     return {
         id: this._id,
@@ -38,7 +38,7 @@ propertySchema.methods.getBasicInfo = function() {
     };
 };
 
-// Calculate rent per room method
+// Calculate rent per room 
 propertySchema.methods.calculateRentPerRoom = function() {
     return this.bedrooms > 0 ? this.rent / this.bedrooms : this.rent;
 };

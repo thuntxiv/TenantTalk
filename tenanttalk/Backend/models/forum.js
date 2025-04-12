@@ -9,7 +9,7 @@ const commentSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// Add methods to comment schema
+// Methods to comment schema
 commentSchema.methods.getBasicInfo = function() {
   return {
     id: this._id,
@@ -19,7 +19,7 @@ commentSchema.methods.getBasicInfo = function() {
   };
 };
 
-// Base forum post schema with discriminator key for inheritance
+// Base forum post schema 
 const options = { discriminatorKey: 'postType', collection: 'forumPosts' };
 
 const forumPostSchema = new mongoose.Schema({
@@ -54,7 +54,7 @@ forumPostSchema.methods.getPostDetails = function() {
   };
 };
 
-// Virtual to get comment count
+
 forumPostSchema.virtual('commentCount').get(function() {
   return this.comments ? this.comments.length : 0;
 });
@@ -64,11 +64,11 @@ forumPostSchema.statics.findPopular = function(limit = 5) {
   return this.find().sort({ likes: -1 }).limit(limit);
 };
 
-// Create base models
+// Base models
 const ForumPost = mongoose.model('ForumPost', forumPostSchema);
 const Comment = mongoose.model('Comment', commentSchema);
 
-// Create specialized forum post types
+// Forum post types
 
 // Sublease post schema
 const subleasePostSchema = new mongoose.Schema({
@@ -82,7 +82,7 @@ const subleasePostSchema = new mongoose.Schema({
 
 // Override method for sublease posts (polymorphism)
 subleasePostSchema.methods.getPostDetails = function() {
-  // Call parent method first
+  // parent method 
   const basicDetails = Object.getPrototypeOf(this).getPostDetails.call(this);
   
   return {
@@ -103,12 +103,12 @@ const roommatePostSchema = new mongoose.Schema({
     max: { type: Number }
   },
   moveInDate: { type: Date },
-  lifestyle: [String] // e.g., "night owl", "early riser", "non-smoker"
+  lifestyle: [String] 
 });
 
 // Override method for roommate posts (polymorphism)
 roommatePostSchema.methods.getPostDetails = function() {
-  // Call parent method first
+  // parent method 
   const basicDetails = Object.getPrototypeOf(this).getPostDetails.call(this);
   
   return {
@@ -121,7 +121,7 @@ roommatePostSchema.methods.getPostDetails = function() {
   };
 };
 
-// Create discriminator models that inherit from ForumPost
+// Discriminator models that inherit the ForumPost
 const SubleasePost = ForumPost.discriminator('SubleasePost', subleasePostSchema);
 const RoommatePost = ForumPost.discriminator('RoommatePost', roommatePostSchema);
 

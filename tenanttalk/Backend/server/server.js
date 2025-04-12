@@ -15,7 +15,7 @@ import {
   login 
 } from '../controllers/routeControllers.js';
 
-// Import models - both base and specialized types
+// Import models 
 import { User } from '../models/user.js';
 import { Property } from '../models/property.js';
 import { Apartment, House, Room } from '../models/propertyTypes.js';
@@ -32,7 +32,6 @@ app.use(express.json());
 const mongodbURL = `mongodb+srv://${process.env.dbuser}:${process.env.dbpw}@tenanttalk.sdau3.mongodb.net/tenantTalk?retryWrites=true&w=majority&appName=tenanttalk`;
 const port = 5000;
 
-//Allow port 3000
 app.use(cors({ origin: "http://localhost:3000" }));
 
 //Error Handling
@@ -69,6 +68,7 @@ app.get('/login', (req, res) => {
 
 app.post('/api/login', login);
 
+
 /* 
  _________________
 | USER ROUTES     |
@@ -90,8 +90,8 @@ app.put('/api/users/:id', userController.update.bind(userController));
 // Delete user
 app.delete('/api/users/:id', userController.delete.bind(userController));
 
-/* 
- _________________
+
+/*________________
 | PROPERTY ROUTES |
 |_________________|
 */
@@ -171,19 +171,18 @@ app.post('/api/forumposts/:id/comments', async (req, res) => {
       return res.status(404).json({ error: "Forum post not found" });
     }
 
-    // Create a new comment object based on the request body
+    // Create a new comment 
     const newComment = {
       userId: req.body.userId,
       username: req.body.username,
       userAvatar: req.body.userAvatar,
       content: req.body.content,
-      createdAt: new Date() // Use current date/time
+      createdAt: new Date() 
     };
 
-    // Push the new comment into the existing comments array
+    
     forumPost.comments.push(newComment);
 
-    // Save the updated forum post document
     await forumPost.save();
 
     res.status(201).json(forumPost);

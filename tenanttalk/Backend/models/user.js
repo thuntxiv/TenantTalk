@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 }, options);
 
-// Add methods that can be inherited by child classes
+// Methods that can be inherited by child classes
 userSchema.methods.getBasicProfile = function() {
     return {
         id: this._id,
@@ -27,7 +27,7 @@ userSchema.methods.getBasicProfile = function() {
     };
 };
 
-// Add static methods that can be inherited
+// Static methods that can be inherited
 userSchema.statics.findByEmail = function(email) {
     return this.findOne({ email });
 };

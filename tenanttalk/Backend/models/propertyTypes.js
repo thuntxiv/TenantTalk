@@ -21,7 +21,7 @@ const houseSchema = new mongoose.Schema({
     yearBuilt: Number
 });
 
-// Room-specific schema (for shared accommodations)
+// Room-specific schema 
 const roomSchema = new mongoose.Schema({
     isShared: { type: Boolean, default: false },
     totalRoommates: { type: Number, default: 0 },
@@ -40,10 +40,9 @@ const roomSchema = new mongoose.Schema({
 
 // Override base method with apartment-specific implementation (polymorphism)
 apartmentSchema.methods.getDetailedInfo = function() {
-    // Call the parent method first
+
     const basicInfo = this.getBasicInfo();
     
-    // Add apartment-specific details
     return {
         ...basicInfo,
         floorLevel: this.floorLevel,
@@ -55,12 +54,11 @@ apartmentSchema.methods.getDetailedInfo = function() {
     };
 };
 
-// Override base method with house-specific implementation (polymorphism)
+// Override base method with house implementation (polymorphism)
 houseSchema.methods.getDetailedInfo = function() {
-    // Call the parent method first
+    // Parent method
     const basicInfo = this.getBasicInfo();
     
-    // Add house-specific details
     return {
         ...basicInfo,
         lotSize: this.lotSize,
@@ -74,12 +72,11 @@ houseSchema.methods.getDetailedInfo = function() {
     };
 };
 
-// Override base method with room-specific implementation (polymorphism)
+// Room-specific (polymorphism)
 roomSchema.methods.getDetailedInfo = function() {
-    // Call the parent method first
+    // Parent method
     const basicInfo = this.getBasicInfo();
     
-    // Add room-specific details
     return {
         ...basicInfo,
         isShared: this.isShared,
@@ -90,7 +87,7 @@ roomSchema.methods.getDetailedInfo = function() {
     };
 };
 
-// Create discriminator models that inherit from Property
+// Discriminator models that inherit from Property
 const Apartment = Property.discriminator('Apartment', apartmentSchema);
 const House = Property.discriminator('House', houseSchema);
 const Room = Property.discriminator('Room', roomSchema);

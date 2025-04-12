@@ -1,6 +1,6 @@
 // Import user models
 import { User } from '../models/user.js';
-import { Landlord } from '../models/landlord.js';  // Assuming we updated the export 
+import { Landlord } from '../models/landlord.js';
 
 // Import property models
 import { Property } from '../models/property.js';
@@ -14,7 +14,7 @@ import { ForumPost, SubleasePost, RoommatePost } from '../models/forum.js';
 
 const pageRoute = '../Frontend/src/pages';
 
-// Base controller that can be inherited
+// Base controller (Inheritance)
 class BaseController {
   constructor(model) {
     this.model = model;
@@ -126,7 +126,7 @@ class UserController extends BaseController {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
       
-      // Check password (in a real app, would use bcrypt.compare)
+      // Check password
       if (user.password !== password) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
@@ -176,7 +176,7 @@ class PropertyController extends BaseController {
       
       const savedProperty = await property.save();
       
-      // Polymorphic method call if available
+      // Polymorphic method call
       const responseData = savedProperty.getDetailedInfo 
         ? savedProperty.getDetailedInfo() 
         : savedProperty;
@@ -223,7 +223,7 @@ class ReviewController extends BaseController {
       
       const savedReview = await review.save();
       
-      // Polymorphic method call if available
+      // Polymorphic method call 
       const responseData = savedReview.getDetailedInfo 
         ? savedReview.getDetailedInfo() 
         : savedReview;
@@ -252,7 +252,7 @@ class ForumController extends BaseController {
     super(model);
   }
   
-  // Override create method for forum-specific logic
+  // Override create method for forum-specific 
   async create(req, res) {
     try {
       const { postType, ...postData } = req.body;
@@ -270,7 +270,7 @@ class ForumController extends BaseController {
       
       const savedPost = await post.save();
       
-      // Polymorphic method call if available
+      // Polymorphic method call
       const responseData = savedPost.getPostDetails 
         ? savedPost.getPostDetails() 
         : savedPost;
@@ -281,25 +281,15 @@ class ForumController extends BaseController {
     }
   }
   
-  // Get popular posts
-  async getPopular(req, res) {
-    try {
-      const { limit } = req.query;
-      const posts = await ForumPost.findPopular(limit ? parseInt(limit) : 5);
-      res.json(posts);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
 }
 
-// Create controller instances
+// Controller instances
 const userController = new UserController();
 const propertyController = new PropertyController();
 const reviewController = new ReviewController();
 const forumController = new ForumController();
 
-// Legacy/simple route handlers
+// Simple route handlers
 const home = async (req, res) => {
     try {
         res.send('Hello World');
@@ -308,7 +298,7 @@ const home = async (req, res) => {
     }
 };
 
-// Define a separate login function that calls userController's login method
+//login function that calls userController's login method
 const login = (req, res) => userController.login(req, res);
 
 export {
