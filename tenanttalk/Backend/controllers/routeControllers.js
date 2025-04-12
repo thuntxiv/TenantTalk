@@ -1,6 +1,6 @@
 // Import user models
 import { User } from '../models/user.js';
-import {Landlord} from '../models/landlord.js';  // Assuming we updated the export 
+import { Landlord } from '../models/landlord.js';  // Assuming we updated the export 
 
 // Import property models
 import { Property } from '../models/property.js';
