@@ -23,7 +23,7 @@ const LandlordListPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Mock data.
+    // Mock data. Is not needed with fully implemented backend
     const fetchLandlords = async () => {
       try {
         setLoading(true);

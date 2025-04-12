@@ -1,5 +1,3 @@
-/* Make the entire page a column layout so we can have a header on top and
-   sidebar + main content below. */
 .property-page {
   display: flex;
   flex-direction: column;
@@ -7,7 +5,7 @@
   background-color: #f9f9f9;
 }
 
-/* Header (logo + title) at the top */
+/* Header at the top */
 .page-header {
   display: flex;
   align-items: center;
@@ -21,7 +19,6 @@
   display: flex;
   align-items: center;
   margin-right: 2rem;
-  /* space between logo and title */
 }
 
 .page-logo span[role="img"] {
@@ -41,17 +38,15 @@
   margin: 0;
 }
 
-/* The main content area (sidebar + listings) */
+/* The main content area */
 .page-content {
   display: flex;
   flex: 1;
-  /* so it expands to fill the viewport if needed */
 }
 
 /* Sidebar for filters */
 .filters-sidebar {
   width: 250px;
-  /* fixed width for the sidebar */
   padding: 1rem;
   border-right: 1px solid #ccc;
   background-color: #fafafa;
@@ -62,24 +57,20 @@
   margin-bottom: 1rem;
 }
 
-/* Main area for listings + timeline */
+/* Main area for listings and timeline */
 .listings-container {
   flex: 1;
-  /* fills remaining space */
   padding: 2rem;
   background-color: #fff;
 }
 
-/* -- Existing grid for listing cards -- */
 .listings-grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   margin-bottom: 2rem;
-  /* space before the timeline */
 }
 
-/* Listing card styles remain the same */
 .listing-card {
   background-color: #fff;
   border-radius: 6px;
@@ -103,14 +94,13 @@
   line-height: 1.4;
 }
 
-/* Timeline container, same as before */
 .timeline-container {
   margin-top: 2rem;
   padding-top: 1rem;
   border-top: 1px solid #ccc;
 }
 
-/* Timeline items */
+
 .timeline-item {
   display: flex;
   align-items: center;
@@ -122,25 +112,21 @@
   margin-right: 1rem;
   color: #666;
   min-width: 80px;
-  /* align dates */
 }
 
 .timeline-content {
   display: inline-block;
 }
 
-/* Price slider container (the filter-section that wraps it) */
 .filter-section {
   margin-bottom: 1rem;
 }
 
-/* The slider itself */
 #priceRange {
   width: 100%;
   margin-top: 0.5rem;
 }
 
-/* Example styling for range input in Chrome, Safari, and Edge */
 #priceRange::-webkit-slider-thumb {
   background-color: #333;
   width: 16px;
@@ -148,7 +134,6 @@
   border-radius: 50%;
   cursor: pointer;
   margin-top: -5px;
-  /* center the thumb on the track */
 }
 
 #priceRange::-webkit-slider-runnable-track {

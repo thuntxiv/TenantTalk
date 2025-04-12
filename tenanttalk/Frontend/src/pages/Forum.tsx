@@ -36,18 +36,13 @@ const ForumPage: React.FC = () => {
   const [posts, setPosts] = useState<ForumPost[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<ForumPost[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
-  // New post form state
   const [isCreatingPost, setIsCreatingPost] = useState<boolean>(false);
   const [newPostSubject, setNewPostSubject] = useState<string>('');
   const [newPostContent, setNewPostContent] = useState<string>('');
   const [newPostCategory, setNewPostCategory] = useState<string>('general');
   const [newPostImage, setNewPostImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-
   const [newComment, setNewComment] = useState<string>('');
-
-  // Filter states
   const [usernameFilter, setUsernameFilter] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [dateFilter, setDateFilter] = useState<string>('');
@@ -56,7 +51,7 @@ const ForumPage: React.FC = () => {
   // Fetch on mount
   useEffect(() => {
 
-    // Example mock data
+    // Example mock data used for testing, not required when backend is fully complete
     const mockPosts: ForumPost[] = [
       {
         id: '1',
