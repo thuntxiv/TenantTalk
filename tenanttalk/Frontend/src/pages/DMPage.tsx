@@ -9,7 +9,7 @@ interface Conversation {
     participant: string;
     lastMessage: string;
     timestamp: string;
-    isNew: boolean; // indicates if the *last* message is new/unread
+    isNew: boolean; // indicates if the last message is new/unread
 }
 
 const DMPage: React.FC = () => {
@@ -21,21 +21,21 @@ const DMPage: React.FC = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
 
-    // Mock conversation list for demonstration
+    // Mock conversation data, can be deleted later with backend complete
     const [conversations] = useState<Conversation[]>([
         {
             id: 1,
             participant: "Alice",
             lastMessage: "Looking forward to hearing back soon!",
             timestamp: "2025-04-07 12:45 PM",
-            isNew: true, // This conversation's last message is unread/new
+            isNew: true, 
         },
         {
             id: 2,
             participant: "Bob",
             lastMessage: "Thanks for the update!",
             timestamp: "2025-04-06 16:10 PM",
-            isNew: false, // This conversation is not new/unread
+            isNew: false, 
         },
         {
             id: 3,
