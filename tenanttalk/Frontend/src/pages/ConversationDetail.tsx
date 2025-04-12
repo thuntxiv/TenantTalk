@@ -11,7 +11,7 @@ interface Message {
     timestamp: string;
 }
 
-// Mock message data
+// Mock message data, can be deleted later with fully implemented backend
 const mockConversations: { [key: number]: Message[] } = {
     1: [
         { id: 1, sender: "You", content: "Hi Alice, how are you?", timestamp: "2025-04-07 12:00" },
@@ -71,7 +71,6 @@ const ConversationDetail: React.FC = () => {
 
     return (
         <div className="conversation-detail-page">
-            {/* Full-width header */}
             <Navbar />
 
             {/* Main conversation container */}
@@ -105,8 +104,6 @@ const ConversationDetail: React.FC = () => {
                     <button type="submit">Send</button>
                 </form>
             </div>
-
-            {/* Full-width footer */}
             <Footer />
         </div>
     );

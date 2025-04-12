@@ -6,6 +6,7 @@ import { useAuth } from './AuthContext.tsx';
 const Navbar = () => {
   const { isAuthenticated, user } = useAuth();
 
+  // returns the navbar UI, add more links here as needed
   return (
     <nav className="navbar">
       <div className="navbar-container">

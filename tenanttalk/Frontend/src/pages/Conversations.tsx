@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Conversations.css';
 
-// Example mock data 
+// Example mock data, can be deleted later when backend is fully complete
 const mockConversations = [
     {
         id: 1,
