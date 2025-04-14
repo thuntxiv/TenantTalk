@@ -225,9 +225,9 @@ const Home = () => {
                 <span className="highlight">We have refined the</span> ever-evolving landscape of college housing, prioritizing transparency and focused intensely on a stress-free tenant search experience.
               </p>
             </div>
-            <div className="cta-circle">
+            <button className="cta-circle" onClick={() => navigate('/about')}>
               <span>→</span>
-            </div>
+            </button>
           </div>
         </div>
       </section>

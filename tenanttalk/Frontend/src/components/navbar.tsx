@@ -15,7 +15,7 @@ const Navbar = () => {
           <span className="logo-text">TenantTalk</span></a>
         </div>
         <div className="nav-links">
-          <a href="/" className="nav-link active">About Us</a>
+          <a href="/about" className="nav-link active">About Us</a>
           <a href="/properties" className="nav-link">Properties</a>
           <a href="/landlords" className="nav-link">Landlords</a>
           <a href="/forum" className="nav-link">Forum</a>
