@@ -1,7 +1,10 @@
 import React from 'react';
 import '../styles/footer.css';
+import { useNavigate } from 'react-router-dom';
 
-const Footer = () => {
+const Footer: React.FC = () => {
+  const navigate = useNavigate();
+  
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -12,7 +15,12 @@ const Footer = () => {
             <p className="footer-tagline">
               Your one-stop rental source to find and promote the perfect housing experience for finding your dream home.
             </p>
-            <button className="footer-cta-btn">Learn More</button>
+            <button
+              className="footer-cta-btn"
+              onClick={() => navigate('/about')}
+            >
+              Learn More
+            </button>
           </div>
           {/* first column */}
           <div className="footer-links-container">
