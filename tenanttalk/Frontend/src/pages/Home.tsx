@@ -312,45 +312,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Trends Section */}
-      <section className="trends-section">
-        <div className="section-container">
-          <h2>Uncover The Latest Trends And Stories</h2>
-          <p className="section-description">
-            Stay informed and updated with the latest trends, home improvement ideas, and our insights on the property market.
-          </p>
 
-          <div className="blog-grid">
-            <div className="blog-card">
-              <div
-                className="blog-image"
-                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
-              >
-                <span className="blog-category">Design Trend</span>
-                <button className="save-button">♡</button>
-              </div>
-              <div className="blog-content">
-                <h3>The Growing Demand for Eco-friendly Student Housing</h3>
-                <p>Discover the latest in sustainable campus living...</p>
-              </div>
-            </div>
-
-            <div className="blog-card">
-              <div
-                className="blog-image"
-                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
-              ></div>
-            </div>
-
-            <div className="blog-card">
-              <div
-                className="blog-image"
-                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
-              ></div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Testimonials Section */}
       <section className="testimonials-section">
@@ -437,8 +399,7 @@ const Home = () => {
         <div className="section-container">
           <h2>Ready To Work With Us?</h2>
           <p>Experience top-notch customer service and let us guide you on your property journey.</p>
-
-          <button className="cta-button">
+          <button className="cta-button" onClick={() => navigate('/about')}>
             Learn More <span>→</span>
           </button>
         </div>

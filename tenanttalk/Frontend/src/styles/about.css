@@ -1,0 +1,29 @@
+.about-page-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+}
+
+.about-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    flex: 1;
+    text-align: left;
+    font-family: sans-serif;
+    color: #333;
+}
+
+.about-page h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.about-page p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}

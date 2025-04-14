@@ -12,6 +12,7 @@ import ForumPage from './pages/Forum.tsx';
 import DMPage from './pages/DMPage.tsx';
 import Conversations from './pages/Conversations.tsx';
 import ConversationDetail from './pages/ConversationDetail.tsx';
+import About from './pages/About.tsx'
 
 
 const clientId = '933058198355-7hlkolpvuoogsvke3ngsrvr5d2ldpdev.apps.googleusercontent.com';
@@ -33,6 +34,7 @@ function App() {
         <Route path="/dm" element={<DMPage />} />
         <Route path="/conversations" element={<Conversations />} />
         <Route path="/conversations/:id" element={<ConversationDetail />} />
+        <Route path="/about" element={<About />} />
       </Routes>
       </AuthProvider>
       </GoogleOAuthProvider>
