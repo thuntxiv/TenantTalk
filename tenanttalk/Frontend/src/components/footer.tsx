@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
-  
+
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -29,7 +29,6 @@ const Footer: React.FC = () => {
               <a href="/">Home</a>
               <a href="/about">About</a>
               <a href="/properties">Properties</a>
-              <a href="/contact">Contact</a>
               <a href="/landlords">Land Lords</a>
             </div>
             {/* second column */}
@@ -53,7 +52,6 @@ const Footer: React.FC = () => {
               <a href="https://facebook.com">Facebook</a>
               <a href="https://twitter.com">Twitter</a>
               <a href="https://instagram.com">Instagram</a>
-              <a href="https://linkedin.com">LinkedIn</a>
             </div>
           </div>
         </div>
