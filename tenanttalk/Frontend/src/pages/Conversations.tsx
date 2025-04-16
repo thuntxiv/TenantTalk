@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../components/AuthContext.tsx';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Conversations.css';
 
-// Example mock data, can be deleted later when backend is fully complete
+// Example mock data 
 const mockConversations = [
     {
         id: 1,
@@ -25,6 +28,33 @@ const mockConversations = [
 ];
 
 const Conversations: React.FC = () => {
+    const [conversations, setConversations] = useState(mockConversations);
+    const { user, isAuthenticated, isLoading } = useAuth();
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+        // Redirect if not authenticated
+        if (!isLoading && !isAuthenticated) {
+            navigate('/');
+        }
+        console.log("User:", user);
+        console.log("Is Authenticated:", isAuthenticated);
+        const fetchChats = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/chats/');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                setConversations(response as any);
+            } catch (error) {
+                console.error("Error fetching conversations:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchChats();
+    }, [isLoading, isAuthenticated, navigate]);
     return (
         <div className="conversations-page">
             <h1>Your Conversations</h1>

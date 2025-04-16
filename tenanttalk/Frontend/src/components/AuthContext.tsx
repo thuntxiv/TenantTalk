@@ -40,7 +40,35 @@ export const AuthProvider = ({ children }) => {
         // Update state
         setUser(userData);
         setIsAuthenticated(true);
-        console.log("User logged in:", userData);
+
+        // Check if user exists in the database
+        const userCheckResponse = await fetch(`http://localhost:5000/api/users/google/${userData.id}`);
+        if (userCheckResponse.ok) {
+          const userCheckData = await userCheckResponse.json();
+        } else {
+          // If user doesn't exist, create a new user
+          await fetch('http://localhost:5000/api/users', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              },
+            body: JSON.stringify({
+              userID: userData.id,
+              email: userData.email,
+              username: userData.name,
+              firstname: userData.given_name,
+              lastname: userData.family_name
+              })
+            }).then((response) => {
+              if (response.ok) {
+                console.log("User created successfully");
+              }
+              else {
+                console.error("Error creating user:", response.statusText);
+              }
+            });
+        }
+
       } catch (error) {
         console.error("Error fetching user details:", error);
       } finally {

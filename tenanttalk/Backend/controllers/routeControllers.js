@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 // Import user models
 import { User } from '../models/user.js';
 import { Landlord } from '../models/landlord.js';
@@ -11,6 +13,12 @@ import { Review, PropertyReview, LandlordReview } from '../models/reviews.js';
 
 // Import forum models
 import { ForumPost, SubleasePost, RoommatePost } from '../models/forum.js';
+
+// Import chat models
+import { Chat, Message } from '../models/chats.js';
+
+// Hashing library
+import crypto from 'crypto';
 
 const pageRoute = '../Frontend/src/pages';
 
@@ -43,6 +51,7 @@ class BaseController {
   async create(req, res) {
     try {
       const newItem = new this.model(req.body);
+      console.log('New item:', newItem);
       const savedItem = await newItem.save();
       res.status(201).json(savedItem);
     } catch (error) {
@@ -112,8 +121,37 @@ class UserController extends BaseController {
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
+
+    
   }
   
+  // Get by google ID
+  async getByUserID(req, res) {
+    try {
+      const user = await this.model.findByUserID(req.params.id);
+      if (!user) return res.status(404).json({ message: 'Item not found' });
+      res.json(user);
+    } catch (error) {
+      res.status(404).json({ error: 'User not found' });
+    }
+  }
+
+  async getByGeneric(req, res) {
+    try {
+      const byEmail = await this.model.findByEmail(req.params.param);
+      if (!byEmail) {
+        console.log(`Email ${req.params.param} not found, checking username...`);
+        const byUser = await this.model.findByUsername(req.params.param);
+        if (!byUser) return res.status(404).json({ message: 'Item not found'});
+        return res.json(byUser);
+      }
+      res.json(byEmail);
+    } catch (error) {
+      console.log(error);
+      res.status(404).json({ error: 'User not found' });
+    }
+  }
+
   // Login method
   async login(req, res) {
     try {
@@ -283,11 +321,132 @@ class ForumController extends BaseController {
   
 }
 
+class ChatController extends BaseController {
+  constructor(model = Chat) {
+    super(model);
+  }
+
+  // Override get method for chat-specific logic
+  async getById(req, res) {
+    try {
+      const user = req.params.id;
+      const chats = await this.model.find({ 
+        userIDs: {
+          $in: [user]
+        } 
+      }).lean();
+
+      if (!chats) return res.status(404).json({ message: 'Chats not found' });
+      const recipientIds = chats.map(chat => 
+        chat.userIDs.find(id => id !== user)
+      ).filter(Boolean);
+  
+      // Remove duplicates
+      const uniqueRecipientIds = [...new Set(recipientIds)];
+      
+      // Query for users
+      const users = await User.find({ userID: { $in: uniqueRecipientIds } }).lean();
+      
+      // Mapping userID -> username
+      const userMapping = users.reduce((acc, curr) => {
+        acc[curr.userID] = curr.username;
+        return acc;
+      }, {});
+      
+
+      const modifiedChats = chats.map(chat => {
+        const recipientId = chat.userIDs.find(id => id !== user) || null;
+        let recipientUser = { id: recipientId, username: null };
+        recipientUser.username = userMapping[recipientId] || null;
+        return { 
+           ...chat,
+           recipientUser
+        };
+      });
+
+      res.json(modifiedChats);
+    } catch (error) {
+      res.status(404).json({ error: error.message });
+      console.error(error);
+    }
+  }
+
+  async getOne(req, res) {
+    try {
+      const chat = await this.model.findById(req.params.id);
+      if (!chat) return res.status(404).json({ message: 'Chat not found' });
+      
+      res.json(chat);
+    }
+    catch (error) {
+      res.status(404).json({ error: error.message });
+    }
+  }
+
+  async create(req, res) {
+    try {
+      const { userIDs, messages } = req.body;
+      if (!userIDs || !Array.isArray(userIDs) || userIDs.length === 0) {
+        return res.status(400).json({ error: 'userIDs must be a non-empty array.' });
+      }
+
+      //Sort array and compute hash
+      const sortedIds = userIDs.map(id => id.toString()).sort();
+      const fingerprint = crypto
+        .createHash('md5')
+        .update(sortedIds.join(','))
+        .digest('hex');
+
+      const chatData = {
+        userIDs,
+        lastSenderID: messages[0] ? messages[0].senderID : null,
+        lastmessage: messages && messages.length > 0 ? messages[messages.length - 1].message : '',
+        idsKey: fingerprint,
+        messages: messages || []
+      };
+
+      const existingChat = await Chat.findOne({ idsKey: fingerprint });
+      if (existingChat) {
+        return res.status(400).json({ error: "A chat with this set of userIDs already exists." });
+      }
+
+      const newChat = new Chat(chatData);
+      
+      const chat = await newChat.save();
+      res.status(201).json(chat);
+
+
+    }
+    catch (error) {
+      console.log(error);
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  async addMessage(req, res) {
+    try {
+      const message  = req.body;
+      const chat = await this.model.findById(req.params.chatid);
+      if (!chat) return res.status(404).json({ message: 'Chat not found' });
+      chat.lastmessage = message.message;
+      chat.lastSenderID = message.senderID;
+      chat.messages.push(message);
+      await chat.save();
+      
+      res.json(chat);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+}
+
 // Controller instances
 const userController = new UserController();
 const propertyController = new PropertyController();
 const reviewController = new ReviewController();
 const forumController = new ForumController();
+const chatController = new ChatController();
 
 // Simple route handlers
 const home = async (req, res) => {
@@ -306,6 +465,7 @@ export {
   propertyController,
   reviewController,
   forumController,
+  chatController,
   home,
   login
 };

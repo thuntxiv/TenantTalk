@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 
 const messageSchema = new mongoose.Schema({
     message: {type: String, required: true},
@@ -8,10 +9,14 @@ const messageSchema = new mongoose.Schema({
 });
 
 const chatSchema = new mongoose.Schema({
-    userIDs: [{type: [String], required: true}],
+    userIDs: {type: [String], required: true},
+    idsKey: {type: String, required: true, unique: true},
     messages: [messageSchema],
+    lastmessage: {type: String, required: true},
+    lastSenderID: {type: String, required: true},
     createdAt: {type: Date, default: Date.now},
 });
+
 
 const Message = mongoose.model('Message', messageSchema);
 const Chat = mongoose.model('Chat', chatSchema);

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext.tsx';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/navbar.tsx';
 import Footer from '../components/footer.tsx';
 import '../styles/DMPage.css';
@@ -20,49 +22,105 @@ const DMPage: React.FC = () => {
     const [sending, setSending] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
+    const { user, isAuthenticated, isLoading } = useAuth();
+    const [conversations, setConversations] = useState<Conversation[]>([]);
+    
+    const navigate = useNavigate();
+        
+    useEffect(() => {
+        // Redirect if not authenticated
+        if (!isLoading && !isAuthenticated) {
+            navigate('/');
+        }
+        console.log("User:", user);
+        console.log("Is Authenticated:", isAuthenticated);
 
-    // Mock conversation data, can be deleted later with backend complete
-    const [conversations] = useState<Conversation[]>([
-        {
-            id: 1,
-            participant: "Alice",
-            lastMessage: "Looking forward to hearing back soon!",
-            timestamp: "2025-04-07 12:45 PM",
-            isNew: true, 
-        },
-        {
-            id: 2,
-            participant: "Bob",
-            lastMessage: "Thanks for the update!",
-            timestamp: "2025-04-06 16:10 PM",
-            isNew: false, 
-        },
-        {
-            id: 3,
-            participant: "Charlie",
-            lastMessage: "Can we reschedule our meeting?",
-            timestamp: "2025-04-05 09:30 AM",
-            isNew: false,
-        },
-    ]);
+        const fetchChats = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/chats/user/${user.id}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log("Response:", response);
+                const data = await response.json();
+                console.log("Data:", data);
+                setConversations(data);
+            } catch (error) {
+                console.error("Error fetching conversations:", error);
+            } finally {
+            }
+        }
+        fetchChats();
+    }, [isLoading, isAuthenticated, navigate]);
+
 
     // Handler for submitting the new DM form
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setSending(true);
         setSuccess(false);
         setError('');
-
+        //Verify recipient is not empty and is a valid email or username
+        if (!recipient) {
+            setError('Recipient cannot be empty.');
+            setSending(false);
+            return;
+        }
+        const response = await fetch(`http://localhost:5000/api/users/generic/${recipient}`);
+        if (!response.ok) {
+            setError('Recipient not found.');
+            setSending(false);
+            return;
+        }
+        const recipientData = await response.json();
+        const recipientID = recipientData.userID;
+        const newChat = {
+            messages: [{message: message,
+                senderID: user.id,
+                receiverID: recipientID,
+               }],
+            userIDs: [user.id, recipientID],
+        }
+        console.log(newChat);
+        //Create new DM conversation
         try {
-            // Simulate an API call to send a DM
-            setTimeout(() => {
-                setSending(false);
+            const createChat = await fetch(`http://localhost:5000/api/chats`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newChat),
+                redirect: "follow"
+            });
+            if (!createChat.ok) {
+                console.log("Error:", createChat.statusText);
+                throw new Error('Network response was not ok');
+            } else {
+                const data = await createChat.json();
+                console.log("Message sent successfully:", data);
                 setSuccess(true);
+                setSending(false);
+
                 // Clear fields
                 setRecipient('');
                 setSubject('');
                 setMessage('');
-            }, 1000);
+
+                // Add conversation to the list
+                const addChat = {
+                    _id: data.id,
+                    participants: recipient,
+                    lastMessage: newChat.messages[0].message,
+                    timestamp: new Date().toLocaleString(),
+                    isNew: false,
+                    recipientUser: {
+                        id: recipientID,
+                        username: recipientData.username || recipient,
+                    },
+                    createdAt: new Date().toLocaleString(),
+                };
+                setConversations((prevConversations) => [addChat, ...prevConversations]);
+            }
         } catch (err) {
             setSending(false);
             setError('Failed to send message. Please try again.');
@@ -91,17 +149,6 @@ const DMPage: React.FC = () => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="subject">Subject</label>
-                        <input
-                            type="text"
-                            id="subject"
-                            value={subject}
-                            onChange={(e) => setSubject(e.target.value)}
-                            placeholder="Enter message subject (optional)"
-                        />
-                    </div>
-
-                    <div className="form-group">
                         <label htmlFor="message">Message</label>
                         <textarea
                             id="message"
@@ -122,16 +169,18 @@ const DMPage: React.FC = () => {
                 <h2 className="previous-messages-title">Previous Conversations</h2>
                 <div className="conversation-list">
                     {conversations.map((conv) => (
+                        console.log(conv),
                         <Link
-                            key={conv.id}
-                            to={`/conversations/${conv.id}`}
+                            key={conv._id}
+                            to={`/conversations/${conv._id}`}
+                            state={{ conv }}
                             className={`conversation-item ${conv.isNew ? 'new-message' : ''}`}
                         >
                             <div className="conversation-header">
-                                <span className="participant">{conv.participant}</span>
-                                <span className="timestamp">{conv.timestamp}</span>
+                                <span className="participant">{conv.recipientUser.username || "New Chat"}</span>
+                                <span className="timestamp">{conv.createdAt}</span>
                             </div>
-                            <div className="last-message">{conv.lastMessage}</div>
+                            <div className="last-message">{conv.lastmessage}</div>
                         </Link>
                     ))}
                 </div>

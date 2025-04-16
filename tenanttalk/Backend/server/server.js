@@ -10,7 +10,8 @@ import {
   userController, 
   propertyController, 
   reviewController, 
-  forumController, 
+  forumController,
+  chatController, 
   home, 
   login 
 } from '../controllers/routeControllers.js';
@@ -22,6 +23,7 @@ import { Apartment, House, Room } from '../models/propertyTypes.js';
 import { Review, PropertyReview, LandlordReview } from '../models/reviews.js';
 import { ForumPost, SubleasePost, RoommatePost, Comment } from '../models/forum.js';
 import { Landlord } from '../models/landlord.js';
+import { Chat, Message } from '../models/chats.js';
 
 
 const app = express();
@@ -80,6 +82,11 @@ app.get('/api/users', userController.getAll.bind(userController));
 
 // Get user by ID
 app.get('/api/users/:id', userController.getById.bind(userController));
+
+// Get user by google ID
+app.get('/api/users/google/:id', userController.getByUserID.bind(userController));
+
+app.get('/api/users/generic/:param', userController.getByGeneric.bind(userController));
 
 // Create user (handles both regular users and landlords polymorphically)
 app.post('/api/users', userController.create.bind(userController));
@@ -151,7 +158,7 @@ app.get('/api/forumposts', forumController.getAll.bind(forumController));
 app.get('/api/forumposts/:id', forumController.getById.bind(forumController));
 
 // Get popular forum posts
-app.get('/api/forumposts/popular', forumController.getPopular.bind(forumController));
+//app.get('/api/forumposts/popular', forumController.getPopular.bind(forumController));
 
 // Create forum post (handles different post types polymorphically)
 app.post('/api/forumposts', forumController.create.bind(forumController));
@@ -236,30 +243,15 @@ app.delete("/api/comments/:id", async (req, res) => {
 |_________________|
 */
 
-//Get chat by ID
-app.get("/api/chats/:id", async (req, res) => {
-  try {
-    const chat = await mongoose.connection.collection("chats").findOne({ 
-      _id: new mongoose.Types.ObjectId(req.params.id)
-    });
-    if (!chat) {
-      return res.status(404).json({ error: "Chat not found" });
-    }
-    res.status(200).json(chat);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
-});
+//Get chats by userID
+app.get("/api/chats/user/:id", chatController.getById.bind(chatController));
+
+//Get chats by chat id
+app.get("/api/chat/:id", chatController.getOne.bind(chatController));
 
 //Create new chat
-app.post("/api/chats", async (req, res) => {
-  try {
-    const chat = new Chat(req.body);
-    await chat.save();
-    res.status(201).json(chat);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
-});
+app.post("/api/chats", chatController.create.bind(chatController));
+
+// Add Message to Chat
+app.post("/api/chats/:chatid/messages", chatController.addMessage.bind(chatController));
+
