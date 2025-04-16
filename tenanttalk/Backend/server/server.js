@@ -150,9 +150,6 @@ app.get('/api/forumposts', forumController.getAll.bind(forumController));
 // Get forum post by ID
 app.get('/api/forumposts/:id', forumController.getById.bind(forumController));
 
-// Get popular forum posts
-app.get('/api/forumposts/popular', forumController.getPopular.bind(forumController));
-
 // Create forum post (handles different post types polymorphically)
 app.post('/api/forumposts', forumController.create.bind(forumController));
 
