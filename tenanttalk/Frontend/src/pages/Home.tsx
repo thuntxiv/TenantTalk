@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/home.css';
 import Navbar from '../components/navbar.tsx';
 import Footer from '../components/footer.tsx';
+import { Link } from 'react-router-dom';
 
 const studioImage = require('../imgs/Studio_listing_1.jpeg');
 const loftImage = require('../imgs/Loft_Example.jpg');
@@ -306,7 +307,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Property Match Section */}
+      {/* ========== Property Match Section ========== */}
       <section className="property-match-section">
         <div className="section-container">
           <h2>Discover Your Perfect Property Match</h2>
@@ -316,24 +317,35 @@ const Home: React.FC = () => {
 
           <div className="property-grid">
             {mockListings.map((listing, idx) => (
-              <div
+              <Link
                 key={listing.id}
+                to={`/listings/${listing.id}`}
                 className={`property-card ${idx === 0 ? 'large' : ''}`}
+                style={{ textDecoration: 'none', color: 'inherit' }}
               >
+                {/* Image */}
                 <div
                   className="property-image"
                   style={{ backgroundImage: `url(${listing.imageUrl})` }}
-                >
-                  <button className="save-button">♡</button>
-                </div>
+                />
 
+                {/* Details */}
                 <div className="property-details">
+                  {/* Title */}
                   <h3 className="property-title">{listing.title}</h3>
+
+                  {/* Price now on its own line */}
                   <p className="property-price">${listing.price}/mo</p>
+
+                  {/* Address */}
                   <p className="property-address">{listing.address}</p>
+
+                  {/* Description */}
                   <p className="property-description">
                     {listing.description}
                   </p>
+
+                  {/* Stats */}
                   <div className="property-stats">
                     <span>{listing.rooms} bd</span>
                     <span>{listing.bathrooms} ba</span>
@@ -344,9 +356,7 @@ const Home: React.FC = () => {
                         : 'suitemate'}
                     </span>
                     <span>
-                      {listing.petFriendly
-                        ? 'Pet Friendly'
-                        : 'No Pets'}
+                      {listing.petFriendly ? 'Pet Friendly' : 'No Pets'}
                     </span>
                     <span>
                       {listing.utilitiesIncluded
@@ -355,11 +365,15 @@ const Home: React.FC = () => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
+
+          
           </div>
         </div>
       </section>
+      {/* ============================================ */}
+
 
       {/* ========== Testimonials Section ========== */}
       <section className="testimonials-section">
