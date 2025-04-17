@@ -19,6 +19,7 @@ const propertySchema = new mongoose.Schema({
     bedrooms: { type: Number, required: true },
     roomType: { type: String, required: true },
     amenities: { type: [String], required: true },
+    suitmates: { type: Number },
     lastEdited: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now }
 }, options);

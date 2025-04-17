@@ -133,7 +133,7 @@ export default function Propertylisting() {
                   ? item.photoURL[0]
                   : studioImage, 
               timeFrame: item.period,
-              numberOfSuitemates: 1, 
+              numberOfSuitemates: item.suitmates || 0, 
               roomType: item.roomType,
               bathrooms: item.bathrooms,
             }));

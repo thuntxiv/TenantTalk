@@ -49,125 +49,7 @@ const ForumPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<string>('newest');
 
   // Fetch on mount
-  useEffect(() => {
-
-    // Example mock data used for testing, not required when backend is fully complete
-    const mockPosts: ForumPost[] = [
-      {
-        id: '1',
-        userId: 'user1',
-        username: 'Alex Johnson',
-        userAvatar: 'https://via.placeholder.com/40',
-        subject: 'Beware of hidden fees at Campus View Apartments',
-        content:
-          "I recently moved into Campus View and discovered they charge extra for parking, which wasn't mentioned during the tour. Make sure to ask about ALL fees before signing a lease!",
-        createdAt: '2025-03-15T14:32:00Z',
-        category: 'general',
-        likes: 24,
-        comments: [
-          {
-            id: 'c1',
-            userId: 'user2',
-            username: 'Maria Garcia',
-            userAvatar: 'https://via.placeholder.com/40',
-            content:
-              'I had the same experience. They also charged me a "community fee" that wasn\'t disclosed upfront.',
-            createdAt: '2025-03-15T15:10:00Z'
-          },
-          {
-            id: 'c2',
-            userId: 'user3',
-            username: 'James Wilson',
-            userAvatar: 'https://via.placeholder.com/40',
-            content: 'Thanks for the heads up! I was considering them for next semester.',
-            createdAt: '2025-03-15T16:45:00Z'
-          }
-        ]
-      },
-      {
-        id: '2',
-        userId: 'user4',
-        username: 'Emily Chen',
-        userAvatar: 'https://via.placeholder.com/40',
-        subject: 'Great experience with landlord John Smith',
-        content:
-          "I've been renting from John Smith for two years now. He's always responsive to maintenance requests and is fair with the security deposit. Highly recommend his properties!",
-        imageUrl: 'https://via.placeholder.com/600x400',
-        createdAt: '2025-03-10T09:15:00Z',
-        category: 'landlord',
-        likes: 42,
-        comments: [
-          {
-            id: 'c3',
-            userId: 'user5',
-            username: 'Michael Rodriguez',
-            userAvatar: 'https://via.placeholder.com/40',
-            content:
-              'I can second this! I lived in one of his properties last year and had a similar positive experience.',
-            createdAt: '2025-03-10T10:22:00Z'
-          }
-        ]
-      },
-      {
-        id: '3',
-        userId: 'user6',
-        username: 'Sarah Williams',
-        userAvatar: 'https://via.placeholder.com/40',
-        subject: 'Looking for a roommate near State University',
-        content:
-          "I'm a junior engineering student looking for a roommate for Fall 2025. I'm clean, quiet, and usually study in the evenings. Budget is around $700/month. Message me if interested!",
-        createdAt: '2025-03-08T18:30:00Z',
-        category: 'roommate',
-        likes: 5,
-        comments: []
-      },
-      {
-        id: '4',
-        userId: 'user7',
-        username: 'David Taylor',
-        userAvatar: 'https://via.placeholder.com/40',
-        subject: 'New student housing being built on College Ave',
-        content:
-          'Just noticed they started construction on a new apartment complex on College Ave. Looks like it will be finished by Summer 2026. Should add about 200 new units to the market.',
-        imageUrl: 'https://via.placeholder.com/600x400',
-        createdAt: '2025-03-05T11:45:00Z',
-        category: 'general',
-        likes: 31,
-        comments: [
-          {
-            id: 'c4',
-            userId: 'user8',
-            username: 'Jessica Brown',
-            userAvatar: 'https://via.placeholder.com/40',
-            content:
-              'I hope they make them affordable! The market is getting ridiculous around campus.',
-            createdAt: '2025-03-05T12:20:00Z'
-          },
-          {
-            id: 'c5',
-            userId: 'user9',
-            username: 'Robert Martinez',
-            userAvatar: 'https://via.placeholder.com/40',
-            content:
-              'I heard these will be luxury apartments starting at $1500/month for studios.',
-            createdAt: '2025-03-05T14:10:00Z'
-          },
-          {
-            id: 'c6',
-            userId: 'user2',
-            username: 'Maria Garcia',
-            userAvatar: 'https://via.placeholder.com/40',
-            content: 'Just what we need... more unaffordable housing 🙄',
-            createdAt: '2025-03-05T15:30:00Z'
-          }
-        ]
-      }
-    ];
-
-
-
-    //setPosts(mockPosts);
-    //setFilteredPosts(mockPosts);
+  useEffect(() => {    
     setLoading(true);
 
     const fetchListings = async () => {
@@ -272,40 +154,56 @@ const ForumPage: React.FC = () => {
   };
 
 
-  // Create new post
-  const handleCreatePost = () => {
+  const handleCreatePost = async () => {
     if (!newPostSubject.trim() || !newPostContent.trim()) {
       alert('Please fill in both subject and content fields.');
       return;
     }
-
-    
-    //const imageUrl = newPostImage ? 'https://via.placeholder.com/600x400' : undefined;
+  
     const imageUrl = imagePreview || undefined;
-
-    const newPost: ForumPost = {
-      id: `post-${Date.now()}`,
+  
+    // Build the payload you’ll send
+    const payload = {
       userId: user?.id || 'anonymous',
       username: user?.name || 'Anonymous User',
       userAvatar: user?.picture || 'https://via.placeholder.com/40',
       subject: newPostSubject,
       content: newPostContent,
       imageUrl,
-      createdAt: new Date().toISOString(),
-      category: newPostCategory as any,
+      category: newPostCategory,
       likes: 0,
       comments: []
     };
-
-    setPosts([newPost, ...posts]);
-
-    // Reset form
-    setNewPostSubject('');
-    setNewPostContent('');
-    setNewPostCategory('general');
-    setNewPostImage(null);
-    setImagePreview(null);
-    setIsCreatingPost(false);
+  
+    try {
+      const res = await fetch('http://localhost:5000/api/forumposts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || res.statusText);
+      }
+  
+      // Server’s response should be the full created object (with _id, createdAt, etc.)
+      const createdPost = await res.json();
+      createdPost.comments = [];
+      console.log(createdPost);
+      // Refresh the posts list
+      setPosts([createdPost,... posts]);
+      // Reset form
+      setNewPostSubject('');
+      setNewPostContent('');
+      setNewPostCategory('general');
+      setNewPostImage(null);
+      setImagePreview(null);
+      setIsCreatingPost(false);
+    } catch (error: any) {
+      console.error('Failed to create post:', error);
+      alert('Could not create post: ' + error.message);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -552,7 +450,7 @@ const ForumPage: React.FC = () => {
                       ❤️ {post.likes} {post.likes === 1 ? 'like' : 'likes'}
                     </span>
                     <span className="comments-count">
-                      💬 {post.comments.length}{' '}
+                      💬 {post.comments.length || 0}{' '}
                       {post.comments.length === 1 ? 'comment' : 'comments'}
                     </span>
                   </div>

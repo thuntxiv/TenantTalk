@@ -55,6 +55,7 @@ class BaseController {
       const savedItem = await newItem.save();
       res.status(201).json(savedItem);
     } catch (error) {
+      console.log('Error:', error);
       res.status(400).json({ error: error.message });
     }
   }
@@ -194,7 +195,7 @@ class PropertyController extends BaseController {
   async create(req, res) {
     try {
       const { type, ...propertyData } = req.body;
-      
+      console.log(propertyData);
       // Polymorphic instantiation based on property type
       let property;
       
@@ -211,7 +212,7 @@ class PropertyController extends BaseController {
         default:
           property = new Property(propertyData);
       }
-      
+      property.type = type;
       const savedProperty = await property.save();
       
       // Polymorphic method call
@@ -221,6 +222,7 @@ class PropertyController extends BaseController {
       
       res.status(201).json(responseData);
     } catch (error) {
+      console.log('Error:', error);
       res.status(400).json({ error: error.message });
     }
   }
