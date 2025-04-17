@@ -292,28 +292,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* International Network Section */}
-      <section className="network-section">
-        <div className="section-container">
-          <h2>Landlord Property Network</h2>
-          <p>Our landlord network spans to the most college campuses in the US</p>
-
-          <div className="world-map">
-            <div className="map-dot germany">
-              <div className="country-popup">
-                <img src="https://via.placeholder.com/50x50" alt="Location Dot" />
-                <div>
-                  <h4>Troy, NY</h4>
-                  <p>RPI Housing</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
       {/* Testimonials Section */}
       <section className="testimonials-section">
         <div className="section-container">
@@ -325,11 +303,6 @@ const Home = () => {
           <div className="testimonials-grid">
             <div className="testimonial-card">
               <div className="testimonial-header">
-                <img
-                  src="https://via.placeholder.com/50x50"
-                  alt="Rachel Heart"
-                  className="testimonial-avatar"
-                />
                 <div>
                   <h4>Rachel Heart</h4>
                   <div className="rating">★★★★★</div>
@@ -342,11 +315,6 @@ const Home = () => {
 
             <div className="testimonial-card">
               <div className="testimonial-header">
-                <img
-                  src="https://via.placeholder.com/50x50"
-                  alt="Lucas Rodrigo"
-                  className="testimonial-avatar"
-                />
                 <div>
                   <h4>Lucas Rodrigo</h4>
                   <div className="rating">★★★★★</div>
@@ -359,11 +327,6 @@ const Home = () => {
 
             <div className="testimonial-card">
               <div className="testimonial-header">
-                <img
-                  src="https://via.placeholder.com/50x50"
-                  alt="Amanda Baldwin"
-                  className="testimonial-avatar"
-                />
                 <div>
                   <h4>Amanda Baldwin</h4>
                   <div className="rating">★★★★★</div>
@@ -376,11 +339,6 @@ const Home = () => {
 
             <div className="testimonial-card">
               <div className="testimonial-header">
-                <img
-                  src="https://via.placeholder.com/50x50"
-                  alt="Harry Jacobs"
-                  className="testimonial-avatar"
-                />
                 <div>
                   <h4>Harry Jacobs</h4>
                   <div className="rating">★★★★★</div>
