@@ -108,7 +108,7 @@ const DMPage: React.FC = () => {
 
                 // Add conversation to the list
                 const addChat = {
-                    _id: data.id,
+                    _id: data._lid,
                     participants: recipient,
                     lastMessage: newChat.messages[0].message,
                     timestamp: new Date().toLocaleString(),
@@ -169,7 +169,7 @@ const DMPage: React.FC = () => {
                 <h2 className="previous-messages-title">Previous Conversations</h2>
                 <div className="conversation-list">
                     {conversations.map((conv) => (
-                        console.log(conv),
+                        console.log("new:", conv),
                         <Link
                             key={conv._id}
                             to={`/conversations/${conv._id}`}

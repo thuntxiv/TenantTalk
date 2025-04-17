@@ -42,7 +42,7 @@ const LandlordListPage: React.FC = () => {
           },
           {
             id: '2',
-            name: 'Emily Johnson',
+            name: 'Jane Doe',
             profileImage: Avatar2,
             properties: 8,
             rating: 4.5,
@@ -50,7 +50,7 @@ const LandlordListPage: React.FC = () => {
           },
           {
             id: '3',
-            name: 'Michael Rodriguez',
+            name: 'Bob Johnson',
             profileImage: Avatar3,
             properties: 5,
             rating: 4.9,
