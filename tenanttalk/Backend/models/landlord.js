@@ -13,6 +13,10 @@ const landlordSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
+landlordSchema.statics.findByLandlord= function(landlordID) {
+    return this.findOne({ landlordID : landlordID});
+};
+
 const Landlord = mongoose.model("Landlord", landlordSchema);
 
 export {Landlord, landlordSchema};

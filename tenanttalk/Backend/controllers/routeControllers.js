@@ -235,6 +235,16 @@ class PropertyController extends BaseController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  async getByLandlord(req, res) {
+    try {
+      const landlordID = req.params.id;
+      const properties = await Property.findByLandlord(landlordID);
+      res.json(properties);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 }
 
 // Review controller inherits from base controller
