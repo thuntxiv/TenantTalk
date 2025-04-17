@@ -77,14 +77,32 @@ app.post('/api/login', login);
 |_________________|
 */
 
-app.get('/api/users', async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
-});
+// Get all users
+app.get('/api/users', userController.getAll.bind(userController));
+
+// Get user by ID
+app.get('/api/users/:id', userController.getById.bind(userController));
+
+// Get user by google ID
+app.get('/api/users/google/:id', userController.getByUserID.bind(userController));
+
+app.get('/api/users/generic/:param', userController.getByGeneric.bind(userController));
+
+// Create user (handles both regular users and landlords polymorphically)
+app.post('/api/users', userController.create.bind(userController));
+
+// Update user
+app.put('/api/users/:id', userController.update.bind(userController));
+
+// Delete user
+app.delete('/api/users/:id', userController.delete.bind(userController));
+
+
+/* 
+ _________________
+| Landlord ROUTES     |
+|_________________|
+*/
 
 app.get('/api/landlords', async (req, res) => {
   try {
@@ -95,20 +113,59 @@ app.get('/api/landlords', async (req, res) => {
   }
 });
 
-// Get User by ID
-app.get("/api/users/:id", async (req, res) => {
+// Get Landlord by ID
+app.get("/api/landlords/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+    const landlord = await Landlord.findById(req.params.id);
+    if (!landlord) {
+      return res.status(404).json({ error: "Landlord not found" });
     }
-    res.status(200).json(user);
+    res.status(200).json(landlord);
   } catch (err) {
     console.error(err);
     res.status(400).json({ error: err.message });
   }
 });
 
+app.post("/api/landlords", async (req, res) => {
+  try {
+      const landlord = new Landlord(req.body);
+      await landlord.save();
+      res.status(201).json(landlord);
+  } catch (err) {
+      res.status(400).json({ error: err.message });
+  }
+});
+
+// Update Landlord
+app.put("/api/landlords/:id", async (req, res) => {
+  try {
+    const updatedLandlord = await Landlord.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!updatedLandlord) {
+      return res.status(404).json({ error: "Landlord not found" });
+    }
+    res.status(200).json(updatedLandlord);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Delete Landlord
+app.delete("/api/landlords/:id", async (req, res) => {
+  try {
+    const deletedLandlord = await Landlord.findByIdAndDelete(req.params.id);
+    if (!deletedLandlord) {
+      return res.status(404).json({ error: "Landlord not found" });
+    }
+    res.status(200).json({ message: "Landlord successfully deleted" });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
 
 /*________________
 | PROPERTY ROUTES |
@@ -148,7 +205,7 @@ app.get('/api/reviews/:id', reviewController.getById.bind(reviewController));
 // Get recent reviews
 app.get('/api/reviews/recent', reviewController.getRecent.bind(reviewController));
 
-// Create review (handles both property and landlord reviews polymorphically)
+// Create review
 app.post('/api/reviews', reviewController.create.bind(reviewController));
 
 // Update review
