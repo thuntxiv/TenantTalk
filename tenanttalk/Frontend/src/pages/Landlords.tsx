@@ -4,6 +4,10 @@ import Navbar from '../components/navbar.tsx';
 import Footer from '../components/footer.tsx';
 import '../styles/landlords.css';
 
+const Avatar1 = require('../imgs/avatar1.jpg');
+const Avatar2 = require('../imgs/avatar2.jpg');
+const Avatar3 = require('../imgs/avatar3.png');
+
 // Types
 interface Landlord {
   id: string;
@@ -31,7 +35,7 @@ const LandlordListPage: React.FC = () => {
           {
             id: '1',
             name: 'John Smith',
-            profileImage: 'https://via.placeholder.com/150',
+            profileImage: Avatar1,
             properties: 12,
             rating: 4.7,
             reviewCount: 34
@@ -39,7 +43,7 @@ const LandlordListPage: React.FC = () => {
           {
             id: '2',
             name: 'Emily Johnson',
-            profileImage: 'https://via.placeholder.com/150',
+            profileImage: Avatar2,
             properties: 8,
             rating: 4.5,
             reviewCount: 21
@@ -47,27 +51,11 @@ const LandlordListPage: React.FC = () => {
           {
             id: '3',
             name: 'Michael Rodriguez',
-            profileImage: 'https://via.placeholder.com/150',
+            profileImage: Avatar3,
             properties: 5,
             rating: 4.9,
             reviewCount: 15
           },
-          {
-            id: '4',
-            name: 'Sarah Williams',
-            profileImage: 'https://via.placeholder.com/150',
-            properties: 3,
-            rating: 4.2,
-            reviewCount: 9
-          },
-          {
-            id: '5',
-            name: 'David Chen',
-            profileImage: 'https://via.placeholder.com/150',
-            properties: 15,
-            rating: 4.8,
-            reviewCount: 42
-          }
         ];
         setLandlords(mockData);
         setLoading(false);

@@ -4,13 +4,19 @@ import ReviewForm from '../components/Review.tsx';
 import '../styles/LandlordProfile.css';
 import { useAuth } from '../components/AuthContext.tsx';
 
+const Avatar1 = require('../imgs/avatar1.jpg');
+const Avatar2 = require('../imgs/avatar2.jpg');
+const Avatar3 = require('../imgs/avatar3.png');
+const studioImage = require('../imgs/Studio_listing_1.jpeg');
+const loftImage = require('../imgs/Loft_Example.jpg');
+
 const LandlordProfilePage: React.FC = () => {
     const { user, isAuthenticated, isLoading } = useAuth();
     // Mock data directly in the component, cna be deleted later with completed backend
     const landlord = {
       id: '1',
       name: 'John Smith',
-      profileImage: 'https://via.placeholder.com/300',
+      profileImage: Avatar1,
       email: 'john.smith@example.com',
       phone: '(555) 123-4567',
       bio: 'Property manager with over 10 years of experience managing college town apartments. I take pride in maintaining quality housing for students and young professionals.',
@@ -19,28 +25,20 @@ const LandlordProfilePage: React.FC = () => {
       rating: 4.7,
       properties: [
         {
-          id: 'p1',
-          address: '123 College St, Apt 4B',
-          image: 'https://via.placeholder.com/400x300',
+          id: 1,
+          address: '123 4th Street, Troy, NY',
+          image: studioImage,
           beds: 2,
           baths: 1,
-          price: 1200
+          price: 650
         },
         {
-          id: 'p2',
-          address: '456 University Ave',
-          image: 'https://via.placeholder.com/400x300',
+          id: 2,
+          address: '456 River Street, Troy, NY',
+          image: loftImage,
           beds: 3,
           baths: 2,
-          price: 1600
-        },
-        {
-          id: 'p3',
-          address: '789 Campus Blvd',
-          image: 'https://via.placeholder.com/400x300',
-          beds: 1,
-          baths: 1,
-          price: 900
+          price: 1000
         }
       ],
       reviews: [
@@ -48,7 +46,7 @@ const LandlordProfilePage: React.FC = () => {
           id: 'r1',
           userId: 'u1',
           userName: 'Alex Johnson',
-          userImage: 'https://via.placeholder.com/50',
+          userImage: Avatar2,
           rating: 5,
           comment: 'John was an excellent landlord! Very responsive to maintenance requests and always fair with the deposit return.',
           date: '2023-12-15'
@@ -57,26 +55,21 @@ const LandlordProfilePage: React.FC = () => {
           id: 'r2',
           userId: 'u2',
           userName: 'Maria Garcia',
-          userImage: 'https://via.placeholder.com/50',
+          userImage: Avatar3,
           rating: 4,
           comment: 'Overall a good experience. The property was well-maintained, though sometimes it took a few days to get a response to emails.',
           date: '2023-10-28'
         },
-        {
-          id: 'r3',
-          userId: 'u3',
-          userName: 'James Wilson',
-          userImage: 'https://via.placeholder.com/50',
-          rating: 5,
-          comment: 'One of the best landlords I\'ve had. Prompt with repairs and very understanding during the pandemic.',
-          date: '2023-08-05'
-        }
       ]
     };
     
     const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
     const [landlordData, setLandlordData] = useState(landlord);
     const navigate = useNavigate();
+
+    function handleListingClick(listingId: number) {
+      navigate(`/listings/${listingId}`);
+  }
   
     const handleBack = () => {
       navigate(-1);
@@ -209,7 +202,7 @@ const LandlordProfilePage: React.FC = () => {
           <h2>Properties ({landlordData.properties.length})</h2>
           <div className="property-cards">
             {landlordData.properties.map(property => (
-              <div key={property.id} className="property-card">
+              <div key={property.id} className="property-card" onClick={() => handleListingClick(property.id)}>
                 <img 
                   src={property.image} 
                   alt={property.address} 
