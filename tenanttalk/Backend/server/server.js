@@ -77,25 +77,37 @@ app.post('/api/login', login);
 |_________________|
 */
 
-// Get all users
-app.get('/api/users', userController.getAll.bind(userController));
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
 
-// Get user by ID
-app.get('/api/users/:id', userController.getById.bind(userController));
+app.get('/api/landlords', async (req, res) => {
+  try {
+    const landlord = await Landlord.find();
+    res.json(landlord);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
 
-// Get user by google ID
-app.get('/api/users/google/:id', userController.getByUserID.bind(userController));
-
-app.get('/api/users/generic/:param', userController.getByGeneric.bind(userController));
-
-// Create user (handles both regular users and landlords polymorphically)
-app.post('/api/users', userController.create.bind(userController));
-
-// Update user
-app.put('/api/users/:id', userController.update.bind(userController));
-
-// Delete user
-app.delete('/api/users/:id', userController.delete.bind(userController));
+// Get User by ID
+app.get("/api/users/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ error: err.message });
+  }
+});
 
 
 /*________________
