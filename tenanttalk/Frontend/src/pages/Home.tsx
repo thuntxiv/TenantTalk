@@ -4,22 +4,96 @@ import '../styles/home.css';
 import Navbar from '../components/navbar.tsx';
 import Footer from '../components/footer.tsx';
 
-const Home = () => {
+const studioImage = require('../imgs/Studio_listing_1.jpeg');
+const loftImage = require('../imgs/Loft_Example.jpg');
+
+interface Listing {
+  id: number;
+  title: string;
+  price: number;
+  location: string;
+  address: string;
+  school: string;
+  petFriendly: boolean;
+  rooms: number;
+  utilitiesIncluded: boolean;
+  description: string;
+  imageUrl: string;
+  timeFrame: string;
+  numberOfSuitemates: number;
+  roomType: string;
+  bathrooms: number;
+}
+
+const Home: React.FC = () => {
   // Local states for search fields
   const [propertyType, setPropertyType] = useState('All Types');
   const [location, setLocation] = useState('');
   const [maxPrice, setMaxPrice] = useState(2000);
-
-  // Additional filters
   const [timeFrame, setTimeFrame] = useState('All');
-  const [petFriendly, setPetFriendly] = useState('All');   
-  const [utilitiesIncluded, setUtilitiesIncluded] = useState('All'); 
-  const [rooms, setRooms] = useState('All');               
+  const [petFriendly, setPetFriendly] = useState('All');
+  const [utilitiesIncluded, setUtilitiesIncluded] = useState('All');
+  const [rooms, setRooms] = useState('All');
   const [suitemates, setSuitemates] = useState('All');
-  const [roomType, setRoomType] = useState('All');          
-  const [bathrooms, setBathrooms] = useState('All');       
+  const [roomType, setRoomType] = useState('All');
+  const [bathrooms, setBathrooms] = useState('All');
 
   const navigate = useNavigate();
+
+  // Mock property data
+  const mockListings: Listing[] = [
+    {
+      id: 1,
+      title: 'Studio Apartment',
+      price: 650,
+      location: 'RPI',
+      address: '123 4th Street, Troy, NY',
+      school: 'RPI',
+      petFriendly: true,
+      rooms: 1,
+      utilitiesIncluded: false,
+      description: 'A cozy studio near RPI. Perfect for one person. Pets allowed!',
+      imageUrl: studioImage,
+      timeFrame: 'August - December',
+      numberOfSuitemates: 1,
+      roomType: 'Single',
+      bathrooms: 1,
+    },
+    {
+      id: 2,
+      title: 'Modern Loft',
+      price: 1000,
+      location: 'RPI',
+      address: '456 River Street, Troy, NY',
+      school: 'RPI',
+      petFriendly: false,
+      rooms: 2,
+      utilitiesIncluded: true,
+      description: 'A modern loft near the river. Spacious living area with utilities included.',
+      imageUrl: loftImage,
+      timeFrame: 'May - August',
+      numberOfSuitemates: 2,
+      roomType: 'Double',
+      bathrooms: 2,
+    },
+    {
+      id: 3,
+      title: 'Townhouse',
+      price: 550,
+      location: 'HVCC',
+      address: '789 12th Street, Troy, NY',
+      school: 'HVCC',
+      petFriendly: true,
+      rooms: 3,
+      utilitiesIncluded: false,
+      description: 'A large townhouse on 12th Street, close to HVCC. Shared living space, pet-friendly.',
+      imageUrl: studioImage,
+      timeFrame: 'January - June',
+      numberOfSuitemates: 3,
+      roomType: 'Other',
+      bathrooms: 1,
+    },
+  ];
 
   // Build query string from the search fields and navigate to /properties
   function handleSearch() {
@@ -51,8 +125,7 @@ const Home = () => {
           <div className="search-container">
             <div className="search-form">
               <div className="search-row">
-
-                {/* Location */}
+                {/* Property Name */}
                 <div className="search-field">
                   <label>Name Of Property</label>
                   <input
@@ -83,6 +156,7 @@ const Home = () => {
                   Search
                 </button>
               </div>
+
               <div className="search-row">
                 {/* Sublease Period */}
                 <div className="search-field">
@@ -124,7 +198,7 @@ const Home = () => {
                   </select>
                 </div>
 
-                {/* Number of Rooms (Property) */}
+                {/* Number of Rooms */}
                 <div className="search-field">
                   <label>Rooms (Property)</label>
                   <select
@@ -138,6 +212,7 @@ const Home = () => {
                   </select>
                 </div>
               </div>
+
               <div className="search-row">
                 {/* Number of Suitemates */}
                 <div className="search-field">
@@ -185,7 +260,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
 
       {/* Advisors Section */}
       <section className="advisors-section">
@@ -237,120 +311,103 @@ const Home = () => {
         <div className="section-container">
           <h2>Discover Your Perfect Property Match</h2>
           <p className="section-description">
-            Embark on a journey of discovery through beautiful properties. Various categories, curated to fulfill your specific housing needs.
+            Embark on a journey of discovery through beautiful properties.
           </p>
 
           <div className="property-grid">
-            <div className="property-card large">
+            {mockListings.map((listing, idx) => (
               <div
-                className="property-image"
-                style={{ backgroundImage: "url('https://via.placeholder.com/600x400')" }}
+                key={listing.id}
+                className={`property-card ${idx === 0 ? 'large' : ''}`}
               >
-                <button className="save-button">♡</button>
-              </div>
-              <div className="property-details">
-                <h3 className="property-price">$1,200,000</h3>
-                <p className="property-address">321 College St, Apt 4B</p>
-                <div className="property-stats">
-                  <span>4 bd</span>
-                  <span>3 ba</span>
-                  <span>2,540 sqft</span>
+                <div
+                  className="property-image"
+                  style={{ backgroundImage: `url(${listing.imageUrl})` }}
+                >
+                  <button className="save-button">♡</button>
                 </div>
-                <div className="agent-badge">
-                  <span>↗</span>
+
+                <div className="property-details">
+                  <h3 className="property-title">{listing.title}</h3>
+                  <p className="property-price">${listing.price}/mo</p>
+                  <p className="property-address">{listing.address}</p>
+                  <p className="property-description">
+                    {listing.description}
+                  </p>
+                  <div className="property-stats">
+                    <span>{listing.rooms} bd</span>
+                    <span>{listing.bathrooms} ba</span>
+                    <span>
+                      {listing.numberOfSuitemates}{' '}
+                      {listing.numberOfSuitemates > 1
+                        ? 'suitemates'
+                        : 'suitemate'}
+                    </span>
+                    <span>
+                      {listing.petFriendly
+                        ? 'Pet Friendly'
+                        : 'No Pets'}
+                    </span>
+                    <span>
+                      {listing.utilitiesIncluded
+                        ? 'Utilities Included'
+                        : 'Utilities Not Included'}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="property-card">
-              <div
-                className="property-image"
-                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
-              >
-                <button className="save-button">♡</button>
-              </div>
-            </div>
-
-            <div className="property-card">
-              <div
-                className="property-image"
-                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
-              >
-                <button className="save-button">♡</button>
-              </div>
-            </div>
-
-            <div className="property-card">
-              <div
-                className="property-image"
-                style={{ backgroundImage: "url('https://via.placeholder.com/400x300')" }}
-              >
-                <button className="save-button">♡</button>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* ========== Testimonials Section ========== */}
       <section className="testimonials-section">
         <div className="section-container">
           <h2>Don't Trust Us, Trust Their Voice</h2>
           <p className="section-description">
-            Discover heartfelt accounts of our past renters and what they say on our valued hosts's timely and reliable responses.
+            Discover heartfelt accounts of our past renters and what they say about our hosts’ timely, reliable responses.
           </p>
 
           <div className="testimonials-grid">
-            <div className="testimonial-card">
-              <div className="testimonial-header">
-                <div>
-                  <h4>Rachel Heart</h4>
-                  <div className="rating">★★★★★</div>
+            {[
+              {
+                name: 'Rachel Heart',
+                quote:
+                  'Choosing this app saved me so much time in my rental search! I was instantly connected with verified landlords and appreciated their professionalism and expertise. Highly recommended!',
+              },
+              {
+                name: 'Lucas Rodrigo',
+                quote:
+                  'I had a tight timeline to find a place near campus. This service helped me secure a great rental in no time. I would definitely use it again!',
+              },
+              {
+                name: 'Amanda Baldwin',
+                quote:
+                  'They patiently answered all our questions, provided valuable market insights, and helped us secure our dream home within our budget.',
+              },
+              {
+                name: 'Harry Jacobs',
+                quote:
+                  'They presented us with a stunning selection of homes that perfectly matched our criteria; their detail‑oriented approach and in‑depth knowledge of the local market truly impressed us.',
+              },
+            ].map((t, i) => (
+              <div key={i} className="testimonial-card">
+                <h4 className="testimonial-name">{t.name}</h4>
+                <div className="testimonial-stars">
+                  {/* ★★★★★ */}
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i}>★</span>
+                  ))}
                 </div>
+                <p className="testimonial-quote">"{t.quote}"</p>
               </div>
-              <p className="testimonial-text">
-                "Choosing this app saved me so much time in my rental search! I was instantly connected with verified landlords and appreciated their professionalism and expertise. Highly recommended!"
-              </p>
-            </div>
-
-            <div className="testimonial-card">
-              <div className="testimonial-header">
-                <div>
-                  <h4>Lucas Rodrigo</h4>
-                  <div className="rating">★★★★★</div>
-                </div>
-              </div>
-              <p className="testimonial-text">
-                "I had a tight timeline to find a place near campus. This service helped me secure a grand rental in no time. I would definitely use it again!"
-              </p>
-            </div>
-
-            <div className="testimonial-card">
-              <div className="testimonial-header">
-                <div>
-                  <h4>Amanda Baldwin</h4>
-                  <div className="rating">★★★★★</div>
-                </div>
-              </div>
-              <p className="testimonial-text">
-                "They patiently answered all our questions, provided valuable market insights, and helped us secure our dream home within our budget."
-              </p>
-            </div>
-
-            <div className="testimonial-card">
-              <div className="testimonial-header">
-                <div>
-                  <h4>Harry Jacobs</h4>
-                  <div className="rating">★★★★★</div>
-                </div>
-              </div>
-              <p className="testimonial-text">
-                "They presented us with a stunning selection of homes that perfectly matched our criteria, thanks to their detail-oriented approach and in-depth knowledge of the local market truly impressed us."
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
+      {/* =========================================== */}
+
 
       {/* CTA Section */}
       <section className="cta-section">
