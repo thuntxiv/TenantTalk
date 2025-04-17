@@ -123,18 +123,6 @@ const Profile = () => {
           >
             Housing Preferences
           </button>
-          <button 
-            className={`profile-tab ${activeTab === 'saved' ? 'active' : ''}`}
-            onClick={() => setActiveTab('saved')}
-          >
-            Saved Properties
-          </button>
-          <button 
-            className={`profile-tab ${activeTab === 'messages' ? 'active' : ''}`}
-            onClick={() => setActiveTab('messages')}
-          >
-            Messages
-          </button>
         </div>
         
         <div className="profile-content">
@@ -384,23 +372,7 @@ const Profile = () => {
             </div>
           )}
           
-          {activeTab === 'saved' && (
-            <div className="saved-properties">
-              <div className="profile-section">
-                <h2>Saved Properties</h2>
-                <p className="no-content">You haven't saved any properties yet.</p>
-              </div>
-            </div>
-          )}
-          
-          {activeTab === 'messages' && (
-            <div className="messages">
-              <div className="profile-section">
-                <h2>Messages</h2>
-                <p className="no-content">You have no messages yet.</p>
-              </div>
-            </div>
-          )}
+
         </div>
       </div>
       <Footer />
