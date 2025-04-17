@@ -220,12 +220,10 @@ const ForumPage: React.FC = () => {
 
   const handleNewComment = (postId: string) => {
     const newCommentObj: Comment = {
-      id: v4(),
-      userId: "elk120df3099",
-      username: "James",
-      userAvatar: "https://via.placeholder.com/40",
-      content: newComment,
-      createdAt: new Date().toISOString()
+      userId: user?.id || 'anonymous',
+      username: user?.name || 'Anonymous User',
+      userAvatar: user?.picture || 'https://via.placeholder.com/40',
+      content: newComment
     }
     console.log(newCommentObj);
     console.log(postId);
