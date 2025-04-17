@@ -167,6 +167,8 @@ app.delete("/api/landlords/:id", async (req, res) => {
   }
 });
 
+app.get("/api/landlords/:id/properties", propertyController.getByLandlord.bind(propertyController));
+
 /*________________
 | PROPERTY ROUTES |
 |_________________|
