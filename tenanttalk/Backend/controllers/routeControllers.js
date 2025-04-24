@@ -284,6 +284,7 @@ class ReviewController extends BaseController {
     }
   }
   
+
   // Get recent reviews
   async getRecent(req, res) {
     try {
@@ -500,13 +501,43 @@ class LandlordController extends BaseController {
       }
 
       const properties = await Property.findByLandlord(landlordId).lean();
-      const reviews = await LandlordReview.find({ landlordId }).lean();
+      const reviews = await LandlordReview.find({ landlordID: landlordId }).lean();
 
-      res.json({
-        ...landlord,
-        properties,
-        reviews
-      });
+      let userReviews = [];
+      if (reviews.length > 0) {
+      // collect unique userIds
+      const userIds = [...new Set(reviews.map(r => r.userID))];
+      const users = await User.find(
+        { userID: { $in: userIds } },
+        'username'
+      ).lean();
+
+      const usernameMap = users.reduce((m, u) => {
+        m[u.userID] = u.username;
+        return m;
+      }, {});
+
+      userReviews = reviews.map(r => ({
+        ...r,
+        username: usernameMap[r.userId] || null
+      }));
+    }
+
+    const reviewCount = userReviews.length;
+    const averageRating = reviewCount > 0
+      ? parseFloat(
+          (userReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount)
+          .toFixed(1)
+        )
+      : 0;
+
+    res.json({
+      ...landlord,
+      properties,
+      reviews: userReviews,
+      reviewCount,
+      averageRating
+    });
     } catch (error) {
       console.error('Error fetching landlord profile:', error);
       res.status(500).json({ error: error.message });

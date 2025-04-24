@@ -397,7 +397,6 @@ const ForumPage: React.FC = () => {
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
-              <option value="most-liked">Most Liked</option>
               <option value="most-commented">Most Comments</option>
             </select>
           </div>
@@ -444,15 +443,12 @@ const ForumPage: React.FC = () => {
 
                 <div className="post-footer">
                   <div className="post-stats">
-                    <span className="likes-count">
-                      ❤️ {post.likes} {post.likes === 1 ? 'like' : 'likes'}
-                    </span>
+     
                     <span className="comments-count">
                       💬 {post.comments.length || 0}{' '}
                       {post.comments.length === 1 ? 'comment' : 'comments'}
                     </span>
                   </div>
-                  <button className="like-button" onClick={() => {handleLikes(post)}}>Like</button>
                 </div>
 
                 {post.comments.length > 0 && (

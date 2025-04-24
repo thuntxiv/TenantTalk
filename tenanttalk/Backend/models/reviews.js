@@ -5,11 +5,12 @@ const options = { discriminatorKey: 'reviewType', collection: 'reviews' };
 
 // Base review schema
 const reviewSchema = new mongoose.Schema({
-    userID: { type: mongoose.ObjectId, required: true },
-    title: { type: String, required: true },
+    userID: { type: String, required: true },
     description: { type: String, required: true },
     rating: { type: Number, required: true },
     photoUrl: { type: String },
+    reviewType: { type: String, required: true },
+    userAvatar: { type: String },
     createdAt: { type: Date, default: Date.now }
 }, options);
 
@@ -44,7 +45,7 @@ const Review = mongoose.model('Review', reviewSchema);
 
 // Property review schema
 const propertyReviewSchema = new mongoose.Schema({
-    propertyID: { type: mongoose.ObjectId, required: true },
+    propertyID: { type: String, required: true },
     cleanliness: { type: Number, min: 1, max: 5 },
     location: { type: Number, min: 1, max: 5 },
     value: { type: Number, min: 1, max: 5 }
@@ -52,10 +53,7 @@ const propertyReviewSchema = new mongoose.Schema({
 
 // Landlord review schema 
 const landlordReviewSchema = new mongoose.Schema({
-    landlordID: { type: mongoose.ObjectId, required: true },
-    communication: { type: Number, min: 1, max: 5 },
-    responsiveness: { type: Number, min: 1, max: 5 },
-    reliability: { type: Number, min: 1, max: 5 }
+    landlordID: { type: String, required: true },
 });
 
 // Override method for property reviews (polymorphism)

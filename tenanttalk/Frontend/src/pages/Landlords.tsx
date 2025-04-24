@@ -117,9 +117,9 @@ const LandlordListPage: React.FC = () => {
           {filteredLandlords.length > 0 ? (
             filteredLandlords.map(landlord => (
               <div
-                key={landlord.id}
+                key={landlord._id}
                 className="landlord-card"
-                onClick={() => handleLandlordClick(landlord.id)}
+                onClick={() => handleLandlordClick(landlord._id)}
               >
                 <img
                   src={`${landlord.photoURL || Avatar1}`}

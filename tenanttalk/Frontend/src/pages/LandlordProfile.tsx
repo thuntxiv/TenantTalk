@@ -5,12 +5,6 @@ import ReviewForm from '../components/Review.tsx';
 import '../styles/LandlordProfile.css';
 import { useAuth } from '../components/AuthContext.tsx';
 
-const Avatar1 = require('../imgs/avatar1.jpg');
-const Avatar2 = require('../imgs/avatar2.jpg');
-const Avatar3 = require('../imgs/avatar3.png');
-const studioImage = require('../imgs/Studio_listing_1.jpeg');
-const loftImage = require('../imgs/Loft_Example.jpg');
-
 interface Property {
   id: number;
   address: string;
@@ -36,118 +30,92 @@ interface Landlord {
   profileImage: string;
   email: string;
   phone: string;
-  bio: string;
-  memberSince: string;
-  responseRate: number;
+  bio: string;  responseRate: number;
   rating: number;
   properties: Property[];
   reviews: Review[];
 }
 
-// 1) Define three mock profiles
-const MOCK_LANDLORDS: Record<string, Landlord> = {
-  '1': {
-    id: '1',
-    name: 'John Smith',
-    profileImage: Avatar1,
-    email: 'john.smith@example.com',
-    phone: '(555) 123-4567',
-    bio: 'Property manager with over 10 years of experience managing college town apartments. I take pride in maintaining quality housing for students and young professionals.',
-    memberSince: '2018-05-12',
-    responseRate: 95,
-    rating: 4.7,
-    properties: [
-      { id: 1, address: '123 4th Street, Troy, NY', image: studioImage, beds: 2, baths: 1, price: 650 },
-      { id: 2, address: '456 River Street, Troy, NY', image: loftImage, beds: 3, baths: 2, price: 1000 }
-    ],
-    reviews: [
-      { id: 'r1', userId: 'u1', userName: 'Alex Johnson', userImage: Avatar2, rating: 5, comment: 'John was an excellent landlord! Very responsive to maintenance requests and always fair with the deposit return.', date: '2023-12-15' },
-      { id: 'r2', userId: 'u2', userName: 'Maria Garcia', userImage: Avatar3, rating: 4, comment: 'Overall a good experience. The property was well-maintained, though sometimes it took a few days to get a response to emails.', date: '2023-10-28' },
-    ]
-  },
-  '2': {
-    id: '2',
-    name: 'Jane Doe',
-    profileImage: Avatar2,
-    email: 'jane.doe@example.com',
-    phone: '(555) 987-6543',
-    bio: 'I specialize in downtown lofts with modern finishes. Always happy to give a tour and answer any questions.',
-    memberSince: '2019-08-20',
-    responseRate: 90,
-    rating: 4.5,
-    properties: [
-      { id: 3, address: '789 Broadway, Troy, NY', image: loftImage, beds: 1, baths: 1, price: 800 },
-      { id: 4, address: '321 Elm Street, Troy, NY', image: studioImage, beds: 2, baths: 2, price: 1200 }
-    ],
-    reviews: [
-      { id: 'r1', userId: 'u3', userName: 'Chris Lee', userImage: Avatar1, rating: 4, comment: 'Great place, but a bit pricey.', date: '2024-01-05' },
-      { id: 'r2', userId: 'u4', userName: 'Pat Taylor', userImage: Avatar3, rating: 5, comment: 'Loved the location and amenities!', date: '2024-02-15' },
-    ]
-  },
-  '3': {
-    id: '3',
-    name: 'Bob Johnson',
-    profileImage: Avatar3,
-    email: 'bob.johnson@example.com',
-    phone: '(555) 222-3333',
-    bio: 'Focused on long-term leases in quiet neighborhoods. Contact me for family-friendly homes.',
-    memberSince: '2020-11-01',
-    responseRate: 88,
-    rating: 4.2,
-    properties: [
-      { id: 5, address: '654 Maple Ave, Troy, NY', image: studioImage, beds: 3, baths: 2, price: 900 },
-      { id: 6, address: '987 Pine Street, Troy, NY', image: loftImage, beds: 4, baths: 3, price: 1500 }
-    ],
-    reviews: [
-      { id: 'r1', userId: 'u5', userName: 'Sam Wilson', userImage: Avatar2, rating: 4, comment: 'Bob was very accommodating.', date: '2023-11-20' },
-      { id: 'r2', userId: 'u6', userName: 'Dana Cruz', userImage: Avatar1, rating: 4, comment: 'Nice and quiet neighborhood.', date: '2024-03-10' },
-    ]
-  }
-};
+const defaultImage = require('../imgs/avatar1.jpg'); // Default image for landlord profile
+const defaultProperty = require('../imgs/Studio_listing_1.jpeg'); // Default image for properties
 
-const LandlordProfilePage: React.FC = () => {
-  const { user } = useAuth();
+const LandlordProfilePage = () => {
   const { id: landlordId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
 
-  // 2) Pick the right landlord or mark “not found”
-  const [landlordData, setLandlordData] = useState<Landlord | null>(
-    MOCK_LANDLORDS[landlordId] ?? null
-  );
+  const [landlordData, setLandlordData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [participantName, setParticipantName] = useState('');
-  const [messages, setMessages] = useState([]); // if you have chat in this page
-  const [newMessage, setNewMessage] = useState('');
 
+  // Fetch landlord + props + reviews
   useEffect(() => {
-    if (!landlordData) return;
-    // reset review form if you want
-    setShowReviewForm(false);
-  }, [landlordId, landlordData]);
+    if (!landlordId) return;
+    setLoading(true);
+    setError(null);
+    const getLandlords = async() => {
+      await fetch(`http://localhost:5000/api/landlords/${landlordId}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data: Landlord) => {
+        console.log(data);
+        setLandlordData(data);
+      })
+      .catch(err => {
+        console.error(err);
+        setError('Failed to load landlord profile.');
+      })
+      .finally(() => setLoading(false));
+    }
+    getLandlords();
+  }, [landlordId]);
+
+  // Review submission
+  const handleReviewSubmit = async (rating: number, comment: string) => {
+    if (!user || !landlordData) {
+      alert('You must be signed in to leave a review.');
+      return;
+    }
+
+    const payload = {
+      reviewType: 'landlord',
+      landlordID: landlordData._id,
+      userID: user.id,
+      rating: rating,
+      description: comment,
+      userAvatar: user.picture
+    };
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        console.error(err);
+        throw new Error(err.error || res.statusText);
+      }
+      // refresh landlord data
+      console.log("Review submitted successfully!");
+      const refreshed = await fetch(`http://localhost:5000/api/landlords/${landlordId}`)
+        .then(r => {
+          if (!r.ok) throw new Error('Refresh failed');
+          return r.json();
+        });
+      setLandlordData(refreshed);
+      setShowReviewForm(false);
+    } catch (err: any) {
+      console.error(err);
+      alert('Error submitting review: ' + err.message);
+    }
+  };
 
   const handleBack = () => navigate(-1);
-  const handleWriteReview = () => setShowReviewForm(true);
-
-  const handleReviewSubmit = (rating: number, comment: string) => {
-    if (!user) throw new Error('You must be signed in to leave a review!');
-    const newReview: Review = {
-      id: `r${landlordData!.reviews.length + 1}`,
-      userId: user.id,
-      userName: user.email,
-      userImage: user.picture || '',
-      rating,
-      comment,
-      date: new Date().toISOString().split('T')[0]
-    };
-    const updatedReviews = [newReview, ...landlordData!.reviews];
-    const avg = updatedReviews.reduce((s, r) => s + r.rating, 0) / updatedReviews.length;
-    setLandlordData({
-      ...landlordData!,
-      reviews: updatedReviews,
-      rating: parseFloat(avg.toFixed(1))
-    });
-    setShowReviewForm(false);
-  };
 
   const renderStars = (rating: number) => {
     const full = Math.floor(rating);
@@ -156,15 +124,25 @@ const LandlordProfilePage: React.FC = () => {
       <div className="star-rating">
         {[...Array(5)].map((_, i) => {
           const cls = i < full ? 'full' : (i === full && half ? 'half' : 'empty');
-          return <span key={i} className={`star ${cls}`}>{i < full || (i === full && half) ? '★' : '☆'}</span>;
+          return (
+            <span key={i} className={`star ${cls}`}>
+              {i < full || (i === full && half) ? '★' : '☆'}
+            </span>
+          );
         })}
-        <span className="rating-value">{rating.toFixed(1)}</span>
+        <span className="rating-value">{rating}</span>
       </div>
     );
   };
 
-  if (landlordData === null) {
-    return <div className="landlord-profile-page"><h2>Landlord not found</h2></div>;
+  if (loading) {
+    return <div className="landlord-profile-page">Loading...</div>;
+  }
+  if (error) {
+    return <div className="landlord-profile-page">Error: {error}</div>;
+  }
+  if (!landlordData) {
+    return <div className="landlord-profile-page">Landlord not found.</div>;
   }
 
   return (
@@ -172,44 +150,48 @@ const LandlordProfilePage: React.FC = () => {
       <button className="back-button" onClick={handleBack}>← Back</button>
       <div className="profile-header">
         <div className="profile-image-container">
-          <img src={landlordData.profileImage} alt={landlordData.name} className="profile-image"/>
+          <img src={landlordData.photoURL || defaultImage} alt={landlordData.name} className="profile-image" />
         </div>
         <div className="profile-info">
           <h1 className="landlord-name">{landlordData.name}</h1>
           <div className="rating-section">
-            {renderStars(landlordData.rating)}
-            <span className="review-count">({landlordData.reviews.length} reviews)</span>
+            {renderStars(landlordData.averageRating)}
+            <span className="review-count">
+              ({landlordData.reviews.length} review{landlordData.reviews.length !== 1 ? 's' : ''})
+            </span>
           </div>
           <div className="profile-details">
-            <div className="detail-item"><span className="detail-label">Email:</span> <span className="detail-value">{landlordData.email}</span></div>
-            <div className="detail-item"><span className="detail-label">Phone:</span> <span className="detail-value">{landlordData.phone}</span></div>
-            <div className="detail-item"><span className="detail-label">Member since:</span> <span className="detail-value">{new Date(landlordData.memberSince).toLocaleDateString()}</span></div>
-            <div className="detail-item"><span className="detail-label">Response rate:</span> <span className="detail-value">{landlordData.responseRate}%</span></div>
+            <div className="detail-item"><span className="detail-label">Email:</span> <span className="detail-value">{landlordData.email || "Not Found"}</span></div>
+            <div className="detail-item"><span className="detail-label">Phone:</span> <span className="detail-value">{landlordData.phone || "Not Found"}</span></div>
+            <div className="detail-item"><span className="detail-label">Response rate:</span> <span className="detail-value">{landlordData.responseRate || "N/A"}%</span></div>
           </div>
-          <button className="write-review-button" onClick={handleWriteReview}>Write a Review</button>
+          <button className="write-review-button" onClick={() => setShowReviewForm(true)}>Write a Review</button>
         </div>
       </div>
 
       <div className="profile-bio">
         <h2>About {landlordData.name}</h2>
-        <p>{landlordData.bio}</p>
+        <p>{landlordData.description}</p>
       </div>
 
       <div className="properties-section">
         <h2>Properties ({landlordData.properties.length})</h2>
         <div className="property-cards">
-          {landlordData.properties.map(p => (
-            <div key={p.id} className="property-card" onClick={() => navigate(`/listings/${p.id}`)}>
-              <img src={p.image} alt={p.address} className="property-image" />
-              <div className="property-info">
-                <h3>{p.address}</h3>
-                <div className="property-details">
-                  <span>{p.beds} bed{p.beds>1 && 's'}</span> • <span>{p.baths} bath{p.baths>1 && 's'}</span>
+          {landlordData.properties.map(p => {
+            const photoUrl = p.photoURL ? p.photoURL[0] : defaultProperty;
+            return (
+              <div key={p._id} className="property-card" onClick={() => navigate(`/listings/${p._id}`)}>
+                <img src={photoUrl} alt={p.address} className="property-image" />
+                <div className="property-info">
+                  <h3>{p.address}</h3>
+                  <div className="propexxxxxxxxxxx  x`rty-details">
+                    <span>{p.bedrooms || "?"} bed{p.bedrooms > 1 && 's'}</span> • <span>{p.bathrooms || "?"} bath{p.bathrooms > 1 && 's'}</span>
+                  </div>
+                  <div className="property-price">${p.rent}/month</div>
                 </div>
-                <div className="property-price">${p.price}/month</div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -223,20 +205,20 @@ const LandlordProfilePage: React.FC = () => {
           <div className="reviews-section">
             <div className="reviews-header">
               <h2>Reviews ({landlordData.reviews.length})</h2>
-              <button className="write-review-button mobile" onClick={handleWriteReview}>Write a Review</button>
+              <button className="write-review-button mobile" onClick={() => setShowReviewForm(true)}>Write a Review</button>
             </div>
             <div className="reviews-list">
               {landlordData.reviews.map(r => (
-                <div key={r.id} className="review-card">
+                <div key={r._id} className="review-card">
                   <div className="review-header">
-                    <img src={r.userImage} alt={r.userName} className="reviewer-image"/>
+                    <img src={r.userImage} alt={r.username} className="reviewer-image" />
                     <div className="reviewer-info">
-                      <h3>{r.userName}</h3>
+                      <h3>{r.username}</h3>
                       <div className="review-rating">{renderStars(r.rating)}</div>
-                      <div className="review-date">{new Date(r.date).toLocaleDateString()}</div>
+                      <div className="review-date">{new Date(r.createdAt).toLocaleDateString()}</div>
                     </div>
                   </div>
-                  <div className="review-comment">{r.comment}</div>
+                  <div className="review-comment">{r.description}</div>
                 </div>
               ))}
             </div>
