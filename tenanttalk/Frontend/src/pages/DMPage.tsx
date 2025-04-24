@@ -37,7 +37,7 @@ const DMPage: React.FC = () => {
 
         const fetchChats = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/chats/user/${user.id}`);
+                const response = await fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/chats/user/${user.id}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -66,7 +66,7 @@ const DMPage: React.FC = () => {
             setSending(false);
             return;
         }
-        const response = await fetch(`http://localhost:5000/api/users/generic/${recipient}`);
+        const response = await fetch(https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/users/generic/${recipient}`);
         if (!response.ok) {
             setError('Recipient not found.');
             setSending(false);
@@ -84,7 +84,7 @@ const DMPage: React.FC = () => {
         console.log(newChat);
         //Create new DM conversation
         try {
-            const createChat = await fetch(`http://localhost:5000/api/chats`, {
+            const createChat = await fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/chats`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
