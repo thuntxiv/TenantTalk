@@ -55,7 +55,7 @@ const LandlordProfilePage = () => {
     setLoading(true);
     setError(null);
     const getLandlords = async() => {
-      await fetch(`http://localhost:5000/api/landlords/${landlordId}`)
+      await fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/landlords/${landlordId}`)
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
