@@ -1,13 +1,29 @@
 {
     "version": 2,
-    
-    "rewrites": [{ "source": "/(.*)", "destination": "/" }],
-    
     "builds": [
+      {
+        "src": "Frontend/build/**",
+        "use": "@vercel/static",
+        "config": {
+          "distDir": "Frontend/build"
+        }
+      },
       {
         "src": "Backend/server/server.js",
         "use": "@vercel/node"
       }
     ],
-    "buildCommand": "npm install --prefix Backend && npm install --prefix Frontend && node --env-file=.env server.js --prefix Backend && npm run build --prefix Frontend"
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "/Backend/server/server.js"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/Frontend/build/$1"
+      }
+    ],
+    "env": {
+      "NODE_ENV": "production"
+    }
   }
