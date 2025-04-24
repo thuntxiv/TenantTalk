@@ -79,10 +79,7 @@ app.get('/login', (req, res) => {
 
 app.post('/api/login', login);
 
-// Catch-all route for SPA routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../Frontend/build', 'index.html'));
-});
+
 
 /* 
  _________________
@@ -300,3 +297,8 @@ app.post("/api/chats", chatController.create.bind(chatController));
 
 // Add Message to Chat
 app.post("/api/chats/:chatid/messages", chatController.addMessage.bind(chatController));
+
+// Catch-all route for SPA routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../Frontend/build', 'index.html'));
+});
