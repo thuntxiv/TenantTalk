@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node Backend/server/server.js",
+    "start": "node tenanttalk/Backend/server/server.js",
     "heroku-postbuild": "cd tenanttalk/Frontend && npm install && npm run build"
   },
   "dependencies": {
