@@ -7,7 +7,8 @@ const landlordSchema = new mongoose.Schema({
     rating: { type: Number },
     description: { type: String, required: true, unique: true },
     type: { type: String, required: true },
-    bio: { type: String},
+    email: { type: String},
+    phone: { type: String },
     photoURL: { type: String },
     lastEdited: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now }
@@ -27,7 +28,9 @@ landlordSchema.statics.findByIdAndUpdate = async function(id, update, options = 
       return null; 
     }
   
-    doc.set(update, { strict: false });
+    Object.keys(update).forEach(key => {
+        doc[key] = update[key];
+    });
 
     if (options.runValidators) {
         await doc.validate();

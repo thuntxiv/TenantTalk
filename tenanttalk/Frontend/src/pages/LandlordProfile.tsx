@@ -163,7 +163,6 @@ const LandlordProfilePage = () => {
           <div className="profile-details">
             <div className="detail-item"><span className="detail-label">Email:</span> <span className="detail-value">{landlordData.email || "Not Found"}</span></div>
             <div className="detail-item"><span className="detail-label">Phone:</span> <span className="detail-value">{landlordData.phone || "Not Found"}</span></div>
-            <div className="detail-item"><span className="detail-label">Response rate:</span> <span className="detail-value">{landlordData.responseRate || "N/A"}%</span></div>
           </div>
           <button className="write-review-button" onClick={() => setShowReviewForm(true)}>Write a Review</button>
         </div>
