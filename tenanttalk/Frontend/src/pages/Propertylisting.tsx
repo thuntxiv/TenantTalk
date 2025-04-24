@@ -111,7 +111,7 @@ export default function Propertylisting() {
     useEffect(() => {
         const fetchListings = async () => {
           try {
-            const response = await fetch('http://localhost:5000/api/properties');
+            const response = await fetch('https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/properties');
             if (!response.ok) {
               throw new Error('Failed to fetch listings from the API');
             }
