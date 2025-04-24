@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from './navbar.tsx';
 import Footer from './footer.tsx';
@@ -81,13 +82,51 @@ const mockListings: Listing[] = [
     },
 ];
 
-//Lists details of the listing. This is the listing page itself 
 export default function ListingDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [listing, setListing] = React.useState<Listing | null>(null);
+    const listingId = id;
+    console.log("Listing ID:", Number(listingId));
 
-    const listingId = Number(id);
-    const listing = mockListings.find((item) => item.id === listingId);
+    useEffect(() => {
+        if (!(Number.isInteger(Number(listingId)))) {
+            fetch(`http://localhost:5000/api/properties/${listingId}`).then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then((data) => {
+                console.log(data);
+                // Assuming the API returns a listing object that matches the Listing interface
+                let photoUrl = data.photoURL[0];
+                if (data.photoURL.length === 0) {
+                    photoUrl = studioImage;
+                }
+                setListing({
+                    id: data.id,
+                    title: data.title,
+                    price: data.rent,
+                    location: data.address,
+                    address: data.address,
+                    school: data.location,
+                    petFriendly: data.petFriendly,
+                    rooms: data.bedrooms,
+                    utilitiesIncluded: data.utilitiesIncluded,
+                    description: data.description,
+                    imageUrl: photoUrl, 
+                    timeFrame: data.period,
+                    numberOfSuitemates: data.suitemates,
+                    houseType: data.type,
+                    bathrooms: data.bathrooms,
+                });
+            }).catch((error) => {
+                console.error('Error fetching listing:', error);
+            });
+        } else {
+            setListing(mockListings.find((listing) => listing.id === Number(listingId)) || null)
+        }
+    }, [listingId]);
 
     if (!listing) {
         return (
@@ -117,7 +156,7 @@ export default function ListingDetails() {
                 <div className="image-and-info">
                     <img className="main-image" src={listing.imageUrl} alt={listing.title} />
                     <div className="quick-facts">
-                        <h1 className="price">${listing.price.toLocaleString()}</h1>
+                        <h1 className="price">${listing.price}</h1>
                         <p className="address">{listing.address}</p>
                     </div>
                 </div>
@@ -144,19 +183,19 @@ export default function ListingDetails() {
                         </tr>
                         <tr>
                             <th>Property Rooms</th>
-                            <td>{listing.rooms}</td>
+                            <td>{listing.rooms || "Contact landlord"}</td>
                         </tr>
                         <tr>
-                            <th>Room Type</th>
-                            <td>{listing.roomType}</td>
+                            <th>House Type</th>
+                            <td>{listing.houseType || "Contact landlord"}</td>
                         </tr>
                         <tr>
                             <th>Bathrooms</th>
-                            <td>{listing.bathrooms}</td>
+                            <td>{listing.bathrooms || "Contact landlord"}</td>
                         </tr>
                         <tr>
                             <th>Suitemates</th>
-                            <td>{listing.numberOfSuitemates}</td>
+                            <td>{listing.numberOfSuitemates || "Contact landlord"}</td>
                         </tr>
                         <tr>
                             <th>Utilities Included</th>
@@ -164,7 +203,7 @@ export default function ListingDetails() {
                         </tr>
                         <tr>
                             <th>Sublease Period</th>
-                            <td>{listing.timeFrame}</td>
+                            <td>{listing.timeFrame || "Contact landlord"}</td>
                         </tr>
                     </tbody>
                 </table>
