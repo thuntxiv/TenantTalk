@@ -1,5 +1,8 @@
 {
     "version": 2,
+    
+    "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+    
     "builds": [
       {
         "src": "Backend/server/server.js",
