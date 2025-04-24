@@ -52,6 +52,8 @@ app.use(cors({
 }));
 
 // Connect to MongoDB
+console.log('MONGODB password:', process.env.dbpw);
+console.log('MONGODB user:', process.env.dbuser);
 const mongodbURL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@tenanttalk.sdau3.mongodb.net/tenantTalk?retryWrites=true&w=majority&appName=tenanttalk`;
 mongoose.connect(mongodbURL).catch(error => {
   console.error('MongoDB connection error:', error);
