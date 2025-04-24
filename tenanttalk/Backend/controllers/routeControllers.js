@@ -556,7 +556,7 @@ const landlordController = new LandlordController();
 // Simple route handlers
 const home = async (req, res) => {
     try {
-        res.send('Hello World');
+        res.sendFile(path.join(dirname, '../../Frontend/build', 'index.html'));
     } catch (error) {
         console.error(error);
     }
