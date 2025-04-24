@@ -2,6 +2,7 @@
   "name": "tenanttalk",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/",
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@react-oauth/google": "^0.12.1",
