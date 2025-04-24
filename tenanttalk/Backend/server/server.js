@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 //const MongoClient = mongodb.MongoClient;
 const mongodbURL = `mongodb+srv://${process.env.dbuser}:${process.env.dbpw}@tenanttalk.sdau3.mongodb.net/tenantTalk?retryWrites=true&w=majority&appName=tenanttalk`;
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.use(cors({ origin: "http://localhost:3000" }));
 
