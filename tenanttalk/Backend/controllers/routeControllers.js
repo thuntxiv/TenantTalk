@@ -1,4 +1,11 @@
 import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import crypto from 'crypto';
+
+// Derive __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Import user models
 import { User } from '../models/user.js';
@@ -16,13 +23,6 @@ import { ForumPost, SubleasePost, RoommatePost } from '../models/forum.js';
 
 // Import chat models
 import { Chat, Message } from '../models/chats.js';
-
-// Hashing library
-import crypto from 'crypto';
-
-const path = require('path');
-
-const pageRoute = '../Frontend/src/pages';
 
 // Base controller (Inheritance)
 class BaseController {
@@ -124,8 +124,6 @@ class UserController extends BaseController {
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
-
-    
   }
   
   // Get by google ID
@@ -285,7 +283,6 @@ class ReviewController extends BaseController {
       res.status(400).json({ error: error.message });
     }
   }
-  
 
   // Get recent reviews
   async getRecent(req, res) {
@@ -333,7 +330,6 @@ class ForumController extends BaseController {
       res.status(400).json({ error: error.message });
     }
   }
-  
 }
 
 class ChatController extends BaseController {
@@ -405,7 +401,7 @@ class ChatController extends BaseController {
         return res.status(400).json({ error: 'userIDs must be a non-empty array.' });
       }
 
-      //Sort array and compute hash
+      // Sort array and compute hash
       const sortedIds = userIDs.map(id => id.toString()).sort();
       const fingerprint = crypto
         .createHash('md5')
@@ -429,8 +425,6 @@ class ChatController extends BaseController {
       
       const chat = await newChat.save();
       res.status(201).json(chat);
-
-
     }
     catch (error) {
       console.log(error);
@@ -453,7 +447,6 @@ class ChatController extends BaseController {
       res.status(400).json({ error: error.message });
     }
   }
-
 }
 
 class LandlordController extends BaseController {
@@ -507,39 +500,39 @@ class LandlordController extends BaseController {
 
       let userReviews = [];
       if (reviews.length > 0) {
-      // collect unique userIds
-      const userIds = [...new Set(reviews.map(r => r.userID))];
-      const users = await User.find(
-        { userID: { $in: userIds } },
-        'username'
-      ).lean();
+        // Collect unique userIds
+        const userIds = [...new Set(reviews.map(r => r.userID))];
+        const users = await User.find(
+          { userID: { $in: userIds } },
+          'username'
+        ).lean();
 
-      const usernameMap = users.reduce((m, u) => {
-        m[u.userID] = u.username;
-        return m;
-      }, {});
+        const usernameMap = users.reduce((m, u) => {
+          m[u.userID] = u.username;
+          return m;
+        }, {});
 
-      userReviews = reviews.map(r => ({
-        ...r,
-        username: usernameMap[r.userId] || null
-      }));
-    }
+        userReviews = reviews.map(r => ({
+          ...r,
+          username: usernameMap[r.userId] || null
+        }));
+      }
 
-    const reviewCount = userReviews.length;
-    const averageRating = reviewCount > 0
-      ? parseFloat(
-          (userReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount)
-          .toFixed(1)
-        )
-      : 0;
+      const reviewCount = userReviews.length;
+      const averageRating = reviewCount > 0
+        ? parseFloat(
+            (userReviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount)
+            .toFixed(1)
+          )
+        : 0;
 
-    res.json({
-      ...landlord,
-      properties,
-      reviews: userReviews,
-      reviewCount,
-      averageRating
-    });
+      res.json({
+        ...landlord,
+        properties,
+        reviews: userReviews,
+        reviewCount,
+        averageRating
+      });
     } catch (error) {
       console.error('Error fetching landlord profile:', error);
       res.status(500).json({ error: error.message });
@@ -558,13 +551,14 @@ const landlordController = new LandlordController();
 // Simple route handlers
 const home = async (req, res) => {
     try {
-        res.sendFile(path.join(dirname, '../../Frontend/build', 'index.html'));
+        res.sendFile(path.join(__dirname, '../../frontend/build', 'index.html'));
     } catch (error) {
         console.error(error);
+        res.status(500).send('Internal Server Error');
     }
 };
 
-//login function that calls userController's login method
+// Login function that calls userController's login method
 const login = (req, res) => userController.login(req, res);
 
 export {

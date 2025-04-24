@@ -4,6 +4,15 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Load environment variables from .env file (for local development)
+dotenv.config();
+
+// Derive __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Import controller instances
 import { 
@@ -15,44 +24,39 @@ import {
   landlordController, 
   home, 
   login 
-} from '../controllers/routeControllers.js';
+} from './controllers/routeControllers.js';
 
 // Import models 
-import { User } from '../models/user.js';
-import { Property } from '../models/property.js';
-import { Apartment, House, Room } from '../models/propertyTypes.js';
-import { Review, PropertyReview, LandlordReview } from '../models/reviews.js';
-import { ForumPost, SubleasePost, RoommatePost, Comment } from '../models/forum.js';
-import { Landlord } from '../models/landlord.js';
-import { Chat, Message } from '../models/chats.js';
-
+import { User } from './models/user.js';
+import { Property } from './models/property.js';
+import { Apartment, House, Room } from './models/propertyTypes.js';
+import { Review, PropertyReview, LandlordReview } from './models/reviews.js';
+import { ForumPost, SubleasePost, RoommatePost, Comment } from './models/forum.js';
+import { Landlord } from './models/landlord.js';
+import { Chat, Message } from './models/chats.js';
 
 const app = express();
 
-//const buildPath = path.join(__dirname, 'tenanttalk/Frontend/build');
-//app.use(express.static(buildPath));
+// Serve static files from the React frontend (e.g., JS, CSS)
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-//const MongoClient = mongodb.MongoClient;
-const mongodbURL = `mongodb+srv://${process.env.dbuser}:${process.env.dbpw}@tenanttalk.sdau3.mongodb.net/tenantTalk?retryWrites=true&w=majority&appName=tenanttalk`;
+
+// Configure CORS for Heroku deployment
+app.use(cors({ 
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://tenanttalkers-ff36b9b495cc.herokuapp.com' 
+    : 'http://localhost:3000' 
+}));
+
+// Connect to MongoDB
+const mongodbURL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@tenanttalk.sdau3.mongodb.net/tenantTalk?retryWrites=true&w=majority&appName=tenanttalk`;
+mongoose.connect(mongodbURL).catch(error => {
+  console.error('MongoDB connection error:', error);
+});
+
 const port = process.env.PORT || 5000;
-
-app.use(cors({ origin: "http://localhost:3000" }));
-
-//Error Handling
-let handleError = (error) => {
-  console.error(error);
-}
-
-//Connect to MongoDB
-mongoose.connect(mongodbURL).
-  catch(error => handleError(error));
-try {
-  await mongoose.connect(mongodbURL);
-} catch (error) {
-  handleError(error);
-}
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);  
@@ -67,17 +71,17 @@ app.listen(port, () => {
 // Home route
 app.get('/', home);
 
-/*app.get('*', (req, res) => {
-  res.sendFile(path.join(buildPath, 'index.html'));
-});*/
-
 // Login route
 app.get('/login', (req, res) => {
-  res.send('login.html');  
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });
 
 app.post('/api/login', login);
 
+// Catch-all route for SPA routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+});
 
 /* 
  _________________
@@ -105,10 +109,9 @@ app.put('/api/users/:id', userController.update.bind(userController));
 // Delete user
 app.delete('/api/users/:id', userController.delete.bind(userController));
 
-
 /* 
  _________________
-| Landlord ROUTES     |
+| LANDLORD ROUTES |
 |_________________|
 */
 
@@ -128,6 +131,7 @@ app.post("/api/landlords", async (req, res) => {
 
 // Update Landlord
 app.put("/api/landlords/:id", landlordController.update.bind(landlordController));
+
 // Delete Landlord
 app.delete("/api/landlords/:id", async (req, res) => {
   try {
@@ -202,9 +206,6 @@ app.get('/api/forumposts', forumController.getAll.bind(forumController));
 // Get forum post by ID
 app.get('/api/forumposts/:id', forumController.getById.bind(forumController));
 
-// Get popular forum posts
-//app.get('/api/forumposts/popular', forumController.getPopular.bind(forumController));
-
 // Create forum post (handles different post types polymorphically)
 app.post('/api/forumposts', forumController.create.bind(forumController));
 
@@ -231,7 +232,6 @@ app.post('/api/forumposts/:id/comments', async (req, res) => {
       content: req.body.content,
       createdAt: new Date() 
     };
-
     
     forumPost.comments.push(newComment);
 
@@ -288,15 +288,14 @@ app.delete("/api/comments/:id", async (req, res) => {
 |_________________|
 */
 
-//Get chats by userID
+// Get chats by userID
 app.get("/api/chats/user/:id", chatController.getById.bind(chatController));
 
-//Get chats by chat id
+// Get chats by chat id
 app.get("/api/chat/:id", chatController.getOne.bind(chatController));
 
-//Create new chat
+// Create new chat
 app.post("/api/chats", chatController.create.bind(chatController));
 
 // Add Message to Chat
 app.post("/api/chats/:chatid/messages", chatController.addMessage.bind(chatController));
-
