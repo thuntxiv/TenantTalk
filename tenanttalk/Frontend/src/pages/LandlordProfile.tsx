@@ -90,7 +90,7 @@ const LandlordProfilePage = () => {
     };
 
     try {
-      const res = await fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com//api/reviews`, {
+      const res = await fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
