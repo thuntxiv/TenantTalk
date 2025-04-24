@@ -1,7 +1,7 @@
 {
     "version": 2,
     
-    "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+    "rewrites": [{ "source": "/(.*)", "destination": "../Frontend/src/pages/Home.tsx" }],
     
     "builds": [
       {
