@@ -39,7 +39,7 @@ const ConversationDetail: React.FC = () => {
 
         const sendMessage = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/chats/${conversationId}/messages`, {
+                const response = await fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/chats/${conversationId}/messages`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
