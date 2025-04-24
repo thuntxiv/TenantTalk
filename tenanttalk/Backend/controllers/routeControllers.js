@@ -116,6 +116,7 @@ class UserController extends BaseController {
       const savedUser = await user.save();
       
       // Polymorphic method call
+      // Ensure `getLandlordProfile` and `getBasicProfile` are defined in your Landlord and User models
       const userProfile = type === 'landlord' 
         ? savedUser.getLandlordProfile() 
         : savedUser.getBasicProfile();
@@ -129,6 +130,7 @@ class UserController extends BaseController {
   // Get by google ID
   async getByUserID(req, res) {
     try {
+      // Ensure `findByUserID` is defined in your User model (e.g., as a static method)
       const user = await this.model.findByUserID(req.params.id);
       if (!user) return res.status(404).json({ message: 'Item not found' });
       res.json(user);
@@ -139,6 +141,7 @@ class UserController extends BaseController {
 
   async getByGeneric(req, res) {
     try {
+      // Ensure `findByEmail` and `findByUsername` are defined in your User model
       const byEmail = await this.model.findByEmail(req.params.param);
       if (!byEmail) {
         console.log(`Email ${req.params.param} not found, checking username...`);
@@ -171,6 +174,7 @@ class UserController extends BaseController {
       }
       
       // Polymorphic response based on user type
+      // Ensure `getLandlordProfile` and `getBasicProfile` are defined in your models
       const userResponse = user.userType === 'Landlord' 
         ? user.getLandlordProfile() 
         : user.getBasicProfile();
@@ -216,6 +220,7 @@ class PropertyController extends BaseController {
       const savedProperty = await property.save();
       
       // Polymorphic method call
+      // Ensure `getDetailedInfo` is defined in your Property, Apartment, House, and Room models
       const responseData = savedProperty.getDetailedInfo 
         ? savedProperty.getDetailedInfo() 
         : savedProperty;
@@ -231,6 +236,7 @@ class PropertyController extends BaseController {
   async getByLocation(req, res) {
     try {
       const { location } = req.params;
+      // Ensure `findByLocation` is defined in your Property model
       const properties = await Property.findByLocation(location);
       res.json(properties);
     } catch (error) {
@@ -241,6 +247,7 @@ class PropertyController extends BaseController {
   async getByLandlord(req, res) {
     try {
       const landlordID = req.params.id;
+      // Ensure `findByLandlord` is defined in your Property model
       const properties = await Property.findByLandlord(landlordID);
       res.json(properties);
     } catch (error) {
@@ -274,6 +281,7 @@ class ReviewController extends BaseController {
       const savedReview = await review.save();
       
       // Polymorphic method call 
+      // Ensure `getDetailedInfo` is defined in your Review, PropertyReview, and LandlordReview models
       const responseData = savedReview.getDetailedInfo 
         ? savedReview.getDetailedInfo() 
         : savedReview;
@@ -288,6 +296,7 @@ class ReviewController extends BaseController {
   async getRecent(req, res) {
     try {
       const { days } = req.query;
+      // Ensure `findRecent` is defined in your Review model
       const reviews = await Review.findRecent(days ? parseInt(days) : 30);
       res.json(reviews);
     } catch (error) {
@@ -321,6 +330,7 @@ class ForumController extends BaseController {
       const savedPost = await post.save();
       
       // Polymorphic method call
+      // Ensure `getPostDetails` is defined in your ForumPost, SubleasePost, and RoommatePost models
       const responseData = savedPost.getPostDetails 
         ? savedPost.getPostDetails() 
         : savedPost;
@@ -364,7 +374,6 @@ class ChatController extends BaseController {
         return acc;
       }, {});
       
-
       const modifiedChats = chats.map(chat => {
         const recipientId = chat.userIDs.find(id => id !== user) || null;
         let recipientUser = { id: recipientId, username: null };
@@ -388,8 +397,7 @@ class ChatController extends BaseController {
       if (!chat) return res.status(404).json({ message: 'Chat not found' });
       
       res.json(chat);
-    }
-    catch (error) {
+    } catch (error) {
       res.status(404).json({ error: error.message });
     }
   }
@@ -425,8 +433,7 @@ class ChatController extends BaseController {
       
       const chat = await newChat.save();
       res.status(201).json(chat);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
       res.status(400).json({ error: error.message });
     }
@@ -434,7 +441,7 @@ class ChatController extends BaseController {
 
   async addMessage(req, res) {
     try {
-      const message  = req.body;
+      const message = req.body;
       const chat = await this.model.findById(req.params.chatid);
       if (!chat) return res.status(404).json({ message: 'Chat not found' });
       chat.lastmessage = message.message;
@@ -551,10 +558,16 @@ const landlordController = new LandlordController();
 // Simple route handlers
 const home = async (req, res) => {
     try {
-        res.sendFile(path.join(__dirname, '../../frontend/build', 'index.html'));
+        const filePath = path.join(__dirname, '../../Frontend/build', 'index.html');
+        res.sendFile(filePath, (err) => {
+            if (err) {
+                console.error(`Error serving index.html: ${err.message}`);
+                res.status(500).json({ error: 'Failed to load the application' });
+            }
+        });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
