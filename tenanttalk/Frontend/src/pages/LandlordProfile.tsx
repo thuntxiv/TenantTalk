@@ -90,7 +90,7 @@ const LandlordProfilePage = () => {
     };
 
     try {
-      const res = await fetch(`http://localhost:5000/api/reviews`, {
+      const res = await fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com//api/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -102,7 +102,7 @@ const LandlordProfilePage = () => {
       }
       // refresh landlord data
       console.log("Review submitted successfully!");
-      const refreshed = await fetch(`http://localhost:5000/api/landlords/${landlordId}`)
+      const refreshed = await fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com//api/landlords/${landlordId}`)
         .then(r => {
           if (!r.ok) throw new Error('Refresh failed');
           return r.json();
