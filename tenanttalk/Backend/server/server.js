@@ -29,7 +29,7 @@ import { Chat, Message } from '../models/chats.js';
 
 const app = express();
 
-const buildPath = path.join(__dirname, '../../Frontend/build');
+const buildPath = path.join(__dirname, 'tenanttalk/Frontend/build');
 app.use(express.static(buildPath));
 
 app.use(express.urlencoded({ extended: true }));
