@@ -176,7 +176,7 @@ const ForumPage: React.FC = () => {
     };
   
     try {
-      const res = await fetch('http://localhost:5000/api/forumposts', {
+      const res = await fetch('https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/forumposts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -228,7 +228,7 @@ const ForumPage: React.FC = () => {
     console.log(newCommentObj);
     console.log(postId);
 
-    fetch(`http://localhost:5000/api/forumposts/${postId}/comments`, {
+    fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/forumposts/${postId}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
