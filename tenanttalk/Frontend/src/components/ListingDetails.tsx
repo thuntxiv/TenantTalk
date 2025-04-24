@@ -85,7 +85,7 @@ const mockListings: Listing[] = [
 export default function ListingDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [listing, setListing] = React.useState<Listing | null>(null);
+    const [listing, setListing] = useState();
     const listingId = id;
     console.log("Listing ID:", Number(listingId));
 

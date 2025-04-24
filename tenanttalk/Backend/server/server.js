@@ -11,7 +11,8 @@ import {
   propertyController, 
   reviewController, 
   forumController,
-  chatController, 
+  chatController,
+  landlordController, 
   home, 
   login 
 } from '../controllers/routeControllers.js';
@@ -104,28 +105,9 @@ app.delete('/api/users/:id', userController.delete.bind(userController));
 |_________________|
 */
 
-app.get('/api/landlords', async (req, res) => {
-  try {
-    const landlord = await Landlord.find();
-    res.json(landlord);
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
-});
+app.get('/api/landlords', landlordController.getAll.bind(landlordController));
 
-// Get Landlord by ID
-app.get("/api/landlords/:id", async (req, res) => {
-  try {
-    const landlord = await Landlord.findById(req.params.id);
-    if (!landlord) {
-      return res.status(404).json({ error: "Landlord not found" });
-    }
-    res.status(200).json(landlord);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: err.message });
-  }
-});
+app.get("/api/landlords/:id", landlordController.getById.bind(landlordController));
 
 app.post("/api/landlords", async (req, res) => {
   try {
@@ -138,22 +120,7 @@ app.post("/api/landlords", async (req, res) => {
 });
 
 // Update Landlord
-app.put("/api/landlords/:id", async (req, res) => {
-  try {
-    const updatedLandlord = await Landlord.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    if (!updatedLandlord) {
-      return res.status(404).json({ error: "Landlord not found" });
-    }
-    res.status(200).json(updatedLandlord);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
+app.put("/api/landlords/:id", landlordController.update.bind(landlordController));
 // Delete Landlord
 app.delete("/api/landlords/:id", async (req, res) => {
   try {

@@ -27,44 +27,26 @@ const LandlordListPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Mock data. Is not needed with fully implemented backend
     const fetchLandlords = async () => {
       try {
         setLoading(true);
-        const mockData: Landlord[] = [
-          {
-            id: '1',
-            name: 'John Smith',
-            profileImage: Avatar1,
-            properties: 12,
-            rating: 4.7,
-            reviewCount: 34
-          },
-          {
-            id: '2',
-            name: 'Jane Doe',
-            profileImage: Avatar2,
-            properties: 8,
-            rating: 4.5,
-            reviewCount: 21
-          },
-          {
-            id: '3',
-            name: 'Bob Johnson',
-            profileImage: Avatar3,
-            properties: 5,
-            rating: 4.9,
-            reviewCount: 15
-          },
-        ];
-        setLandlords(mockData);
-        setLoading(false);
+        fetch('http://localhost:5000/api/landlords')
+          .then(response => response.json())
+          .then(data => {
+            setLandlords(data);
+            setLoading(false);
+          })
+          .catch(err => {
+            setError('Failed to load landlords. Please try again later.');
+            setLoading(false);
+          });
       } catch (err) {
         setError('Failed to load landlords. Please try again later.');
+      } finally {
         setLoading(false);
       }
-    };
 
+    };
     fetchLandlords();
   }, []);
 
@@ -140,14 +122,14 @@ const LandlordListPage: React.FC = () => {
                 onClick={() => handleLandlordClick(landlord.id)}
               >
                 <img
-                  src={landlord.profileImage}
+                  src={`${landlord.photoURL || Avatar1}`}
                   alt={`${landlord.name}`}
                   className="landlord-image"
                 />
                 <div className="landlord-info">
                   <h3 className="landlord-name">{landlord.name}</h3>
                   <p className="property-count">
-                    {landlord.properties} {landlord.properties === 1 ? 'Property' : 'Properties'}
+                    {landlord.propertyCount} {landlord.propertyCount === 1 ? 'Property' : 'Properties'}
                   </p>
                   {renderStars(landlord.rating, landlord.reviewCount)}
                 </div>

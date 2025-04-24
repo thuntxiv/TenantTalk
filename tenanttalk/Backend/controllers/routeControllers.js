@@ -453,12 +453,74 @@ class ChatController extends BaseController {
 
 }
 
+class LandlordController extends BaseController {
+  constructor(model = Landlord) {
+    super(model);
+  }
+
+  async getAll(req, res) {
+    try {
+      const landlords = await this.model.find().lean();
+
+      const enriched = await Promise.all(landlords.map(async (ld) => {
+        const propertyCount = await Property.countDocuments({ landlordID: ld._id });
+
+        const reviews = await LandlordReview.find({ landlordID: ld._id }).lean();
+        const reviewCount = reviews.length;
+
+        const rating = reviewCount > 0
+          ? parseFloat(
+              (reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount)
+              .toFixed(1)
+            )
+          : 0;
+
+        return {
+          ...ld,
+          propertyCount,
+          reviewCount,
+          rating
+        };
+      }));
+
+      res.json(enriched);
+    } catch (error) {
+      console.error('Error fetching landlords:', error);
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  async getById(req, res) {
+    try {
+      const landlordId = req.params.id;
+
+      const landlord = await this.model.findById(landlordId).lean();
+      if (!landlord) {
+        return res.status(404).json({ message: 'Landlord not found' });
+      }
+
+      const properties = await Property.findByLandlord(landlordId).lean();
+      const reviews = await LandlordReview.find({ landlordId }).lean();
+
+      res.json({
+        ...landlord,
+        properties,
+        reviews
+      });
+    } catch (error) {
+      console.error('Error fetching landlord profile:', error);
+      res.status(500).json({ error: error.message });
+    }
+  }
+}
+
 // Controller instances
 const userController = new UserController();
 const propertyController = new PropertyController();
 const reviewController = new ReviewController();
 const forumController = new ForumController();
 const chatController = new ChatController();
+const landlordController = new LandlordController();
 
 // Simple route handlers
 const home = async (req, res) => {
@@ -478,6 +540,7 @@ export {
   reviewController,
   forumController,
   chatController,
+  landlordController,
   home,
   login
 };

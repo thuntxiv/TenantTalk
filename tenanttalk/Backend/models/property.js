@@ -49,6 +49,11 @@ propertySchema.statics.findByLocation = function(location) {
     return this.find({ location: new RegExp(location, 'i') });
 };
 
+// Static method to find properties by landlord ID
+propertySchema.statics.findByLandlord = function(landlordID) {
+    return this.find({ landlordID: landlordID });
+};
+
 // Virtual for full address
 propertySchema.virtual('fullAddress').get(function() {
     return `${this.address}, ${this.location}`;
