@@ -66,7 +66,7 @@ const DMPage: React.FC = () => {
             setSending(false);
             return;
         }
-        const response = await fetch('https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/users/generic/${recipient}`);
+        const response = await fetch(`https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/users/generic/${recipient}`);
         if (!response.ok) {
             setError('Recipient not found.');
             setSending(false);
