@@ -54,7 +54,7 @@ const ForumPage: React.FC = () => {
 
     const fetchListings = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/forumposts');
+        const response = await fetch('https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/forumposts');
         if (!response.ok) {
           throw new Error('Failed to fetch listings from the API');
         }
