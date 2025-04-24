@@ -30,7 +30,7 @@ const LandlordListPage: React.FC = () => {
     const fetchLandlords = async () => {
       try {
         setLoading(true);
-        fetch('http://localhost:5000/api/landlords')
+        fetch('https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/landlords')
           .then(response => response.json())
           .then(data => {
             setLandlords(data);
