@@ -1,3 +1,4 @@
+
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import express from 'express';
 import dotenv from 'dotenv';
@@ -24,21 +25,21 @@ import {
   landlordController, 
   home, 
   login 
-} from './controllers/routeControllers.js';
+} from '../controllers/routeControllers.js';
 
 // Import models 
-import { User } from './models/user.js';
-import { Property } from './models/property.js';
-import { Apartment, House, Room } from './models/propertyTypes.js';
-import { Review, PropertyReview, LandlordReview } from './models/reviews.js';
-import { ForumPost, SubleasePost, RoommatePost, Comment } from './models/forum.js';
-import { Landlord } from './models/landlord.js';
-import { Chat, Message } from './models/chats.js';
+import { User } from '../models/user.js';
+import { Property } from '../models/property.js';
+import { Apartment, House, Room } from '../models/propertyTypes.js';
+import { Review, PropertyReview, LandlordReview } from '../models/reviews.js';
+import { ForumPost, SubleasePost, RoommatePost, Comment } from '../models/forum.js';
+import { Landlord } from '../models/landlord.js';
+import { Chat, Message } from '../models/chats.js';
 
 const app = express();
 
 // Serve static files from the React frontend (e.g., JS, CSS)
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(express.static(path.join(__dirname, '../../Frontend/build')));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -73,14 +74,14 @@ app.get('/', home);
 
 // Login route
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../../Frontend/build', 'index.html'));
 });
 
 app.post('/api/login', login);
 
 // Catch-all route for SPA routing
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../../Frontend/build', 'index.html'));
 });
 
 /* 
@@ -145,7 +146,7 @@ app.delete("/api/landlords/:id", async (req, res) => {
   }
 });
 
-app.get("/api/landlords/:id/properties", propertyController.getByLandlord.bind(propertyController));
+app.get("/api/landlords/:id/properties", propertyController.getByLandlord.bind(landlordController));
 
 /*________________
 | PROPERTY ROUTES |
