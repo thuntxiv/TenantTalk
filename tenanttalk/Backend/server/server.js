@@ -29,7 +29,7 @@ import { Chat, Message } from '../models/chats.js';
 
 const app = express();
 
-const buildPath = path.join(__dirname, 'tenanttalk/Frontend/build');
+const buildPath = path.join(__dirname, '../../Frontend/build');
 app.use(express.static(buildPath));
 
 app.use(express.urlencoded({ extended: true }));
@@ -68,7 +68,7 @@ app.listen(port, () => {
 app.get('/', home);
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(buildPath, 'index.html');
+  res.sendFile(path.join(buildPath, 'index.html'));
 });
 
 // Login route
