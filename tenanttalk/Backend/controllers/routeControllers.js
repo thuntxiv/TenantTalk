@@ -20,6 +20,8 @@ import { Chat, Message } from '../models/chats.js';
 // Hashing library
 import crypto from 'crypto';
 
+const path = require('path');
+
 const pageRoute = '../Frontend/src/pages';
 
 // Base controller (Inheritance)
