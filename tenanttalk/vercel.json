@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "Backend/server/server.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "buildCommand": "npm install --prefix Backend && npm install --prefix Frontend && node --env-file=.env server.js --prefix Backend && npm run build --prefix Frontend"
+  }
