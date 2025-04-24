@@ -42,7 +42,7 @@ const Conversations: React.FC = () => {
         console.log("Is Authenticated:", isAuthenticated);
         const fetchChats = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/chats/');
+                const response = await fetch('https://tenanttalkers-ff36b9b495cc.herokuapp.com/api/chats/');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
